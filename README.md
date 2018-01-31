@@ -20,7 +20,9 @@ They can be easily installed with the `install.packages()` function.
 
 ## Installation from github
 
+```
 devtools::install_github("patzaw/neo2R")
+```
 
 # Use
 
