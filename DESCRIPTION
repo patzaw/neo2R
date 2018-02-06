@@ -1,7 +1,7 @@
 Package: neo2R
 Type: Package
 Title: Neo4j to R
-Version: 0.1.0
+Version: 1.0.0
 Author: Patrice Godard
 Maintainer: Patrice Godard <patrice.godard@gmail.com>
 Description: This package provides simple connectors for querying neo4j
