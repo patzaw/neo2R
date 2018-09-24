@@ -18,4 +18,3 @@ Parse a CQL file and returned the prepared queries
 \seealso{
 \code{\link{prepCql}}
 }
-

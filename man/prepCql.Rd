@@ -25,4 +25,3 @@ prepCql(c(
 \seealso{
 \code{\link{readCql}}
 }
-

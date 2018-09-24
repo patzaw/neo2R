@@ -4,7 +4,8 @@
 \alias{cypher}
 \title{Run a cypher query}
 \usage{
-cypher(graph, query, parameters = NULL, result = c("row", "graph"))
+cypher(graph, query, parameters = NULL, result = c("row", "graph"),
+  arraysAsStrings = TRUE, eltSep = " || ")
 }
 \arguments{
 \item{graph}{the neo4j connection}
@@ -15,6 +16,14 @@ cypher(graph, query, parameters = NULL, result = c("row", "graph"))
 
 \item{result}{the way to return results. "row" will return a data frame
 and "graph" will return a list of nodes and a list of relationships.}
+
+\item{arraysAsStrings}{if result="row" and arraysAsStrings is TRUE (default)
+array from neo4j are converted to strings and array elementes are
+separated by eltSep.}
+
+\item{eltSep}{if result="row" and arraysAsStrings is TRUE (default)
+array from neo4j are converted to strings and array elementes are
+separated by eltSep.}
 }
 \value{
 the "result" of the query (invisible). See the "result" param.
@@ -39,4 +48,3 @@ result <- cypher(
 }
 
 }
-

@@ -20,4 +20,3 @@ a list with the url and necessary headers
 \description{
 Prepare connection to neo4j database
 }
-
