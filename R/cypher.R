@@ -102,6 +102,9 @@ cypher <- function(
    }
    if(result=="graph"){
       d <- results$results[[1]]$data
+      if(is.null(d) || length(d)==0){
+         return(NULL)
+      }
       nodes <- unique(do.call(c, lapply(d, function(x) x$graph$nodes)))
       names(nodes) <- unlist(lapply(nodes, function(n) n$id))
       relationships <- unique(do.call(c, lapply(d, function(x) x$graph$relationships)))
