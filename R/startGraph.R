@@ -26,7 +26,7 @@ startGraph <- function(url, username, password){
       "/db/data/"
    )
    neo4jHeaders <- list(
-      'Accept' = 'application/json; charset=UTF-8',
+      'Accept' = 'application/json; charset=UTF-8;',
       'Content-Type' = 'application/json',
       'X-Stream' = TRUE,
       'Authorization' = paste(
