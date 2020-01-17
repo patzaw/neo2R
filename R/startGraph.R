@@ -7,8 +7,6 @@
 #' @return a connection to the graph DB:
 #' a list with the url and necessary headers
 #'
-#' @importFrom base64enc base64encode
-#'
 #' @export
 #'
 startGraph <- function(url, username, password){
@@ -31,7 +29,7 @@ startGraph <- function(url, username, password){
       'X-Stream' = TRUE,
       'Authorization' = paste(
          "Basic",
-         base64encode(charToRaw(
+         base64enc::base64encode(charToRaw(
             paste(username, password, sep=":")
          ))
       )

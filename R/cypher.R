@@ -29,9 +29,6 @@
 #' )
 #' }
 #'
-#' @importFrom jsonlite toJSON fromJSON
-#' @importFrom RCurl basicTextGatherer basicHeaderGatherer curlPerform
-#'
 #' @export
 #'
 cypher <- function(

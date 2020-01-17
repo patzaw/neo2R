@@ -9,9 +9,6 @@
 #'
 #' @return a list with the "header" and the "result" of the request (invisible)
 #'
-#' @importFrom jsonlite toJSON fromJSON
-#' @importFrom RCurl basicTextGatherer basicHeaderGatherer curlPerform
-#'
 #' @export
 #'
 graphRequest <- function(
@@ -21,10 +18,10 @@ graphRequest <- function(
    postText
 ){
    customrequest <- match.arg(customrequest)
-   postfields <- toJSON(postText, auto_unbox = T)
-   tg = basicTextGatherer()
-   hg = basicHeaderGatherer()
-   curlPerform(
+   postfields <- jsonlite::toJSON(postText, auto_unbox = T)
+   tg = RCurl::basicTextGatherer()
+   hg = RCurl::basicHeaderGatherer()
+   RCurl::curlPerform(
       url = paste0(graph$url, endpoint),
       httpheader=graph$headers,
       customrequest = customrequest,
@@ -35,6 +32,6 @@ graphRequest <- function(
    )
    invisible(list(
       header=hg$value(),
-      result=fromJSON(tg$value(), simplifyVector=FALSE)
+      result=jsonlite::fromJSON(tg$value(), simplifyVector=FALSE)
    ))
 }

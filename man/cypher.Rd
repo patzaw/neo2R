@@ -4,8 +4,14 @@
 \alias{cypher}
 \title{Run a cypher query}
 \usage{
-cypher(graph, query, parameters = NULL, result = c("row", "graph"),
-  arraysAsStrings = TRUE, eltSep = " || ")
+cypher(
+  graph,
+  query,
+  parameters = NULL,
+  result = c("row", "graph"),
+  arraysAsStrings = TRUE,
+  eltSep = " || "
+)
 }
 \arguments{
 \item{graph}{the neo4j connection}

@@ -1,22 +1,19 @@
 Package: neo2R
 Type: Package
 Title: Neo4j to R
-Version: 1.1.1
+Version: 1.1.2
 Author: Patrice Godard
 Maintainer: Patrice Godard <patrice.godard@gmail.com>
-Description: This package provides simple connectors for querying neo4j
-    graph databases.
+Description: Simple connectors for querying neo4j graph databases.
+URL: https://github.com/patzaw/neo2r
+BugReports: https://github.com/patzaw/neo2r/issues
 Depends:
-    R (>= 3.2)
+    R (>= 3.6)
 Imports:
     base64enc,
     jsonlite,
     RCurl
-Suggests:
-    BiocStyle,
-    knitr,
-    rmarkdown
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

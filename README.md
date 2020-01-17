@@ -2,10 +2,11 @@
 
 This R package provides simple connectors for querying neo4j graph databases.
 It provides simple low level functions.
-It has been developped to support
-the BED package (https://github.com/patzaw/BED).
-Other packages such as RNeo4j (https://github.com/nicolewhite/RNeo4j) provide
-connectors to neo4j databases with addititional features.
+It has been developed to support the BED package (https://github.com/patzaw/BED,
+https://f1000research.com/articles/7-195/v3 ).
+Other packages such as RNeo4j (https://github.com/nicolewhite/RNeo4j) or
+neo4R (https://github.com/neo4j-rstats/neo4r) provide connectors to neo4j
+databases with additional features.
 
 # Installation
 
