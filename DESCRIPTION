@@ -18,7 +18,8 @@ Depends:
 Imports:
     base64enc,
     jsonlite,
-    RCurl
+    RCurl,
+    utils
 SystemRequirements: neo4j (>= 3.4) <https://neo4j.com/>
 License: GPL-3
 Encoding: UTF-8

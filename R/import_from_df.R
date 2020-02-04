@@ -50,7 +50,7 @@ import_from_df <- function(
       cql
    ))
    if(nrow(toImport)<=1000){
-      write.table(
+      utils::write.table(
          toImport,
          file=tf,
          sep=",", #"\t",
@@ -61,7 +61,7 @@ import_from_df <- function(
       toRet <- cypher(graph=graph, query=cql, ...)
       invisible(toRet)
    }else{
-      write.table(
+      utils::write.table(
          toImport[c(1:1000), , drop=FALSE],
          file=tf,
          sep=",", #"\t",
@@ -71,7 +71,7 @@ import_from_df <- function(
       on.exit(file.remove(tf))
       toRet <- cypher(graph=graph, query=cql, ...)
       cypher(graph=graph, query='CALL db.resampleOutdatedIndexes();')
-      write.table(
+      utils::write.table(
          toImport[-c(1:1000), , drop=FALSE],
          file=tf,
          sep=",", #"\t",
