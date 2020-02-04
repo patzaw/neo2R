@@ -4,7 +4,7 @@
 \alias{startGraph}
 \title{Prepare connection to neo4j database}
 \usage{
-startGraph(url, username = NA, password = NA)
+startGraph(url, username = NA, password = NA, importPath = NA)
 }
 \arguments{
 \item{url}{the DB url}
@@ -16,6 +16,10 @@ setting NEO4J.AUTH=none)}
 \item{password}{the neo4j user password
 (default: NA; works only if authentication has been disabled in neo4j by
 setting NEO4J.AUTH=none)}
+
+\item{importPath}{path to the import directory
+(default: NA => no import directory). Import only works with local neo4j
+instance.}
 }
 \value{
 a connection to the graph DB:

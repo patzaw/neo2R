@@ -7,13 +7,16 @@
 #' @param password the neo4j user password
 #' (default: NA; works only if authentication has been disabled in neo4j by
 #' setting NEO4J.AUTH=none)
+#' @param importPath path to the import directory
+#' (default: NA => no import directory). Import only works with local neo4j
+#' instance.
 #'
 #' @return a connection to the graph DB:
 #' a list with the url and necessary headers
 #'
 #' @export
 #'
-startGraph <- function(url, username=NA, password=NA){
+startGraph <- function(url, username=NA, password=NA, importPath=NA){
    protocol <- grep("^https://", url)
    if(length(protocol)==1){
       protocol="https://"
@@ -40,7 +43,8 @@ startGraph <- function(url, username=NA, password=NA){
    )
    toRet <- list(
       url=url,
-      headers=neo4jHeaders
+      headers=neo4jHeaders,
+      importPath=importPath
    )
    return(toRet)
 }
