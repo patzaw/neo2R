@@ -2,11 +2,11 @@
 #'
 #' @param graph the neo4j connection
 #' @param query the cypher query
-#' @param parameters parameters for the cypher query. Cannot be used in MATCH
+#' @param parameters parameters for the cypher query.
 #' @param result the way to return results. "row" will return a data frame
 #' and "graph" will return a list of nodes and a list of relationships.
 #' @param arraysAsStrings if result="row" and arraysAsStrings is TRUE (default)
-#' array from neo4j are converted to strings and array elementes are
+#' array from neo4j are converted to strings and array elements are
 #' separated by eltSep.
 #' @param eltSep if result="row" and arraysAsStrings is TRUE (default)
 #' array from neo4j are converted to strings and array elementes are
@@ -14,12 +14,14 @@
 #'
 #' @return the "result" of the query (invisible). See the "result" param.
 #'
+#' @seealso [startGraph()], [prepCql()], [readCql()] and [graphRequest()]
+#'
 #' @examples \dontrun{
 #' # 2 identical queries
 #' result <- cypher(
 #'    graph=graph,
 #'    query='match (n {value:$value}) return n',
-#'    parameters=list(value="100")
+#'    parameters=list(value="100"),
 #'    result="graph"
 #' )
 #' result <- cypher(

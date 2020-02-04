@@ -2,14 +2,18 @@
 #'
 #' @param url the DB url
 #' @param username the neo4j user name
+#' (default: NA; works only if authentication has been disabled in neo4j by
+#' setting NEO4J.AUTH=none)
 #' @param password the neo4j user password
+#' (default: NA; works only if authentication has been disabled in neo4j by
+#' setting NEO4J.AUTH=none)
 #'
 #' @return a connection to the graph DB:
 #' a list with the url and necessary headers
 #'
 #' @export
 #'
-startGraph <- function(url, username, password){
+startGraph <- function(url, username=NA, password=NA){
    protocol <- grep("^https://", url)
    if(length(protocol)==1){
       protocol="https://"

@@ -23,3 +23,6 @@ a list with the "header" and the "result" of the request (invisible)
 \description{
 Run a curl request on a neo4j graph
 }
+\seealso{
+\code{\link[=startGraph]{startGraph()}} and \code{\link[=cypher]{cypher()}}
+}

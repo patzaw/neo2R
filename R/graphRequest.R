@@ -3,11 +3,13 @@
 #' @param graph the neo4j connection
 #' @param endpoint the endpoint for the request. To list all the available
 #' endpoints:
-#' \code{graphRequest(graph, endpoint="", customrequest="GET", postText="")$result}
+#' `graphRequest(graph, endpoint="", customrequest="GET", postText="")$result`
 #' @param customrequest the type of request: "POST" (default) or "GET"
 #' @param postText the request body
 #'
 #' @return a list with the "header" and the "result" of the request (invisible)
+#'
+#' @seealso [startGraph()] and [cypher()]
 #'
 #' @export
 #'

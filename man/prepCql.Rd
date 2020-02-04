@@ -23,5 +23,5 @@ prepCql(c(
 
 }
 \seealso{
-\code{\link{readCql}}
+\code{\link[=cypher]{cypher()}} and \code{\link[=readCql]{readCql()}}
 }

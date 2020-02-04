@@ -4,14 +4,18 @@
 \alias{startGraph}
 \title{Prepare connection to neo4j database}
 \usage{
-startGraph(url, username, password)
+startGraph(url, username = NA, password = NA)
 }
 \arguments{
 \item{url}{the DB url}
 
-\item{username}{the neo4j user name}
+\item{username}{the neo4j user name
+(default: NA; works only if authentication has been disabled in neo4j by
+setting NEO4J.AUTH=none)}
 
-\item{password}{the neo4j user password}
+\item{password}{the neo4j user password
+(default: NA; works only if authentication has been disabled in neo4j by
+setting NEO4J.AUTH=none)}
 }
 \value{
 a connection to the graph DB:

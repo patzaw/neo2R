@@ -18,13 +18,13 @@ cypher(
 
 \item{query}{the cypher query}
 
-\item{parameters}{parameters for the cypher query. Cannot be used in MATCH}
+\item{parameters}{parameters for the cypher query.}
 
 \item{result}{the way to return results. "row" will return a data frame
 and "graph" will return a list of nodes and a list of relationships.}
 
 \item{arraysAsStrings}{if result="row" and arraysAsStrings is TRUE (default)
-array from neo4j are converted to strings and array elementes are
+array from neo4j are converted to strings and array elements are
 separated by eltSep.}
 
 \item{eltSep}{if result="row" and arraysAsStrings is TRUE (default)
@@ -43,7 +43,7 @@ Run a cypher query
 result <- cypher(
    graph=graph,
    query='match (n {value:$value}) return n',
-   parameters=list(value="100")
+   parameters=list(value="100"),
    result="graph"
 )
 result <- cypher(
@@ -53,4 +53,7 @@ result <- cypher(
 )
 }
 
+}
+\seealso{
+\code{\link[=startGraph]{startGraph()}}, \code{\link[=prepCql]{prepCql()}}, \code{\link[=readCql]{readCql()}} and \code{\link[=graphRequest]{graphRequest()}}
 }

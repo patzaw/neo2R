@@ -16,5 +16,5 @@ a character vector of well formated CQL queries
 Parse a CQL file and returned the prepared queries
 }
 \seealso{
-\code{\link{prepCql}}
+\code{\link[=cypher]{cypher()}} and \code{\link[=prepCql]{prepCql()}}
 }

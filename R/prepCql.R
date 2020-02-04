@@ -6,7 +6,7 @@
 #'
 #' @return a well formated CQL query
 #'
-#' @seealso \code{\link{readCql}}
+#' @seealso [cypher()] and [readCql()]
 #'
 #' @examples prepCql(c(
 #'  "MATCH (n)",
@@ -29,7 +29,7 @@ prepCql <- function(...){
 #'
 #' @return a character vector of well formated CQL queries
 #'
-#' @seealso \code{\link{prepCql}}
+#' @seealso [cypher()] and [prepCql()]
 #'
 #' @export
 #'
