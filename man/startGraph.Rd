@@ -4,10 +4,13 @@
 \alias{startGraph}
 \title{Prepare connection to neo4j database}
 \usage{
-startGraph(url, username = NA, password = NA, importPath = NA)
+startGraph(url, database = NA, username = NA, password = NA, importPath = NA)
 }
 \arguments{
 \item{url}{the DB url}
+
+\item{database}{the name of the database. If NA (default) it will use "data"
+with versions 3.. of Neo4j and "neo4j" with versions 4..}
 
 \item{username}{the neo4j user name
 (default: NA; works only if authentication has been disabled in neo4j by

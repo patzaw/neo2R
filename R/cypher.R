@@ -42,24 +42,15 @@ cypher <- function(
    eltSep=" || "
 ){
    result=match.arg(result)
-   if(result=="graph"){
-      endpoint <- "transaction/commit"
-      postText <- list(
-         statements=list(list(
-            statement=query,
-            resultDataContents=list(result)
-         ))
-      )
-      if(!is.null(parameters)){
-         postText$statements[[1]]$parameters <- parameters
-      }
-   }
-   if(result=="row"){
-      endpoint <- "cypher"
-      postText <- list(query=query)
-      if(!is.null(parameters)){
-         postText$params <- parameters
-      }
+   endpoint <- "transaction/commit"
+   postText <- list(
+      statements=list(list(
+         statement=query,
+         resultDataContents=list(result)
+      ))
+   )
+   if(!is.null(parameters)){
+      postText$statements[[1]]$parameters <- parameters
    }
    results <- graphRequest(
       graph=graph,
@@ -73,6 +64,7 @@ cypher <- function(
       stop("neo4j error")
    }
    if(result=="row"){
+      results <- results$results[[1]]
       if(length(results$data)==0){
          toRet <- NULL
       }else{
@@ -80,7 +72,7 @@ cypher <- function(
             warning("Complex data from query ==> you should shift to 'graph' result.")
          }
          columns <- do.call(c, results$columns)
-         toRet <- do.call(rbind, results$data)
+         toRet <- do.call(rbind, lapply(results$data, function(x) x$row))
          toRet[sapply(toRet, is.null)] <- NA
          toRet <- data.frame(toRet, stringsAsFactors=FALSE)
          if(all(sapply(toRet, class) == "list")) {

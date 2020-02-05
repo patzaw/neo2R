@@ -1,6 +1,8 @@
 #' Prepare connection to neo4j database
 #'
 #' @param url the DB url
+#' @param database the name of the database. If NA (default) it will use "data"
+#' with versions 3.. of Neo4j and "neo4j" with versions 4..
 #' @param username the neo4j user name
 #' (default: NA; works only if authentication has been disabled in neo4j by
 #' setting NEO4J.AUTH=none)
@@ -16,7 +18,9 @@
 #'
 #' @export
 #'
-startGraph <- function(url, username=NA, password=NA, importPath=NA){
+startGraph <- function(
+   url, database=NA, username=NA, password=NA, importPath=NA
+){
    protocol <- grep("^https://", url)
    if(length(protocol)==1){
       protocol="https://"

@@ -1,7 +1,7 @@
 Package: neo2R
 Type: Package
 Title: Neo4j to R
-Version: 1.1.3
+Version: 2.0.0
 Author: Patrice Godard
 Maintainer: Patrice Godard <patrice.godard@gmail.com>
 Description: The aim of the neo2R is to provide simple and low level connectors
@@ -20,7 +20,7 @@ Imports:
     jsonlite,
     RCurl,
     utils
-SystemRequirements: neo4j (>= 3.4) <https://neo4j.com/>
+SystemRequirements: neo4j (== 3) <https://neo4j.com/>
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
