@@ -17,12 +17,12 @@ Use "row.FIELD" in the cql query to refer to one FIELD of the toImport
 data.frame}
 
 \item{periodicCommit}{use periodic commit when loading the data
-(default: 1000).}
+(default: 10000).}
 
 \item{...}{further parameters for \code{\link[=cypher]{cypher()}}}
 }
 \description{
-Imports a data.frame in the neo4j graph database
+This function only works with localhost Neo4j instances.
 }
 \seealso{
 \code{\link[=cypher]{cypher()}}

@@ -1,5 +1,7 @@
 #' Imports a data.frame in the neo4j graph database
 #'
+#' This function only works with localhost Neo4j instances.
+#'
 #' @param graph the neo4j connection
 #' @param cql the CQL query to be applied on each row of toImport.
 #' Use the 'row' prefix to refer to the data.frame column.
@@ -7,7 +9,7 @@
 #' Use "row.FIELD" in the cql query to refer to one FIELD of the toImport
 #' data.frame
 #' @param periodicCommit use periodic commit when loading the data
-#' (default: 1000).
+#' (default: 10000).
 #' @param ... further parameters for [cypher()]
 #'
 #' @seealso [cypher()]

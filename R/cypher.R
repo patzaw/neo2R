@@ -4,7 +4,8 @@
 #' @param query the cypher query
 #' @param parameters parameters for the cypher query.
 #' @param result the way to return results. "row" will return a data frame
-#' and "graph" will return a list of nodes and a list of relationships.
+#' and "graph" will return a list of nodes, a list of relationships
+#' and a list of paths (vectors of relationships identifiers).
 #' @param arraysAsStrings if result="row" and arraysAsStrings is TRUE (default)
 #' array from neo4j are converted to strings and array elements are
 #' separated by eltSep.
@@ -42,7 +43,7 @@ cypher <- function(
    eltSep=" || "
 ){
    result=match.arg(result)
-   endpoint <- "transaction/commit"
+   endpoint <- graph$cypher_endpoint
    postText <- list(
       statements=list(list(
          statement=query,

@@ -21,6 +21,7 @@
 startGraph <- function(
    url, database=NA, username=NA, password=NA, importPath=NA
 ){
+   ## Process URL and guess protocol ----
    protocol <- grep("^https://", url)
    if(length(protocol)==1){
       protocol="https://"
@@ -31,9 +32,9 @@ startGraph <- function(
    }
    url <- paste0(
       protocol,
-      sub("[/]*db[/]data[/]*$", "", url),
-      "/db/data/"
+      sub("[/]db.*$", "", url)
    )
+   ## Set general header ----
    neo4jHeaders <- list(
       'Accept' = 'application/json; charset=UTF-8;',
       'Content-Type' = 'application/json',
@@ -50,5 +51,51 @@ startGraph <- function(
       headers=neo4jHeaders,
       importPath=importPath
    )
+   ## Find neo4j version and database name ----
+   conStatus <- graphRequest(toRet, "", "GET", "")
+   if(is.na(conStatus$header["status"]) || conStatus$header["status"]!="200"){
+      print(conStatus$header)
+      stop("Cannot connect to the Neo4j database")
+   }
+   if("neo4j_version" %in% names(conStatus$result)){
+      toRet$version=unlist(strsplit(
+         conStatus$result$neo4j_version, split="[.]"
+      ))
+   }else{
+      if(is.na(database)){
+         database <- "data"
+      }
+      conStatus <- graphRequest(toRet, sprintf("/db/%s/", database), "GET", "")
+      if(
+         is.na(conStatus$header["status"]) || conStatus$header["status"]!="200"
+      ){
+         print(conStatus$header)
+         stop("Cannot connect to the Neo4j database")
+      }
+      if("neo4j_version" %in% names(conStatus$result)){
+         toRet$version=unlist(strsplit(
+            conStatus$result$neo4j_version, split="[.]"
+         ))
+      }else{
+         stop("Unknown version of neo4j")
+      }
+   }
+   if(!toRet$version[1] %in% c("3", "4")){
+      print(toRet["version"])
+      stop("Only version 3 and 4 of Neo4j are supported")
+   }
+   ## Define cypher transaction endpoint ----
+   if(toRet$version[1]=="3"){
+      toRet$database=ifelse(is.na(database), "data", database)
+      toRet$cypher_endpoint <- sprintf(
+         "/db/%s/transaction/commit", toRet$database
+      )
+   }
+   if(toRet$version[1]=="4"){
+      toRet$database <- ifelse(is.na(database), "neo4j", database)
+      toRet$cypher_endpoint <- sprintf("/db/%s/tx/commit", toRet$database)
+   }
+   ## Final connection check ----
+   cypher(toRet, "match (n) return n limit 1", result="graph")
    return(toRet)
 }
