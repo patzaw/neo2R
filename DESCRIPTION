@@ -20,7 +20,7 @@ Imports:
     jsonlite,
     RCurl,
     utils
-SystemRequirements: neo4j (== 3) <https://neo4j.com/>
+SystemRequirements: neo4j (==3 OR ==4) <https://neo4j.com/>
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
