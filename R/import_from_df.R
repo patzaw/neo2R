@@ -57,6 +57,7 @@ import_from_df <- function(
          file=tf,
          sep=",", #"\t",
          quote=T,
+         na='',
          row.names=F, col.names=T
       )
       on.exit(file.remove(tf))
@@ -68,6 +69,7 @@ import_from_df <- function(
          file=tf,
          sep=",", #"\t",
          quote=T,
+         na='',
          row.names=F, col.names=T
       )
       on.exit(file.remove(tf))
@@ -78,6 +80,7 @@ import_from_df <- function(
          file=tf,
          sep=",", #"\t",
          quote=T,
+         na='',
          row.names=F, col.names=T
       )
       toRet <- cypher(graph=graph, query=cql, ...)
