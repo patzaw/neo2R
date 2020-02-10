@@ -32,7 +32,7 @@ import_from_df <- function(
    }
    tf <- tempfile(tmpdir=importPath)
    for(cn in colnames(toImport)){
-      toImport[,cn] <- as.character(toImport[,cn])
+      toImport[,cn] <- as.character(toImport[, cn, drop=TRUE])
    }
    pc <- c()
    if(is.numeric(periodicCommit) && length(periodicCommit)==1){
