@@ -3,6 +3,8 @@ title: "README"
 output:
   md_document:
     variant: markdown_github
+    toc: true
+    toc_depth: 2
 editor_options: 
   chunk_output_type: console
 ---
@@ -27,6 +29,13 @@ databases with additional features.
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 # Installation
+
+## From CRAN
+
+```{r, eval=FALSE}
+install.packages("neo2R")
+```
+
 
 <!------------------------->
 ## Dependencies
@@ -161,6 +170,7 @@ Use the 'row' prefix to refer to the data.frame column.
 ## Create an index to speed-up MERGE
 try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'))
 ## Define node properties in a data.frame
+set.seed(1)
 nn <- 100000
 nodes <- data.frame(
    "name"=paste(

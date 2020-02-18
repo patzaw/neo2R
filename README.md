@@ -1,3 +1,14 @@
+-   [neo2R](#neo2r)
+-   [Installation](#installation)
+    -   [From CRAN](#from-cran)
+    -   [Dependencies](#dependencies)
+    -   [Installation from github](#installation-from-github)
+-   [Use](#use)
+    -   [Running Neo4j](#running-neo4j)
+    -   [Connect to Neo4j](#connect-to-neo4j)
+    -   [Import from data.frame](#import-from-data.frame)
+    -   [Query the Neo4j database](#query-the-neo4j-database)
+
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 neo2R
@@ -22,6 +33,13 @@ provide connectors to neo4j databases with additional features.
 <!----------------------------------------------------------------------------->
 Installation
 ============
+
+From CRAN
+---------
+
+``` r
+install.packages("neo2R")
+```
 
 <!------------------------->
 Dependencies
@@ -161,6 +179,7 @@ the ‘row’ prefix to refer to the data.frame column.
 ## Create an index to speed-up MERGE
 try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'))
 ## Define node properties in a data.frame
+set.seed(1)
 nn <- 100000
 nodes <- data.frame(
    "name"=paste(
@@ -220,19 +239,19 @@ df <- cypher(
 print(dim(df))
 ```
 
-    ## [1] 2195    2
+    ## [1] 2253    2
 
 ``` r
 print(head(df))
 ```
 
     ##      name    value
-    ## 1 J 82813 2.758757
-    ## 2 S 45631 2.515531
-    ## 3 R 36882 3.392146
-    ## 4  J 8940 3.450308
-    ## 5 L 37977 1.419235
-    ## 6 Y 97217 3.223701
+    ## 1   V 693 3.791603
+    ## 2  N 2585 1.965486
+    ## 3 L 72527 3.345461
+    ## 4 Y 54240 2.372623
+    ## 5  N 1436 1.500713
+    ## 6 T 21434 3.592195
 
 ``` r
 ## Get all paths of length 5 starting from a subset of nodes 
@@ -248,129 +267,129 @@ print(lapply(net, head, 3))
 ```
 
     ## $nodes
-    ## $nodes$`98980`
-    ## $nodes$`98980`$id
-    ## [1] "98980"
+    ## $nodes$`2815978`
+    ## $nodes$`2815978`$id
+    ## [1] "2815978"
     ## 
-    ## $nodes$`98980`$labels
-    ## $nodes$`98980`$labels[[1]]
+    ## $nodes$`2815978`$labels
+    ## $nodes$`2815978`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`98980`$properties
-    ## $nodes$`98980`$properties$name
-    ## [1] "M 64216"
+    ## $nodes$`2815978`$properties
+    ## $nodes$`2815978`$properties$name
+    ## [1] "N 78274"
     ## 
-    ## $nodes$`98980`$properties$value
-    ## [1] 13.25553
+    ## $nodes$`2815978`$properties$value
+    ## [1] 8.064299
     ## 
     ## 
     ## 
-    ## $nodes$`48070`
-    ## $nodes$`48070`$id
-    ## [1] "48070"
+    ## $nodes$`2826833`
+    ## $nodes$`2826833`$id
+    ## [1] "2826833"
     ## 
-    ## $nodes$`48070`$labels
-    ## $nodes$`48070`$labels[[1]]
+    ## $nodes$`2826833`$labels
+    ## $nodes$`2826833`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`48070`$properties
-    ## $nodes$`48070`$properties$name
-    ## [1] "W 27492"
+    ## $nodes$`2826833`$properties
+    ## $nodes$`2826833`$properties$name
+    ## [1] "E 18105"
     ## 
-    ## $nodes$`48070`$properties$value
-    ## [1] 0.5488439
+    ## $nodes$`2826833`$properties$value
+    ## [1] 6.936337
     ## 
     ## 
     ## 
-    ## $nodes$`57495`
-    ## $nodes$`57495`$id
-    ## [1] "57495"
+    ## $nodes$`2855952`
+    ## $nodes$`2855952`$id
+    ## [1] "2855952"
     ## 
-    ## $nodes$`57495`$labels
-    ## $nodes$`57495`$labels[[1]]
+    ## $nodes$`2855952`$labels
+    ## $nodes$`2855952`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`57495`$properties
-    ## $nodes$`57495`$properties$name
-    ## [1] "I 4741"
+    ## $nodes$`2855952`$properties
+    ## $nodes$`2855952`$properties$name
+    ## [1] "K 44901"
     ## 
-    ## $nodes$`57495`$properties$value
-    ## [1] 10.95175
+    ## $nodes$`2855952`$properties$value
+    ## [1] 11.67618
     ## 
     ## 
     ## 
     ## 
     ## $relationships
-    ## $relationships$`25316`
-    ## $relationships$`25316`$id
-    ## [1] "25316"
+    ## $relationships$`664638`
+    ## $relationships$`664638`$id
+    ## [1] "664638"
     ## 
-    ## $relationships$`25316`$type
+    ## $relationships$`664638`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`25316`$startNode
-    ## [1] "16475"
+    ## $relationships$`664638`$startNode
+    ## [1] "2871190"
     ## 
-    ## $relationships$`25316`$endNode
-    ## [1] "42200"
+    ## $relationships$`664638`$endNode
+    ## [1] "2826833"
     ## 
-    ## $relationships$`25316`$properties
-    ## $relationships$`25316`$properties$property
-    ## [1] 2
-    ## 
-    ## 
-    ## 
-    ## $relationships$`86517`
-    ## $relationships$`86517`$id
-    ## [1] "86517"
-    ## 
-    ## $relationships$`86517`$type
-    ## [1] "TestEdge"
-    ## 
-    ## $relationships$`86517`$startNode
-    ## [1] "42200"
-    ## 
-    ## $relationships$`86517`$endNode
-    ## [1] "57495"
-    ## 
-    ## $relationships$`86517`$properties
-    ## $relationships$`86517`$properties$property
+    ## $relationships$`664638`$properties
+    ## $relationships$`664638`$properties$property
     ## [1] 1
     ## 
     ## 
     ## 
-    ## $relationships$`98582`
-    ## $relationships$`98582`$id
-    ## [1] "98582"
+    ## $relationships$`597613`
+    ## $relationships$`597613`$id
+    ## [1] "597613"
     ## 
-    ## $relationships$`98582`$type
+    ## $relationships$`597613`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`98582`$startNode
-    ## [1] "48070"
+    ## $relationships$`597613`$startNode
+    ## [1] "2815978"
     ## 
-    ## $relationships$`98582`$endNode
-    ## [1] "16475"
+    ## $relationships$`597613`$endNode
+    ## [1] "2796948"
     ## 
-    ## $relationships$`98582`$properties
-    ## $relationships$`98582`$properties$property
-    ## [1] 1
+    ## $relationships$`597613`$properties
+    ## $relationships$`597613`$properties$property
+    ## [1] 4
+    ## 
+    ## 
+    ## 
+    ## $relationships$`637295`
+    ## $relationships$`637295`$id
+    ## [1] "637295"
+    ## 
+    ## $relationships$`637295`$type
+    ## [1] "TestEdge"
+    ## 
+    ## $relationships$`637295`$startNode
+    ## [1] "2826833"
+    ## 
+    ## $relationships$`637295`$endNode
+    ## [1] "2855952"
+    ## 
+    ## $relationships$`637295`$properties
+    ## $relationships$`637295`$properties$property
+    ## [1] 5
     ## 
     ## 
     ## 
     ## 
     ## $paths
     ## $paths[[1]]
-    ## [1] "25316" "86517" "98582" "40087" "9243" 
+    ## [1] "664638" "597613" "637295" "624611" "641222"
     ## 
     ## $paths[[2]]
-    ## [1] "41649" "60677" "58668" "96700" "98703"
+    ## [1] "611081" "596184" "684767" "666604" "645798"
     ## 
     ## $paths[[3]]
-    ## [1] "59314" "76901" "19639" "59817" "62299"
+    ## [1] "600235" "685356" "654094" "651827" "630484"
 
 ``` r
 print(table(unlist(lapply(net$paths, length))))
@@ -378,4 +397,4 @@ print(table(unlist(lapply(net$paths, length))))
 
     ## 
     ##   5 
-    ## 865
+    ## 945
