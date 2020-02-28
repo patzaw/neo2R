@@ -68,7 +68,9 @@ cypher <- function(
    }
    if(result=="row"){
       results <- results$results[[1]]
-      toRet <- process_row(results)
+      toRet <- process_row(
+         results, arraysAsStrings=arraysAsStrings, eltSep=eltSep
+      )
    }
    if(result=="graph"){
       d <- results$results[[1]]$data
@@ -192,7 +194,9 @@ multicypher <- function(
       function(i){
          results <- results$results[[i]]
          if(statements[[i]]$resultDataContents=="row"){
-            return(process_row(results))
+            return(process_row(
+               results, arraysAsStrings=arraysAsStrings, eltSep=eltSep
+            ))
          }
          if(statements[[i]]$resultDataContents=="graph"){
             return(process_graph(results$d))
@@ -206,7 +210,7 @@ multicypher <- function(
 
 ###############################################################################@
 ## Helpers ----
-process_row <- function(results){
+process_row <- function(results, arraysAsStrings, eltSep){
    if(length(results$data)==0){
       toRet <- NULL
    }else{
@@ -243,7 +247,10 @@ process_graph <- function(d){
    }
    nodes <- unique(do.call(c, lapply(d, function(x) x$graph$nodes)))
    names(nodes) <- unlist(lapply(nodes, function(n) n$id))
-   relationships <- unique(do.call(c, lapply(d, function(x) x$graph$relationships)))
+   relationships <- unique(do.call(c, lapply(
+      d,
+      function(x) x$graph$relationships
+   )))
    names(relationships) <- unlist(lapply(relationships, function(n) n$id))
    p <- lapply(
       d,
