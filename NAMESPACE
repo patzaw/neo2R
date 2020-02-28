@@ -3,6 +3,7 @@
 export(cypher)
 export(graphRequest)
 export(import_from_df)
+export(multicypher)
 export(prepCql)
 export(readCql)
 export(startGraph)

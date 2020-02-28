@@ -56,5 +56,6 @@ result <- cypher(
 
 }
 \seealso{
-\code{\link[=startGraph]{startGraph()}}, \code{\link[=prepCql]{prepCql()}}, \code{\link[=readCql]{readCql()}} and \code{\link[=graphRequest]{graphRequest()}}
+\code{\link[=multicypher]{multicypher()}}, \code{\link[=startGraph]{startGraph()}}, \code{\link[=prepCql]{prepCql()}},
+\code{\link[=readCql]{readCql()}} and \code{\link[=graphRequest]{graphRequest()}}
 }

@@ -1,3 +1,8 @@
+# Version 2.1.0
+
+- Implementation of the `multicypher()` function which can be used to send
+multiple queries together to the neo4j database
+
 # Version 2.0.2
 
 - Better handling or NA values when importing data.frames
