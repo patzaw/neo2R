@@ -5,7 +5,7 @@ multiple queries together to the neo4j database
 
 # Version 2.0.2
 
-- Better handling or NA values when importing data.frames
+- Better handling of NA values when importing data.frames
 - Supporting tibbles when importing
 
 # Version 2.0.0 (On CRAN)
