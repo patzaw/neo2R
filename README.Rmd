@@ -13,6 +13,9 @@ editor_options:
 <!----------------------------------------------------------------------------->
 # neo2R
 
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/neo2R)](https://cran.r-project.org/package=neo2R)
+[![](http://cranlogs.r-pkg.org/badges/neo2R)](https://cran.r-project.org/package=neo2R)
+
 The aim of the neo2R is to provide simple and low level connectors
 for querying [Neo4j graph databases](https://neo4j.com/).
 The objects returned by the query functions are either lists or data.frames
@@ -82,8 +85,8 @@ export NJ_VERSION=4.0.0
 # export NJ_VERSION=3.5.14
 
 ## Ports
-export NJ_HTTP_PORT=7475
-export NJ_BOLT_PORT=7688
+export NJ_HTTP_PORT=7474
+export NJ_BOLT_PORT=7687
 
 ## Change the location of the Neo4j directory
 export NJ_HOME=~/neo4j_home
@@ -151,7 +154,7 @@ import from data.frames.
 ```{r}
 library(neo2R)
 graph <- startGraph(
-  "localhost:7475",
+  "localhost:7474",
   username="neo4j", password="1234",
   importPath="~/neo4j_home/neo4jImport"
 )

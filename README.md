@@ -11,8 +11,12 @@
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+
 neo2R
 =====
+
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/neo2R)](https://cran.r-project.org/package=neo2R)
+[![](http://cranlogs.r-pkg.org/badges/neo2R)](https://cran.r-project.org/package=neo2R)
 
 The aim of the neo2R is to provide simple and low level connectors for
 querying [Neo4j graph databases](https://neo4j.com/). The objects
@@ -31,6 +35,7 @@ provide connectors to neo4j databases with additional features.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+
 Installation
 ============
 
@@ -42,6 +47,7 @@ install.packages("neo2R")
 ```
 
 <!------------------------->
+
 Dependencies
 ------------
 
@@ -54,6 +60,7 @@ The following R packages available on CRAN are required:
 They can be easily installed with the `install.packages()` function.
 
 <!------------------------->
+
 Installation from github
 ------------------------
 
@@ -63,10 +70,12 @@ devtools::install_github("patzaw/neo2R")
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
+
 Use
 ===
 
 <!------------------------->
+
 Running Neo4j
 -------------
 
@@ -90,8 +99,8 @@ export NJ_VERSION=4.0.0
 # export NJ_VERSION=3.5.14
 
 ## Ports
-export NJ_HTTP_PORT=7475
-export NJ_BOLT_PORT=7688
+export NJ_HTTP_PORT=7474
+export NJ_BOLT_PORT=7687
 
 ## Change the location of the Neo4j directory
 export NJ_HOME=~/neo4j_home
@@ -146,6 +155,7 @@ docker run -d \
 ```
 
 <!------------------------->
+
 Connect to Neo4j
 ----------------
 
@@ -159,13 +169,14 @@ order to allow import from data.frames.
 ``` r
 library(neo2R)
 graph <- startGraph(
-  "localhost:7475",
+  "localhost:7474",
   username="neo4j", password="1234",
   importPath="~/neo4j_home/neo4jImport"
 )
 ```
 
 <!------------------------->
+
 Import from data.frame
 ----------------------
 
@@ -217,6 +228,7 @@ import_from_df(
 ```
 
 <!------------------------->
+
 Query the Neo4j database
 ------------------------
 
@@ -246,12 +258,12 @@ print(head(df))
 ```
 
     ##      name    value
-    ## 1   V 693 3.791603
-    ## 2  N 2585 1.965486
-    ## 3 L 72527 3.345461
-    ## 4 Y 54240 2.372623
-    ## 5  N 1436 1.500713
-    ## 6 T 21434 3.592195
+    ## 1  N 2585 1.965486
+    ## 2 L 72527 3.345461
+    ## 3 Y 54240 2.372623
+    ## 4  N 1436 1.500713
+    ## 5 T 21434 3.592195
+    ## 6 M 91787 2.504475
 
 ``` r
 ## Get all paths of length 5 starting from a subset of nodes 
@@ -267,115 +279,115 @@ print(lapply(net, head, 3))
 ```
 
     ## $nodes
-    ## $nodes$`2815978`
-    ## $nodes$`2815978`$id
-    ## [1] "2815978"
+    ## $nodes$`59314`
+    ## $nodes$`59314`$id
+    ## [1] "59314"
     ## 
-    ## $nodes$`2815978`$labels
-    ## $nodes$`2815978`$labels[[1]]
+    ## $nodes$`59314`$labels
+    ## $nodes$`59314`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`2815978`$properties
-    ## $nodes$`2815978`$properties$name
-    ## [1] "N 78274"
-    ## 
-    ## $nodes$`2815978`$properties$value
-    ## [1] 8.064299
-    ## 
-    ## 
-    ## 
-    ## $nodes$`2826833`
-    ## $nodes$`2826833`$id
-    ## [1] "2826833"
-    ## 
-    ## $nodes$`2826833`$labels
-    ## $nodes$`2826833`$labels[[1]]
-    ## [1] "TestNode"
-    ## 
-    ## 
-    ## $nodes$`2826833`$properties
-    ## $nodes$`2826833`$properties$name
-    ## [1] "E 18105"
-    ## 
-    ## $nodes$`2826833`$properties$value
-    ## [1] 6.936337
-    ## 
-    ## 
-    ## 
-    ## $nodes$`2855952`
-    ## $nodes$`2855952`$id
-    ## [1] "2855952"
-    ## 
-    ## $nodes$`2855952`$labels
-    ## $nodes$`2855952`$labels[[1]]
-    ## [1] "TestNode"
-    ## 
-    ## 
-    ## $nodes$`2855952`$properties
-    ## $nodes$`2855952`$properties$name
+    ## $nodes$`59314`$properties
+    ## $nodes$`59314`$properties$name
     ## [1] "K 44901"
     ## 
-    ## $nodes$`2855952`$properties$value
+    ## $nodes$`59314`$properties$value
     ## [1] 11.67618
+    ## 
+    ## 
+    ## 
+    ## $nodes$`322`
+    ## $nodes$`322`$id
+    ## [1] "322"
+    ## 
+    ## $nodes$`322`$labels
+    ## $nodes$`322`$labels[[1]]
+    ## [1] "TestNode"
+    ## 
+    ## 
+    ## $nodes$`322`$properties
+    ## $nodes$`322`$properties$name
+    ## [1] "O 9631"
+    ## 
+    ## $nodes$`322`$properties$value
+    ## [1] 10.27289
+    ## 
+    ## 
+    ## 
+    ## $nodes$`79993`
+    ## $nodes$`79993`$id
+    ## [1] "79993"
+    ## 
+    ## $nodes$`79993`$labels
+    ## $nodes$`79993`$labels[[1]]
+    ## [1] "TestNode"
+    ## 
+    ## 
+    ## $nodes$`79993`$properties
+    ## $nodes$`79993`$properties$name
+    ## [1] "L 39307"
+    ## 
+    ## $nodes$`79993`$properties$value
+    ## [1] 2.385369
     ## 
     ## 
     ## 
     ## 
     ## $relationships
-    ## $relationships$`664638`
-    ## $relationships$`664638`$id
-    ## [1] "664638"
+    ## $relationships$`1605`
+    ## $relationships$`1605`$id
+    ## [1] "1605"
     ## 
-    ## $relationships$`664638`$type
+    ## $relationships$`1605`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`664638`$startNode
-    ## [1] "2871190"
+    ## $relationships$`1605`$startNode
+    ## [1] "19340"
     ## 
-    ## $relationships$`664638`$endNode
-    ## [1] "2826833"
+    ## $relationships$`1605`$endNode
+    ## [1] "322"
     ## 
-    ## $relationships$`664638`$properties
-    ## $relationships$`664638`$properties$property
-    ## [1] 1
-    ## 
-    ## 
-    ## 
-    ## $relationships$`597613`
-    ## $relationships$`597613`$id
-    ## [1] "597613"
-    ## 
-    ## $relationships$`597613`$type
-    ## [1] "TestEdge"
-    ## 
-    ## $relationships$`597613`$startNode
-    ## [1] "2815978"
-    ## 
-    ## $relationships$`597613`$endNode
-    ## [1] "2796948"
-    ## 
-    ## $relationships$`597613`$properties
-    ## $relationships$`597613`$properties$property
+    ## $relationships$`1605`$properties
+    ## $relationships$`1605`$properties$property
     ## [1] 4
     ## 
     ## 
     ## 
-    ## $relationships$`637295`
-    ## $relationships$`637295`$id
-    ## [1] "637295"
+    ## $relationships$`68630`
+    ## $relationships$`68630`$id
+    ## [1] "68630"
     ## 
-    ## $relationships$`637295`$type
+    ## $relationships$`68630`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`637295`$startNode
-    ## [1] "2826833"
+    ## $relationships$`68630`$startNode
+    ## [1] "74552"
     ## 
-    ## $relationships$`637295`$endNode
-    ## [1] "2855952"
+    ## $relationships$`68630`$endNode
+    ## [1] "30207"
     ## 
-    ## $relationships$`637295`$properties
-    ## $relationships$`637295`$properties$property
+    ## $relationships$`68630`$properties
+    ## $relationships$`68630`$properties$property
+    ## [1] 1
+    ## 
+    ## 
+    ## 
+    ## $relationships$`41287`
+    ## $relationships$`41287`$id
+    ## [1] "41287"
+    ## 
+    ## $relationships$`41287`$type
+    ## [1] "TestEdge"
+    ## 
+    ## $relationships$`41287`$startNode
+    ## [1] "30207"
+    ## 
+    ## $relationships$`41287`$endNode
+    ## [1] "59314"
+    ## 
+    ## $relationships$`41287`$properties
+    ## $relationships$`41287`$properties$property
     ## [1] 5
     ## 
     ## 
@@ -383,13 +395,13 @@ print(lapply(net, head, 3))
     ## 
     ## $paths
     ## $paths[[1]]
-    ## [1] "664638" "597613" "637295" "624611" "641222"
+    ## [1] "1605"  "68630" "41287" "28603" "45214"
     ## 
     ## $paths[[2]]
-    ## [1] "611081" "596184" "684767" "666604" "645798"
+    ## [1] "176"   "70596" "15061" "88759" "49790"
     ## 
     ## $paths[[3]]
-    ## [1] "600235" "685356" "654094" "651827" "630484"
+    ## [1] "34464" "4227"  "89348" "58074" "55807"
 
 ``` r
 print(table(unlist(lapply(net$paths, length))))
