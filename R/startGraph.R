@@ -35,7 +35,7 @@ startGraph <- function(
       sub("[/]db.*$", "", url)
    )
    ## Set general header ----
-   neo4jHeaders <- list(
+   neo4jHeaders <- httr::add_headers(
       'Accept' = 'application/json; charset=UTF-8;',
       'Content-Type' = 'application/json',
       'X-Stream' = TRUE,
@@ -53,8 +53,9 @@ startGraph <- function(
    )
    ## Find neo4j version and database name ----
    conStatus <- graphRequest(toRet, "", "GET", "")
-   if(is.na(conStatus$header["status"]) || conStatus$header["status"]!="200"){
+   if(conStatus$status_code !="200"){
       print(conStatus$header)
+      print(conStatus$status_code)
       stop("Cannot connect to the Neo4j database")
    }
    if("neo4j_version" %in% names(conStatus$result)){
@@ -66,10 +67,9 @@ startGraph <- function(
          database <- "data"
       }
       conStatus <- graphRequest(toRet, sprintf("/db/%s/", database), "GET", "")
-      if(
-         is.na(conStatus$header["status"]) || conStatus$header["status"]!="200"
-      ){
+      if(conStatus$status_code !="200"){
          print(conStatus$header)
+         print(conStatus$status_code)
          stop("Cannot connect to the Neo4j database")
       }
       if("neo4j_version" %in% names(conStatus$result)){

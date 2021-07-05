@@ -21,19 +21,25 @@ graphRequest <- function(
 ){
    customrequest <- match.arg(customrequest)
    postfields <- jsonlite::toJSON(postText, auto_unbox = T)
-   tg = RCurl::basicTextGatherer()
-   hg = RCurl::basicHeaderGatherer()
-   RCurl::curlPerform(
-      url = paste0(graph$url, endpoint),
-      httpheader=graph$headers,
-      customrequest = customrequest,
-      writefunction = tg$update,
-      headerfunction = hg$update,
-      postfields=postfields,
-      .encoding="UTF-8"
-   )
+
+   if (customrequest== "GET")
+   {
+       res <- GET(url = paste0(graph$url, endpoint),
+                 config=graph$headers,
+                 body = postfields)
+   }
+   else if (customrequest== "POST")
+   {
+      res <- POST(url = paste0(graph$url, endpoint),
+                 config=graph$headers,
+                 body = postfields)
+   }
+   
+   res.content = httr::content(res, as='text', encoding='UTF-8')
+   
    invisible(list(
-      header=hg$value(),
-      result=jsonlite::fromJSON(tg$value(), simplifyVector=FALSE)
+      header=headers(res),
+      status_code=status_code(res),
+      result=jsonlite::fromJSON(res.content, simplifyVector=FALSE)
    ))
 }
