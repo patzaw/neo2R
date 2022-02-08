@@ -12,6 +12,9 @@
 #' @param importPath path to the import directory
 #' (default: NA => no import directory). Import only works with local neo4j
 #' instance.
+#' @param .opts a named list or CURLOptions object identifying the curl
+#' options for the handle (see [RCurl::curlPerform()]).
+#' (for example: `.opts = list(ssl.verifypeer = FALSE)`)
 #'
 #' @return a connection to the graph DB:
 #' a list with the url and necessary headers
@@ -19,7 +22,7 @@
 #' @export
 #'
 startGraph <- function(
-   url, database=NA, username=NA, password=NA, importPath=NA
+   url, database=NA, username=NA, password=NA, importPath=NA, .opts=list()
 ){
    ## Process URL and guess protocol ----
    protocol <- grep("^https://", url)
@@ -49,7 +52,8 @@ startGraph <- function(
    toRet <- list(
       url=url,
       headers=neo4jHeaders,
-      importPath=importPath
+      importPath=importPath,
+      .opts=.opts
    )
    ## Find neo4j version and database name ----
    conStatus <- graphRequest(toRet, "", "GET", "")

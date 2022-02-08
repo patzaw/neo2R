@@ -30,7 +30,8 @@ graphRequest <- function(
       writefunction = tg$update,
       headerfunction = hg$update,
       postfields=postfields,
-      .encoding="UTF-8"
+      .encoding="UTF-8",
+      .opts=graph$.opts
    )
    invisible(list(
       header=hg$value(),

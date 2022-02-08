@@ -1,3 +1,7 @@
+# Version 2.1.1
+
+- `graphRequest()` supports the .opts parameter of `RCurl::curlPerform()`.
+
 # Version 2.1.0
 
 - Implementation of the `multicypher()` function which can be used to send

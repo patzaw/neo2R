@@ -4,7 +4,14 @@
 \alias{startGraph}
 \title{Prepare connection to neo4j database}
 \usage{
-startGraph(url, database = NA, username = NA, password = NA, importPath = NA)
+startGraph(
+  url,
+  database = NA,
+  username = NA,
+  password = NA,
+  importPath = NA,
+  .opts = list()
+)
 }
 \arguments{
 \item{url}{the DB url}
@@ -23,6 +30,10 @@ setting NEO4J.AUTH=none)}
 \item{importPath}{path to the import directory
 (default: NA => no import directory). Import only works with local neo4j
 instance.}
+
+\item{.opts}{a named list or CURLOptions object identifying the curl
+options for the handle (see \code{\link[RCurl:curlPerform]{RCurl::curlPerform()}}).
+(for example: \code{.opts = list(ssl.verifypeer = FALSE)})}
 }
 \value{
 a connection to the graph DB:
