@@ -2,4 +2,6 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README\.md$
+^README\.html$
 ^NEWS\.md$
+^supp$

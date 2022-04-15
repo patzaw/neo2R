@@ -1,3 +1,6 @@
+README
+================
+
 -   [neo2R](#neo2r)
 -   [Installation](#installation)
     -   [From CRAN](#from-cran)
@@ -6,16 +9,15 @@
 -   [Use](#use)
     -   [Running Neo4j](#running-neo4j)
     -   [Connect to Neo4j](#connect-to-neo4j)
-    -   [Import from data.frame](#import-from-data.frame)
+    -   [Import from data.frame](#import-from-dataframe)
     -   [Query the Neo4j database](#query-the-neo4j-database)
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 
-neo2R
-=====
+# neo2R
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/neo2R)](https://cran.r-project.org/package=neo2R)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/neo2R)](https://cran.r-project.org/package=neo2R)
 [![](http://cranlogs.r-pkg.org/badges/neo2R)](https://cran.r-project.org/package=neo2R)
 
 The aim of the neo2R is to provide simple and low level connectors for
@@ -24,23 +26,18 @@ returned by the query functions are either lists or data.frames with
 very few post-processing. It allows fast processing of queries returning
 many records. And it let the user handle post-processing according to
 the data model and his needs. It has been developed to support the BED
-package
-(<a href="https://github.com/patzaw/BED" class="uri">https://github.com/patzaw/BED</a>,
-<a href="https://f1000research.com/articles/7-195/v3" class="uri">https://f1000research.com/articles/7-195/v3</a>
-). Other packages such as RNeo4j
-(<a href="https://github.com/nicolewhite/RNeo4j" class="uri">https://github.com/nicolewhite/RNeo4j</a>)
-or neo4R
-(<a href="https://github.com/neo4j-rstats/neo4r" class="uri">https://github.com/neo4j-rstats/neo4r</a>)
-provide connectors to neo4j databases with additional features.
+package (<https://github.com/patzaw/BED>,
+<https://f1000research.com/articles/7-195/v3> ). Other packages such as
+RNeo4j (<https://github.com/nicolewhite/RNeo4j>) or neo4R
+(<https://github.com/neo4j-rstats/neo4r>) provide connectors to neo4j
+databases with additional features.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 
-Installation
-============
+# Installation
 
-From CRAN
----------
+## From CRAN
 
 ``` r
 install.packages("neo2R")
@@ -48,21 +45,22 @@ install.packages("neo2R")
 
 <!------------------------->
 
-Dependencies
-------------
+## Dependencies
 
 The following R packages available on CRAN are required:
 
-    - base64enc
-    - jsonlite
-    - RCurl
-
-They can be easily installed with the `install.packages()` function.
+-   [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
+    base64 encoding
+-   [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Simple
+    and Robust JSON Parser and Generator for R
+-   [RCurl](https://CRAN.R-project.org/package=RCurl): General Network
+    (HTTP/FTP/…) Client Interface for R
+-   [utils](https://CRAN.R-project.org/package=utils): The R Utils
+    Package
 
 <!------------------------->
 
-Installation from github
-------------------------
+## Installation from github
 
 ``` r
 devtools::install_github("patzaw/neo2R")
@@ -71,19 +69,24 @@ devtools::install_github("patzaw/neo2R")
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 
-Use
-===
+# Use
 
 <!------------------------->
 
-Running Neo4j
--------------
+## Running Neo4j
 
 You can download and install Neo4j according to the
 [documentation](https://neo4j.com/docs/getting-started/current/get-started-with-neo4j/#_installing_neo4j).
 You can also run it in a [docker
 container](https://neo4j.com/docs/operations-manual/current/docker/). It
 takes a few seconds to start.
+
+The following chunks show how to instantaite a docker container running
+either version 3 or version 4 (only those 2 are supported by neo2R) of
+Neo4j. The main differences between the 2 calls are related to the apoc
+library and SSL configuration.
+
+### Neo4j 3.x
 
 ``` sh
 #!/bin/sh
@@ -94,12 +97,11 @@ takes a few seconds to start.
 
 export CONTAINER=neo4j_cont
 
-## Chose Neo4j version (Only versions 3 and 4 are supported)
-export NJ_VERSION=4.0.0
-# export NJ_VERSION=3.5.14
+export NJ_VERSION=3.5.30
 
 ## Ports
 export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
 export NJ_BOLT_PORT=7687
 
 ## Change the location of the Neo4j directory
@@ -109,8 +111,7 @@ export NJ_HOME=~/neo4j_home
 NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
 
 ## APOC download
-export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.0.0.2/apoc-4.0.0.2-all.jar
-# export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.7/apoc-3.5.0.7-all.jar
+export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.15/apoc-3.5.0.15-all.jar
 
 #################################
 ## RUN
@@ -127,6 +128,15 @@ if test -e $NJ_DATA; then
    exit
 fi
 mkdir -p $NJ_DATA
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/client_policy
+mkdir -p ${NJ_SSL}/client_policy/revoked
+mkdir -p ${NJ_SSL}/client_policy/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout ${NJ_SSL}/client_policy/private.key -out ${NJ_SSL}/client_policy/public.crt
+chmod -R a+rwx ${NJ_SSL}
+
 ## Neo4j plugins: APOC
 export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
 mkdir -p $NJ_PLUGINS
@@ -137,6 +147,7 @@ cd -
 docker run -d \
    --name $CONTAINER \
    --publish=$NJ_HTTP_PORT:7474 \
+    --publish=$NJ_HTTPS_PORT:7473 \
    --publish=$NJ_BOLT_PORT:7687 \
    --env=NEO4J_dbms_memory_heap_initial__size=4G \
    --env=NEO4J_dbms_memory_heap_max__size=4G \
@@ -150,14 +161,111 @@ docker run -d \
    --volume $NJ_IMPORT:/var/lib/neo4j/import \
    --volume $NJ_DATA/data:/data \
     --volume $NJ_PLUGINS:/plugins \
+    --volume=$NJ_SSL:/ssl \
+    --env=NEO4J_https_ssl__policy=client_policy \
+    --env=NEO4J_dbms_ssl_policy_client__policy_base__directory=/ssl/client_policy \
+    --env=NEO4J_dbms_ssl_policy_client__policy_client__auth=NONE \
+    --env=NEO4J_dbms_ssl_policy_client__policy_trust__all=true \
     neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
+    
+```
+
+### Neo4j 4.x
+
+``` sh
+#!/bin/sh
+
+#################################
+## CONFIG according to your needs
+#################################
+
+export CONTAINER=neo4j_cont
+
+export NJ_VERSION=4.4.5
+
+## Ports
+export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
+export NJ_BOLT_PORT=7687
+
+## Change the location of the Neo4j directory
+export NJ_HOME=~/neo4j_home
+
+## Authorization
+NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
+
+## APOC download
+export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.3/apoc-4.4.0.3-all.jar
+
+#################################
+## RUN
+#################################
+
+mkdir -p $NJ_HOME
+
+## Import and data directory
+export NJ_IMPORT=$NJ_HOME/neo4jImport
+mkdir -p $NJ_IMPORT
+export NJ_DATA=$NJ_HOME/neo4jData
+if test -e $NJ_DATA; then
+   echo "$NJ_DATA directory exists ==> abort - Remove it before proceeding" >&2
+   exit
+fi
+mkdir -p $NJ_DATA
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/https
+mkdir -p ${NJ_SSL}/https/revoked
+mkdir -p ${NJ_SSL}/https/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout ${NJ_SSL}/https/private.key -out ${NJ_SSL}/https/public.crt
+chmod -R a+rwx ${NJ_SSL}
+
+## Neo4j plugins: APOC
+export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
+mkdir -p $NJ_PLUGINS
+cd $NJ_PLUGINS
+wget --no-check-certificate $NJ_APOC
+cd -
+
+docker run -d \
+   --name $CONTAINER \
+   --publish=$NJ_HTTP_PORT:7474 \
+    --publish=$NJ_HTTPS_PORT:7473 \
+   --publish=$NJ_BOLT_PORT:7687 \
+   --env=NEO4J_dbms_memory_heap_initial__size=4G \
+   --env=NEO4J_dbms_memory_heap_max__size=4G \
+   --env=NEO4J_dbms_memory_pagecache_size=2G \
+   --env=NEO4J_dbms_query__cache__size=0 \
+   --env=NEO4J_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\\* \
+   --env=NEO4J_dbms_directories_import=import \
+   --env NEO4J_AUTH=$NJ_AUTH \
+   --volume $NJ_IMPORT:/var/lib/neo4j/import \
+   --volume $NJ_DATA/data:/data \
+    --volume $NJ_PLUGINS:/plugins \
+    --volume=$NJ_SSL:/ssl \
+    --env=NEO4J_dbms_connector_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_enabled=true \
+    --env=NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https \
+   --env=NEO4J_dbms_ssl_policy_https_private__key=private.key \
+   --env=NEO4J_dbms_ssl_policy_https_public__certificate=public.crt \
+    --env=NEO4J_dbms_ssl_policy_https_client__auth=NONE \
+    --env=NEO4J_dbms_ssl_policy_https_trust__all=true \
+    neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
     
 ```
 
 <!------------------------->
 
-Connect to Neo4j
-----------------
+## Connect to Neo4j
 
 After installing [neo4j](https://neo4j.com/), `startGraph` is used to
 initialize the connection from R. If authentication has been disabled in
@@ -169,16 +277,16 @@ order to allow import from data.frames.
 ``` r
 library(neo2R)
 graph <- startGraph(
-  "localhost:7474",
+  "https://localhost:7473",
   username="neo4j", password="1234",
-  importPath="~/neo4j_home/neo4jImport"
+  importPath="~/neo4j_home/neo4jImport",
+  .opts = list(ssl.verifypeer = FALSE)
 )
 ```
 
 <!------------------------->
 
-Import from data.frame
-----------------------
+## Import from data.frame
 
 If you’re connected to a local instance of Neo4j and import directory
 has been defined (see above), you can import data from data.frames. Use
@@ -188,7 +296,7 @@ the ‘row’ prefix to refer to the data.frame column.
 #########################################
 ## Nodes
 ## Create an index to speed-up MERGE
-try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'))
+try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent=TRUE)
 ## Define node properties in a data.frame
 set.seed(1)
 nn <- 100000
@@ -229,8 +337,7 @@ import_from_df(
 
 <!------------------------->
 
-Query the Neo4j database
-------------------------
+## Query the Neo4j database
 
 You can query the Neo4j graph database using the `cypher()` function.
 Depending on the query, the function can return data in a a data.frame
