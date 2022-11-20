@@ -1,3 +1,7 @@
+# Version 2.2.0
+
+- Support Neo4j version 5
+
 # Version 2.1.1
 
 - `graphRequest()` supports the .opts parameter of `RCurl::curlPerform()`.

@@ -84,9 +84,9 @@ startGraph <- function(
          stop("Unknown version of neo4j")
       }
    }
-   if(!toRet$version[1] %in% c("3", "4")){
+   if(!toRet$version[1] %in% c("3", "4", "5")){
       print(toRet["version"])
-      stop("Only version 3 and 4 of Neo4j are supported")
+      stop("Only version 3, 4 and 5 of Neo4j are supported")
    }
    ## Define cypher transaction endpoint ----
    if(toRet$version[1]=="3"){
@@ -96,6 +96,10 @@ startGraph <- function(
       )
    }
    if(toRet$version[1]=="4"){
+      toRet$database <- ifelse(is.na(database), "neo4j", database)
+      toRet$cypher_endpoint <- sprintf("/db/%s/tx/commit", toRet$database)
+   }
+   if(toRet$version[1]=="5"){
       toRet$database <- ifelse(is.na(database), "neo4j", database)
       toRet$cypher_endpoint <- sprintf("/db/%s/tx/commit", toRet$database)
    }

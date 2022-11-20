@@ -4,7 +4,14 @@
 \alias{import_from_df}
 \title{Imports a data.frame in the neo4j graph database}
 \usage{
-import_from_df(graph, cql, toImport, periodicCommit = 10000, ...)
+import_from_df(
+  graph,
+  cql,
+  toImport,
+  periodicCommit = ifelse(graph$version[[1]] == 5, NA, 10000),
+  by = Inf,
+  ...
+)
 }
 \arguments{
 \item{graph}{the neo4j connection}
@@ -17,7 +24,10 @@ Use "row.FIELD" in the cql query to refer to one FIELD of the toImport
 data.frame}
 
 \item{periodicCommit}{use periodic commit when loading the data
-(default: 10000).}
+(default: 10000). Not supported for Neo4j >= 5.}
+
+\item{by}{number of rows to send by batch (default: Inf).
+Can be an alternative to periodic commit for Neo4j >= 5.}
 
 \item{...}{further parameters for \code{\link[=cypher]{cypher()}}}
 }
