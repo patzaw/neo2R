@@ -269,6 +269,99 @@ sudo chmod a+rwx $NJ_IMPORT
 ```
 
 
+### Neo4j 5.x
+
+
+```{sh, eval=FALSE}
+#!/bin/sh
+
+#################################
+## CONFIG according to your needs
+#################################
+
+export CONTAINER=neo4j_cont
+
+export NJ_VERSION=5.1.0
+
+## Ports
+export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
+export NJ_BOLT_PORT=7687
+
+## Change the location of the Neo4j directory
+export NJ_HOME=~/neo4j_home
+
+## Authorization
+NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
+
+## APOC download
+export NJ_APOC=https://github.com/neo4j/apoc/releases/download/5.1.0/apoc-5.1.0-core.jar
+
+#################################
+## RUN
+#################################
+
+mkdir -p $NJ_HOME
+
+## Import and data directory
+export NJ_IMPORT=$NJ_HOME/neo4jImport
+mkdir -p $NJ_IMPORT
+export NJ_DATA=$NJ_HOME/neo4jData
+if test -e $NJ_DATA; then
+   echo "$NJ_DATA directory exists ==> abort - Remove it before proceeding" >&2
+   exit
+fi
+mkdir -p $NJ_DATA
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/https
+mkdir -p ${NJ_SSL}/https/revoked
+mkdir -p ${NJ_SSL}/https/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout ${NJ_SSL}/https/private.key -out ${NJ_SSL}/https/public.crt
+cp ${NJ_SSL}/https/public.crt ${NJ_SSL}/https/trusted
+chmod -R a+rwx ${NJ_SSL}
+
+## Neo4j plugins: APOC
+export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
+mkdir -p $NJ_PLUGINS
+cd $NJ_PLUGINS
+wget --no-check-certificate $NJ_APOC
+cd -
+
+docker run -d \
+   --name $CONTAINER \
+   --publish=$NJ_HTTP_PORT:7474 \
+   --publish=$NJ_HTTPS_PORT:7473 \
+   --publish=$NJ_BOLT_PORT:7687 \
+   --env=NEO4J_dbms_memory_heap_initial__size=4G \
+   --env=NEO4J_dbms_memory_heap_max__size=4G \
+   --env=NEO4J_dbms_memory_pagecache_size=2G \
+   --env=NEO4J_dbms_query__cache__size=0 \
+   --env=NEO4J_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\\* \
+   --env=NEO4J_dbms_directories_import=import \
+   --env=NEO4J_AUTH=$NJ_AUTH \
+   --volume=$NJ_IMPORT:/var/lib/neo4j/import \
+   --volume=$NJ_DATA/data:/data \
+   --volume=$NJ_PLUGINS:/plugins \
+   --volume=$NJ_SSL:/ssl \
+   --env=NEO4J_server_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https \
+   --env=NEO4J_dbms_ssl_policy_https_private__key=private.key \
+   --env=NEO4J_dbms_ssl_policy_https_public__certificate=public.crt \
+   --env=NEO4J_dbms_ssl_policy_https_client__auth=NONE \
+   --env=NEO4J_dbms_ssl_policy_https_trust__all=true \
+   neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
+	
+```
+
+
 <!------------------------->
 ## Connect to Neo4j
 
@@ -301,7 +394,11 @@ Use the 'row' prefix to refer to the data.frame column.
 #########################################
 ## Nodes
 ## Create an index to speed-up MERGE
-try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent=TRUE)
+if(graph$version[[1]]=="5"){
+   try(cypher(graph, 'CREATE INDEX FOR (n:TestNode) ON (n.name)'), silent=TRUE)
+}else{
+   try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent=TRUE)
+}
 ## Define node properties in a data.frame
 set.seed(1)
 nn <- 100000
