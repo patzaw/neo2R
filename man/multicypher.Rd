@@ -45,7 +45,7 @@ array from neo4j are converted to strings and array elementes are
 separated by eltSep.}
 }
 \value{
-a list of "result" of the queries (invisible).
+A list of "result" of the queries (invisible).
 See the "result" param.
 }
 \description{

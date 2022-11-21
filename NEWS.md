@@ -1,3 +1,7 @@
+# Version 2.3.0
+
+- Use the 'httr' package instead of the 'RCurl' package.
+
 # Version 2.2.0
 
 - Support Neo4j version 5

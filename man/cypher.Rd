@@ -33,7 +33,7 @@ array from neo4j are converted to strings and array elementes are
 separated by eltSep.}
 }
 \value{
-the "result" of the query (invisible). See the "result" param.
+The "result" of the query (invisible). See the "result" param.
 }
 \description{
 Run a cypher query

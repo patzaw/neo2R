@@ -14,7 +14,7 @@
 #' array from neo4j are converted to strings and array elementes are
 #' separated by eltSep.
 #'
-#' @return the "result" of the query (invisible). See the "result" param.
+#' @return The "result" of the query (invisible). See the "result" param.
 #'
 #' @seealso [multicypher()], [startGraph()], [prepCql()],
 #' [readCql()] and [graphRequest()]
@@ -105,7 +105,7 @@ cypher <- function(
 #' array from neo4j are converted to strings and array elementes are
 #' separated by eltSep.
 #'
-#' @return a list of "result" of the queries (invisible).
+#' @return A list of "result" of the queries (invisible).
 #' See the "result" param.
 #'
 #' @seealso [cypher()], [startGraph()], [prepCql()],

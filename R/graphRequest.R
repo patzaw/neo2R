@@ -7,7 +7,7 @@
 #' @param customrequest the type of request: "POST" (default) or "GET"
 #' @param postText the request body
 #'
-#' @return a list with the "header" and the "result" of the request (invisible)
+#' @return A list with the "header" and the "result" of the request (invisible)
 #'
 #' @seealso [startGraph()] and [cypher()]
 #'
@@ -21,20 +21,25 @@ graphRequest <- function(
 ){
    customrequest <- match.arg(customrequest)
    postfields <- jsonlite::toJSON(postText, auto_unbox = T)
-   tg = RCurl::basicTextGatherer()
-   hg = RCurl::basicHeaderGatherer()
-   RCurl::curlPerform(
-      url = paste0(graph$url, endpoint),
-      httpheader=graph$headers,
-      customrequest = customrequest,
-      writefunction = tg$update,
-      headerfunction = hg$update,
-      postfields=postfields,
-      .encoding="UTF-8",
-      .opts=graph$.opts
-   )
+
+   if(customrequest=="POST"){
+      toRet <- httr::POST(
+         url=paste0(graph$url, endpoint),
+         body=postfields,
+         do.call(httr::add_headers, graph$headers),
+         config=do.call(httr::config, graph$.opts)
+      )
+   }
+   if(customrequest=="GET"){
+      toRet <- httr::GET(
+         url=paste0(graph$url, endpoint),
+         body=postfields,
+         do.call(httr::add_headers, graph$headers),
+         config=do.call(httr::config, graph$.opts)
+      )
+   }
    invisible(list(
-      header=hg$value(),
-      result=jsonlite::fromJSON(tg$value(), simplifyVector=FALSE)
+      header=toRet$all_headers[[1]],
+      result=jsonlite::fromJSON(rawToChar(toRet$content), simplifyVector=FALSE)
    ))
 }

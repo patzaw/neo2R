@@ -10,7 +10,7 @@ readCql(file)
 \item{file}{the name of the file to be parsed}
 }
 \value{
-a character vector of well formated CQL queries
+A character vector of well formated CQL queries
 }
 \description{
 Parse a CQL file and returned the prepared queries

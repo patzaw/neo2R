@@ -10,7 +10,7 @@ prepCql(...)
 \item{...}{character vectors with cQL commands}
 }
 \value{
-a well formated CQL query
+A well formated CQL query
 }
 \description{
 Prepares a CQL query from a character vector

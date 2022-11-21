@@ -1,16 +1,20 @@
 README
 ================
 
--   [neo2R](#neo2r)
--   [Installation](#installation)
-    -   [From CRAN](#from-cran)
-    -   [Dependencies](#dependencies)
-    -   [Installation from github](#installation-from-github)
--   [Use](#use)
-    -   [Running Neo4j](#running-neo4j)
-    -   [Connect to Neo4j](#connect-to-neo4j)
-    -   [Import from data.frame](#import-from-dataframe)
-    -   [Query the Neo4j database](#query-the-neo4j-database)
+- <a href="#neo2r" id="toc-neo2r">neo2R</a>
+- <a href="#installation" id="toc-installation">Installation</a>
+  - <a href="#from-cran" id="toc-from-cran">From CRAN</a>
+  - <a href="#dependencies" id="toc-dependencies">Dependencies</a>
+  - <a href="#installation-from-github"
+    id="toc-installation-from-github">Installation from github</a>
+- <a href="#use" id="toc-use">Use</a>
+  - <a href="#running-neo4j" id="toc-running-neo4j">Running Neo4j</a>
+  - <a href="#connect-to-neo4j" id="toc-connect-to-neo4j">Connect to
+    Neo4j</a>
+  - <a href="#import-from-dataframe" id="toc-import-from-dataframe">Import
+    from data.frame</a>
+  - <a href="#query-the-neo4j-database"
+    id="toc-query-the-neo4j-database">Query the Neo4j database</a>
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
@@ -49,14 +53,13 @@ install.packages("neo2R")
 
 The following R packages available on CRAN are required:
 
--   [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
-    base64 encoding
--   [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Simple
-    and Robust JSON Parser and Generator for R
--   [RCurl](https://CRAN.R-project.org/package=RCurl): General Network
-    (HTTP/FTP/…) Client Interface for R
--   [utils](https://CRAN.R-project.org/package=utils): The R Utils
-    Package
+- [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
+  base64 encoding
+- [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Simple and
+  Robust JSON Parser and Generator for R
+- [httr](https://CRAN.R-project.org/package=httr): Tools for Working
+  with URLs and HTTP
+- [utils](https://CRAN.R-project.org/package=utils): The R Utils Package
 
 <!------------------------->
 
@@ -263,6 +266,97 @@ sudo chmod a+rwx $NJ_IMPORT
     
 ```
 
+### Neo4j 5.x
+
+``` sh
+#!/bin/sh
+
+#################################
+## CONFIG according to your needs
+#################################
+
+export CONTAINER=neo4j_cont
+
+export NJ_VERSION=5.1.0
+
+## Ports
+export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
+export NJ_BOLT_PORT=7687
+
+## Change the location of the Neo4j directory
+export NJ_HOME=~/neo4j_home
+
+## Authorization
+NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
+
+## APOC download
+export NJ_APOC=https://github.com/neo4j/apoc/releases/download/5.1.0/apoc-5.1.0-core.jar
+
+#################################
+## RUN
+#################################
+
+mkdir -p $NJ_HOME
+
+## Import and data directory
+export NJ_IMPORT=$NJ_HOME/neo4jImport
+mkdir -p $NJ_IMPORT
+export NJ_DATA=$NJ_HOME/neo4jData
+if test -e $NJ_DATA; then
+   echo "$NJ_DATA directory exists ==> abort - Remove it before proceeding" >&2
+   exit
+fi
+mkdir -p $NJ_DATA
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/https
+mkdir -p ${NJ_SSL}/https/revoked
+mkdir -p ${NJ_SSL}/https/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout ${NJ_SSL}/https/private.key -out ${NJ_SSL}/https/public.crt
+cp ${NJ_SSL}/https/public.crt ${NJ_SSL}/https/trusted
+chmod -R a+rwx ${NJ_SSL}
+
+## Neo4j plugins: APOC
+export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
+mkdir -p $NJ_PLUGINS
+cd $NJ_PLUGINS
+wget --no-check-certificate $NJ_APOC
+cd -
+
+docker run -d \
+   --name $CONTAINER \
+   --publish=$NJ_HTTP_PORT:7474 \
+   --publish=$NJ_HTTPS_PORT:7473 \
+   --publish=$NJ_BOLT_PORT:7687 \
+   --env=NEO4J_dbms_memory_heap_initial__size=2G \
+   --env=NEO4J_dbms_memory_heap_max__size=2G \
+   --env=NEO4J_dbms_memory_pagecache_size=1G \
+   --env=NEO4J_dbms_query__cache__size=0 \
+   --env=NEO4J_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\\* \
+   --env=NEO4J_dbms_directories_import=import \
+   --env=NEO4J_AUTH=$NJ_AUTH \
+   --volume=$NJ_IMPORT:/var/lib/neo4j/import \
+   --volume=$NJ_DATA/data:/data \
+   --volume=$NJ_PLUGINS:/plugins \
+   --volume=$NJ_SSL:/ssl \
+   --env=NEO4J_server_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https \
+   --env=NEO4J_dbms_ssl_policy_https_private__key=private.key \
+   --env=NEO4J_dbms_ssl_policy_https_public__certificate=public.crt \
+   --env=NEO4J_dbms_ssl_policy_https_client__auth=NONE \
+   --env=NEO4J_dbms_ssl_policy_https_trust__all=true \
+   neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
+    
+```
+
 <!------------------------->
 
 ## Connect to Neo4j
@@ -280,7 +374,7 @@ graph <- startGraph(
   "https://localhost:7473",
   username="neo4j", password="1234",
   importPath="~/neo4j_home/neo4jImport",
-  .opts = list(ssl.verifypeer = FALSE)
+  .opts = list(ssl_verifypeer=0)
 )
 ```
 
@@ -296,7 +390,11 @@ the ‘row’ prefix to refer to the data.frame column.
 #########################################
 ## Nodes
 ## Create an index to speed-up MERGE
-try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent=TRUE)
+if(graph$version[[1]]=="5"){
+   try(cypher(graph, 'CREATE INDEX FOR (n:TestNode) ON (n.name)'), silent=TRUE)
+}else{
+   try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent=TRUE)
+}
 ## Define node properties in a data.frame
 set.seed(1)
 nn <- 100000
@@ -386,129 +484,165 @@ print(lapply(net, head, 3))
 ```
 
     ## $nodes
-    ## $nodes$`59314`
-    ## $nodes$`59314`$id
-    ## [1] "59314"
+    ## $nodes$`97347`
+    ## $nodes$`97347`$id
+    ## [1] "97347"
     ## 
-    ## $nodes$`59314`$labels
-    ## $nodes$`59314`$labels[[1]]
+    ## $nodes$`97347`$elementId
+    ## [1] "4:8010ab4c-4837-401f-ba10-0f1353e7192c:97347"
+    ## 
+    ## $nodes$`97347`$labels
+    ## $nodes$`97347`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`59314`$properties
-    ## $nodes$`59314`$properties$name
-    ## [1] "K 44901"
+    ## $nodes$`97347`$properties
+    ## $nodes$`97347`$properties$name
+    ## [1] "V 30913"
     ## 
-    ## $nodes$`59314`$properties$value
-    ## [1] 11.67618
+    ## $nodes$`97347`$properties$value
+    ## [1] 10.389
     ## 
     ## 
     ## 
-    ## $nodes$`322`
-    ## $nodes$`322`$id
-    ## [1] "322"
+    ## $nodes$`7`
+    ## $nodes$`7`$id
+    ## [1] "7"
     ## 
-    ## $nodes$`322`$labels
-    ## $nodes$`322`$labels[[1]]
+    ## $nodes$`7`$elementId
+    ## [1] "4:8010ab4c-4837-401f-ba10-0f1353e7192c:7"
+    ## 
+    ## $nodes$`7`$labels
+    ## $nodes$`7`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`322`$properties
-    ## $nodes$`322`$properties$name
-    ## [1] "O 9631"
+    ## $nodes$`7`$properties
+    ## $nodes$`7`$properties$name
+    ## [1] "N 2585"
     ## 
-    ## $nodes$`322`$properties$value
-    ## [1] 10.27289
+    ## $nodes$`7`$properties$value
+    ## [1] 1.965486
     ## 
     ## 
     ## 
-    ## $nodes$`79993`
-    ## $nodes$`79993`$id
-    ## [1] "79993"
+    ## $nodes$`39159`
+    ## $nodes$`39159`$id
+    ## [1] "39159"
     ## 
-    ## $nodes$`79993`$labels
-    ## $nodes$`79993`$labels[[1]]
+    ## $nodes$`39159`$elementId
+    ## [1] "4:8010ab4c-4837-401f-ba10-0f1353e7192c:39159"
+    ## 
+    ## $nodes$`39159`$labels
+    ## $nodes$`39159`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`79993`$properties
-    ## $nodes$`79993`$properties$name
-    ## [1] "L 39307"
+    ## $nodes$`39159`$properties
+    ## $nodes$`39159`$properties$name
+    ## [1] "L 31296"
     ## 
-    ## $nodes$`79993`$properties$value
-    ## [1] 2.385369
+    ## $nodes$`39159`$properties$value
+    ## [1] 14.95749
     ## 
     ## 
     ## 
     ## 
     ## $relationships
-    ## $relationships$`1605`
-    ## $relationships$`1605`$id
-    ## [1] "1605"
+    ## $relationships$`23876`
+    ## $relationships$`23876`$id
+    ## [1] "23876"
     ## 
-    ## $relationships$`1605`$type
+    ## $relationships$`23876`$elementId
+    ## [1] "5:8010ab4c-4837-401f-ba10-0f1353e7192c:23876"
+    ## 
+    ## $relationships$`23876`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`1605`$startNode
-    ## [1] "19340"
+    ## $relationships$`23876`$startNode
+    ## [1] "39159"
     ## 
-    ## $relationships$`1605`$endNode
-    ## [1] "322"
+    ## $relationships$`23876`$startNodeElementId
+    ## [1] "4:8010ab4c-4837-401f-ba10-0f1353e7192c:39159"
     ## 
-    ## $relationships$`1605`$properties
-    ## $relationships$`1605`$properties$property
-    ## [1] 4
+    ## $relationships$`23876`$endNode
+    ## [1] "45711"
+    ## 
+    ## $relationships$`23876`$endNodeElementId
+    ## [1] "4:8010ab4c-4837-401f-ba10-0f1353e7192c:45711"
+    ## 
+    ## $relationships$`23876`$properties
+    ## $relationships$`23876`$properties$property
+    ## [1] 3
     ## 
     ## 
     ## 
-    ## $relationships$`68630`
-    ## $relationships$`68630`$id
-    ## [1] "68630"
+    ## $relationships$`93543`
+    ## $relationships$`93543`$id
+    ## [1] "93543"
     ## 
-    ## $relationships$`68630`$type
+    ## $relationships$`93543`$elementId
+    ## [1] "5:8010ab4c-4837-401f-ba10-0f1353e7192c:93543"
+    ## 
+    ## $relationships$`93543`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`68630`$startNode
-    ## [1] "74552"
+    ## $relationships$`93543`$startNode
+    ## [1] "7"
     ## 
-    ## $relationships$`68630`$endNode
-    ## [1] "30207"
+    ## $relationships$`93543`$startNodeElementId
+    ## [1] "4:8010ab4c-4837-401f-ba10-0f1353e7192c:7"
     ## 
-    ## $relationships$`68630`$properties
-    ## $relationships$`68630`$properties$property
-    ## [1] 1
+    ## $relationships$`93543`$endNode
+    ## [1] "97347"
+    ## 
+    ## $relationships$`93543`$endNodeElementId
+    ## [1] "4:8010ab4c-4837-401f-ba10-0f1353e7192c:97347"
+    ## 
+    ## $relationships$`93543`$properties
+    ## $relationships$`93543`$properties$property
+    ## [1] 8
     ## 
     ## 
     ## 
-    ## $relationships$`41287`
-    ## $relationships$`41287`$id
-    ## [1] "41287"
+    ## $relationships$`24488`
+    ## $relationships$`24488`$id
+    ## [1] "24488"
     ## 
-    ## $relationships$`41287`$type
+    ## $relationships$`24488`$elementId
+    ## [1] "5:8010ab4c-4837-401f-ba10-0f1353e7192c:24488"
+    ## 
+    ## $relationships$`24488`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`41287`$startNode
-    ## [1] "30207"
+    ## $relationships$`24488`$startNode
+    ## [1] "93854"
     ## 
-    ## $relationships$`41287`$endNode
-    ## [1] "59314"
+    ## $relationships$`24488`$startNodeElementId
+    ## [1] "4:8010ab4c-4837-401f-ba10-0f1353e7192c:93854"
     ## 
-    ## $relationships$`41287`$properties
-    ## $relationships$`41287`$properties$property
-    ## [1] 5
+    ## $relationships$`24488`$endNode
+    ## [1] "39159"
+    ## 
+    ## $relationships$`24488`$endNodeElementId
+    ## [1] "4:8010ab4c-4837-401f-ba10-0f1353e7192c:39159"
+    ## 
+    ## $relationships$`24488`$properties
+    ## $relationships$`24488`$properties$property
+    ## [1] 8
     ## 
     ## 
     ## 
     ## 
     ## $paths
     ## $paths[[1]]
-    ## [1] "1605"  "68630" "41287" "28603" "45214"
+    ## [1] "23876" "93543" "24488" "46044" "6560" 
     ## 
     ## $paths[[2]]
-    ## [1] "176"   "70596" "15061" "88759" "49790"
+    ## [1] "7553"  "94678" "470"   "93543" "31423"
     ## 
     ## $paths[[3]]
-    ## [1] "34464" "4227"  "89348" "58074" "55807"
+    ## [1] "7553"  "470"   "93543" "31423" "98608"
 
 ``` r
 print(table(unlist(lapply(net$paths, length))))

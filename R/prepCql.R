@@ -4,7 +4,7 @@
 #'
 #' @param ... character vectors with cQL commands
 #'
-#' @return a well formated CQL query
+#' @return A well formated CQL query
 #'
 #' @seealso [cypher()] and [readCql()]
 #'
@@ -27,7 +27,7 @@ prepCql <- function(...){
 #'
 #' @param file the name of the file to be parsed
 #'
-#' @return a character vector of well formated CQL queries
+#' @return A character vector of well formated CQL queries
 #'
 #' @seealso [cypher()] and [prepCql()]
 #'

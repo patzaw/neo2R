@@ -12,11 +12,19 @@
 #' @param importPath path to the import directory
 #' (default: NA => no import directory). Import only works with local neo4j
 #' instance.
-#' @param .opts a named list or CURLOptions object identifying the curl
-#' options for the handle (see [RCurl::curlPerform()]).
-#' (for example: `.opts = list(ssl.verifypeer = FALSE)`)
+#' @param .opts a named list identifying the curl
+#' options for the handle (see [httr::config()] and [httr::httr_options()]
+#' for a complete list of available options).
+#' (for example: `.opts = list(ssl_verifypeer = 0)`)
 #'
-#' @return a connection to the graph DB:
+#' @details The "ssl.verifypeer" logical option available in the RCurl package
+#' used in former versions of neo2R (<= 2.2.0) is
+#' not recognized by [httr::config()].
+#' However, for backward compatibility, if it used, it is translated into
+#' "ssl_verifypeer" integer option recognized by the httr package with a
+#' warning message.
+#'
+#' @return A connection to the graph DB:
 #' a list with the url and necessary headers
 #'
 #' @export
@@ -24,6 +32,18 @@
 startGraph <- function(
    url, database=NA, username=NA, password=NA, importPath=NA, .opts=list()
 ){
+
+   if("ssl.verifypeer" %in% names(.opts)){
+      .opts$ssl_verifypeer <- as.integer(.opts$ssl.verifypeer)
+      .opts$ssl.verifypeer <- NULL
+      warning(
+         "'ssl.verifypeer' option has been automatically converted into ",
+         "'ssl_verifypeer' option recognized by `httr::config()`. ",
+         "You should use the 'ssl_verifypeer' integer option ",
+         "to avoid this warning."
+      )
+   }
+
    ## Process URL and guess protocol ----
    protocol <- grep("^https://", url)
    if(length(protocol)==1){
