@@ -152,9 +152,9 @@ docker run -d \
    --publish=$NJ_HTTP_PORT:7474 \
 	--publish=$NJ_HTTPS_PORT:7473 \
    --publish=$NJ_BOLT_PORT:7687 \
-   --env=NEO4J_dbms_memory_heap_initial__size=4G \
-   --env=NEO4J_dbms_memory_heap_max__size=4G \
-   --env=NEO4J_dbms_memory_pagecache_size=2G \
+   --env=NEO4J_dbms_memory_heap_initial__size=2G \
+   --env=NEO4J_dbms_memory_heap_max__size=2G \
+   --env=NEO4J_dbms_memory_pagecache_size=1G \
    --env=NEO4J_dbms_query__cache__size=0 \
    --env=NEO4J_cypher_min__replan__interval=100000000ms \
    --env=NEO4J_cypher_statistics__divergence__threshold=1 \
@@ -241,9 +241,9 @@ docker run -d \
    --publish=$NJ_HTTP_PORT:7474 \
 	--publish=$NJ_HTTPS_PORT:7473 \
    --publish=$NJ_BOLT_PORT:7687 \
-   --env=NEO4J_dbms_memory_heap_initial__size=4G \
-   --env=NEO4J_dbms_memory_heap_max__size=4G \
-   --env=NEO4J_dbms_memory_pagecache_size=2G \
+   --env=NEO4J_dbms_memory_heap_initial__size=2G \
+   --env=NEO4J_dbms_memory_heap_max__size=2G \
+   --env=NEO4J_dbms_memory_pagecache_size=1G \
    --env=NEO4J_dbms_query__cache__size=0 \
    --env=NEO4J_cypher_min__replan__interval=100000000ms \
    --env=NEO4J_cypher_statistics__divergence__threshold=1 \
