@@ -67,18 +67,6 @@ import_from_df <- function(
       cql
    ))
    if(nrow(toImport)<=1000){
-      # utils::write.table(
-      #    toImport,
-      #    file=tf,
-      #    sep=",", #"\t",
-      #    quote=T,
-      #    na='',
-      #    row.names=F, col.names=T
-      # )
-      # on.exit(file.remove(tf))
-      # toRet <- cypher(graph=graph, query=cql, ...)
-      # invisible(toRet)
-
       taken <- 0
       while(taken < nrow(toImport)){
          totake <- min(taken+by, nrow(toImport))
@@ -95,9 +83,6 @@ import_from_df <- function(
          taken <- totake
       }
       invisible(toRet)
-
-
-
    }else{
       utils::write.table(
          toImport[c(1:1000), , drop=FALSE],
@@ -110,20 +95,6 @@ import_from_df <- function(
       on.exit(file.remove(tf))
       toRet <- cypher(graph=graph, query=cql, ...)
       cypher(graph=graph, query='CALL db.resampleOutdatedIndexes();')
-
-
-
-      # utils::write.table(
-      #    toImport[-c(1:1000), , drop=FALSE],
-      #    file=tf,
-      #    sep=",", #"\t",
-      #    quote=T,
-      #    na='',
-      #    row.names=F, col.names=T
-      # )
-      # toRet <- cypher(graph=graph, query=cql, ...)
-      # invisible(toRet)
-
       taken <- 1000
       while(taken < nrow(toImport)){
          totake <- min(taken+by, nrow(toImport))
