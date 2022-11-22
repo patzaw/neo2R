@@ -81,6 +81,7 @@ startGraph <- function(
       }
 
       neo4jHeaders <- c(neo4jHeaders, extendedHeaders)
+      .opts$extendedHeaders <- NULL
    }
 
    toRet <- list(
