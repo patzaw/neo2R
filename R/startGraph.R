@@ -69,6 +69,20 @@ startGraph <- function(
          ))
       )
    )
+
+   ## Append other headers - swap Authorization headers for OAuth
+   extendedHeaders <- .opts$extendedHeaders
+   if (!is.null(extendedHeaders) && length(extendedHeaders) > 0 && !is.na(extendedHeaders)) {
+      if (!is.null(extendedHeaders[["Authorization"]])) {
+         temp_auth <- neo4jHeaders[["Authorization"]]
+         neo4jHeaders[["Authorization"]] <- NULL
+         neo4jHeaders[["Authorization"]] <- extendedHeaders[["Authorization"]]
+         neo4jHeaders[["X-Authorization"]] <- temp_auth
+      }
+
+      neo4jHeaders <- c(neo4jHeaders, extendedHeaders)
+   }
+
    toRet <- list(
       url=url,
       headers=neo4jHeaders,
