@@ -14,8 +14,12 @@
 #' instance.
 #' @param .opts a named list identifying the curl
 #' options for the handle (see [httr::config()] and [httr::httr_options()]
-#' for a complete list of available options).
-#' (for example: `.opts = list(ssl_verifypeer = 0)`)
+#' for a complete list of available options;
+#' for example: `.opts = list(ssl_verifypeer = 0)`). Moreover, this parameter
+#' can be used to pass additional headers to the graph requests as
+#' "extendedHeaders": it is useful, for example, for OAuth access
+#' delegation (see details).
+#'
 #'
 #' @details The "ssl.verifypeer" logical option available in the RCurl package
 #' used in former versions of neo2R (<= 2.2.0) is
@@ -23,6 +27,13 @@
 #' However, for backward compatibility, if it used, it is translated into
 #' "ssl_verifypeer" integer option recognized by the httr package with a
 #' warning message.
+#'
+#' Headers in `.opts$extendedHeaders` are added to, or overwrite,
+#' the default Neo4j headers.
+#' If there is a `.opts$extendedHeaders[["Authorization"]]` value, the
+#' default Neo4j "Authorization" header (user credentials) is provided
+#' automaticaly as "X-Authorization". This mechanism is used for OAuth access
+#' delegation.
 #'
 #' @return A connection to the graph DB:
 #' a list with the url and necessary headers
@@ -69,6 +80,30 @@ startGraph <- function(
          ))
       )
    )
+
+   ## Append other headers - swap Authorization headers for OAuth ----
+   extendedHeaders <- .opts$extendedHeaders
+   .opts$extendedHeaders <- NULL
+   if(!is.null(extendedHeaders[["Authorization"]])){
+      temp_auth <- neo4jHeaders[["Authorization"]]
+      neo4jHeaders[["Authorization"]] <- extendedHeaders[["Authorization"]]
+      neo4jHeaders[["X-Authorization"]] <- temp_auth
+      extendedHeaders <- extendedHeaders[setdiff(
+         names(extendedHeaders), "Authorization"
+      )]
+   }
+   overw <- intersect(names(extendedHeaders), names(neo4jHeaders))
+   if(length(overw) > 0){
+      warning(
+         "The following default headers are overwritten by user values: ",
+         paste(overw, sep=", ")
+      )
+      neo4jHeaders <- neo4jHeaders[setdiff(
+         names(neo4jHeaders), names(extendedHeaders)
+      )]
+   }
+   neo4jHeaders <- c(neo4jHeaders, extendedHeaders)
+
    toRet <- list(
       url=url,
       headers=neo4jHeaders,

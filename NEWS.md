@@ -1,3 +1,8 @@
+# Version 2.4.0
+
+- Add the possibility to add additional headers to the graph requests.
+- New contributor: https://github.com/eusebiu
+
 # Version 2.3.0
 
 - Use the 'httr' package instead of the 'RCurl' package.

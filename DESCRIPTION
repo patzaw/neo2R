@@ -1,16 +1,21 @@
 Package: neo2R
 Type: Package
 Title: Neo4j to R
-Version: 2.3.0
+Version: 2.4.0
 Authors@R: c(
     person(
         "Patrice", "Godard",
         role = c("aut", "cre","cph"),
         email = "patrice.godard@gmail.com"
+    ),
+    person(
+        "Eusebiu", "Marcu",
+        role = "ctb",
+        email = "marcueusebiu@gmail.com"
     )
     )
 Maintainer: Patrice Godard <patrice.godard@gmail.com>
-Description: The aim of the neo2R is to provide simple and low level connectors
+Description: The aim of neo2R is to provide simple and low level connectors
    for querying neo4j graph databases (<https://neo4j.com/>).
    The objects returned by the query functions are either lists or data.frames
    with very few post-processing.
