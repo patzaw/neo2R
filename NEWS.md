@@ -1,3 +1,7 @@
+# Version 2.4.1
+
+- Bug fix in `import_from_df()` when importing a data.frame with one column
+
 # Version 2.4.0
 
 - Add the possibility to add additional headers to the graph requests.

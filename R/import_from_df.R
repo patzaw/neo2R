@@ -71,7 +71,7 @@ import_from_df <- function(
       while(taken < nrow(toImport)){
          totake <- min(taken+by, nrow(toImport))
          utils::write.table(
-            toImport[(taken+1):totake,],
+            toImport[(taken+1):totake, , drop=FALSE],
             file=tf,
             sep=",", #"\t",
             quote=T,
@@ -99,7 +99,7 @@ import_from_df <- function(
       while(taken < nrow(toImport)){
          totake <- min(taken+by, nrow(toImport))
          utils::write.table(
-            toImport[(taken+1):totake,],
+            toImport[(taken+1):totake, , drop=FALSE],
             file=tf,
             sep=",", #"\t",
             quote=T,
