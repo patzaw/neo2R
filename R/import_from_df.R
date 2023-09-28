@@ -20,7 +20,7 @@
 #'
 import_from_df <- function(
    graph, cql, toImport,
-   periodicCommit=ifelse(graph$version[[1]]==5, NA, 10000),
+   periodicCommit=10000,
    by=Inf, ...
 ){
    stopifnot(
@@ -42,50 +42,43 @@ import_from_df <- function(
    for(cn in colnames(toImport)){
       toImport[,cn] <- as.character(toImport[, cn, drop=TRUE])
    }
-   pc <- c()
+   load_string <- paste0(
+      'LOAD CSV WITH HEADERS FROM "file:',
+      ifelse(
+         !is.null(importPath),
+         file.path("", basename(tf)),
+         tf
+      ),
+      '" AS row '# FIELDTERMINATOR "\\t"'
+   )
    if(is.numeric(periodicCommit) && length(periodicCommit)==1){
       if(graph$version[[1]]!=5){
-         pc <- sprintf("USING PERIODIC COMMIT %s", periodicCommit)
+         cql <- prepCql(c(
+            sprintf("USING PERIODIC COMMIT %s", periodicCommit),
+            load_string,
+            cql
+         ))
       }else{
-         warning(
-            "Periodic commit not supported for Neo4j >= 5.\n",
-            "Consider the 'by' parameter."
-         )
+         cql <- prepCql(c(
+            load_string,
+            "CALL {WITH row",
+            cql,
+            "}",
+            sprintf("IN TRANSACTIONS OF %s ROWS RETURN count(*)", periodicCommit)
+         ))
       }
+   } else {
+      cql <- prepCql(c(
+         load_string,
+         cql
+      ))
    }
-   cql <- prepCql(c(
-      pc,
-      paste0(
-         'LOAD CSV WITH HEADERS FROM "file:',
-         ifelse(
-            !is.null(importPath),
-            file.path("", basename(tf)),
-            tf
-         ),
-         '" AS row '# FIELDTERMINATOR "\\t"'
-      ),
-      cql
-   ))
-   if(nrow(toImport)<=1000){
-      taken <- 0
-      while(taken < nrow(toImport)){
-         totake <- min(taken+by, nrow(toImport))
-         utils::write.table(
-            toImport[(taken+1):totake, , drop=FALSE],
-            file=tf,
-            sep=",", #"\t",
-            quote=T,
-            na='',
-            row.names=F, col.names=T
-         )
-         on.exit(file.remove(tf))
-         toRet <- cypher(graph=graph, query=cql, ...)
-         taken <- totake
-      }
-      invisible(toRet)
-   }else{
+
+   taken <- 0
+   while(taken < nrow(toImport)){
+      totake <- min(taken+by, nrow(toImport))
       utils::write.table(
-         toImport[c(1:1000), , drop=FALSE],
+         toImport[(taken+1):totake, , drop=FALSE],
          file=tf,
          sep=",", #"\t",
          quote=T,
@@ -94,23 +87,55 @@ import_from_df <- function(
       )
       on.exit(file.remove(tf))
       toRet <- cypher(graph=graph, query=cql, ...)
-      cypher(graph=graph, query='CALL db.resampleOutdatedIndexes();')
-      taken <- 1000
-      while(taken < nrow(toImport)){
-         totake <- min(taken+by, nrow(toImport))
-         utils::write.table(
-            toImport[(taken+1):totake, , drop=FALSE],
-            file=tf,
-            sep=",", #"\t",
-            quote=T,
-            na='',
-            row.names=F, col.names=T
-         )
-         on.exit(file.remove(tf))
-         toRet <- cypher(graph=graph, query=cql, ...)
-         taken <- totake
-      }
-      invisible(toRet)
-
+      taken <- totake
    }
+   invisible(toRet)
+
+   # if(nrow(toImport)<=by){
+   #    taken <- 0
+   #    while(taken < nrow(toImport)){
+   #       totake <- min(taken+by, nrow(toImport))
+   #       utils::write.table(
+   #          toImport[(taken+1):totake, , drop=FALSE],
+   #          file=tf,
+   #          sep=",", #"\t",
+   #          quote=T,
+   #          na='',
+   #          row.names=F, col.names=T
+   #       )
+   #       on.exit(file.remove(tf))
+   #       toRet <- cypher(graph=graph, query=cql, ...)
+   #       taken <- totake
+   #    }
+   #    invisible(toRet)
+   # }else{
+   #    utils::write.table(
+   #       toImport[c(1:1000), , drop=FALSE],
+   #       file=tf,
+   #       sep=",", #"\t",
+   #       quote=T,
+   #       na='',
+   #       row.names=F, col.names=T
+   #    )
+   #    on.exit(file.remove(tf))
+   #    toRet <- cypher(graph=graph, query=cql, ...)
+   #    cypher(graph=graph, query='CALL db.resampleOutdatedIndexes();')
+   #    taken <- 1000
+   #    while(taken < nrow(toImport)){
+   #       totake <- min(taken+by, nrow(toImport))
+   #       utils::write.table(
+   #          toImport[(taken+1):totake, , drop=FALSE],
+   #          file=tf,
+   #          sep=",", #"\t",
+   #          quote=T,
+   #          na='',
+   #          row.names=F, col.names=T
+   #       )
+   #       on.exit(file.remove(tf))
+   #       toRet <- cypher(graph=graph, query=cql, ...)
+   #       taken <- totake
+   #    }
+   #    invisible(toRet)
+   #
+   # }
 }
