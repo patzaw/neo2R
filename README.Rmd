@@ -111,7 +111,7 @@ export NJ_BOLT_PORT=7687
 export NJ_HOME=~/neo4j_home
 
 ## Authorization
-NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
+NJ_AUTH=neo4j/donttrustusers # set to 'none' if you want to disable authorization
 
 ## APOC download
 export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.15/apoc-3.5.0.15-all.jar
@@ -189,7 +189,7 @@ sudo chmod a+rwx $NJ_IMPORT
 
 export CONTAINER=neo4j_cont
 
-export NJ_VERSION=4.4.5
+export NJ_VERSION=4.4.26
 
 ## Ports
 export NJ_HTTP_PORT=7474
@@ -200,7 +200,7 @@ export NJ_BOLT_PORT=7687
 export NJ_HOME=~/neo4j_home
 
 ## Authorization
-NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
+NJ_AUTH=neo4j/donttrustusers # set to 'none' if you want to disable authorization
 
 ## APOC download
 export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.3/apoc-4.4.0.3-all.jar
@@ -269,7 +269,13 @@ sudo chmod a+rwx $NJ_IMPORT
 ```
 
 
-### Neo4j 5.x
+### Neo4j 5.x (>= 5.12)
+
+In recent version of Neo4j, it is not possible to instantiate the docker image
+with a specific user name and password. The password needs to be changed
+after Neo4j starts. Nevertheless, it's still possible to instanciate the image
+without any credentials with the following `docker run`
+parameter: `--env NEO4J_AUTH=none`
 
 
 ```{sh, eval=FALSE}
@@ -281,7 +287,7 @@ sudo chmod a+rwx $NJ_IMPORT
 
 export CONTAINER=neo4j_cont
 
-export NJ_VERSION=5.1.0
+export NJ_VERSION=5.12.0
 
 ## Ports
 export NJ_HTTP_PORT=7474
@@ -290,9 +296,6 @@ export NJ_BOLT_PORT=7687
 
 ## Change the location of the Neo4j directory
 export NJ_HOME=~/neo4j_home
-
-## Authorization
-NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
 
 ## APOC download
 export NJ_APOC=https://github.com/neo4j/apoc/releases/download/5.1.0/apoc-5.1.0-core.jar
@@ -329,22 +332,23 @@ cd $NJ_PLUGINS
 wget --no-check-certificate $NJ_APOC
 cd -
 
+## Add ` --env NEO4J_AUTH=none ` if you don't want to setup credentials
 docker run -d \
    --name $CONTAINER \
    --publish=$NJ_HTTP_PORT:7474 \
    --publish=$NJ_HTTPS_PORT:7473 \
    --publish=$NJ_BOLT_PORT:7687 \
-   --env=NEO4J_dbms_memory_heap_initial__size=2G \
-   --env=NEO4J_dbms_memory_heap_max__size=2G \
-   --env=NEO4J_dbms_memory_pagecache_size=1G \
-   --env=NEO4J_dbms_query__cache__size=0 \
-   --env=NEO4J_cypher_min__replan__interval=100000000ms \
-   --env=NEO4J_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_server_memory_heap_initial__size=2G \
+   --env=NEO4J_server_memory_heap_max__size=2G \
+   --env=NEO4J_server_memory_pagecache_size=1G \
+   --env=NEO4J_server_db_query__cache__size=0 \
+   --env=NEO4J_dbms_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_dbms_cypher_statistics__divergence__threshold=1 \
    --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\\* \
-   --env=NEO4J_dbms_directories_import=import \
-   --env=NEO4J_AUTH=$NJ_AUTH \
+   --env=NEO4J_server_directories_import=import\
    --volume=$NJ_IMPORT:/var/lib/neo4j/import \
    --volume=$NJ_DATA/data:/data \
+   --volume=$NJ_LOGS:/var/lib/neo4j/logs \
    --volume=$NJ_PLUGINS:/plugins \
    --volume=$NJ_SSL:/ssl \
    --env=NEO4J_server_https_enabled=true \
@@ -361,6 +365,43 @@ sudo chmod a+rwx $NJ_IMPORT
 	
 ```
 
+If you did not disable credentials (with `--env NEO4J_AUTH=none`), you'll need
+to first change the user password before being able to connect to the graph
+database.
+The following chunk shows how to do it with neo2R.
+
+```{r, echo=FALSE, message=FALSE}
+library(neo2R)
+system <- try(startGraph(
+  "https://localhost:7473", database="system", check=FALSE,
+  username="neo4j", password="neo4j",
+  importPath="~/neo4j_home/neo4jImport",
+  .opts = list(ssl_verifypeer=0)
+), silent = TRUE)
+if(system$version[[1]]=="5"){
+   try(cypher(
+      system,
+      "ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'donttrustusers'"
+   ), silent = TRUE)
+}
+```
+
+```{r, eval=FALSE}
+library(neo2R)
+system <- startGraph(
+  "https://localhost:7473", database="system", check=FALSE,
+  username="neo4j", password="neo4j",
+  importPath="~/neo4j_home/neo4jImport",
+  .opts = list(ssl_verifypeer=0)
+)
+cypher(
+   system,
+   "ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'donttrustusers'"
+)
+```
+
+
+
 
 <!------------------------->
 ## Connect to Neo4j
@@ -373,11 +414,12 @@ If you're connecting to a local instance of Neo4j and import directory has
 been defined in the configuration, you can specify it in order to allow
 import from data.frames.
 
+
 ```{r}
 library(neo2R)
 graph <- startGraph(
   "https://localhost:7473",
-  username="neo4j", password="1234",
+  username="neo4j", password="donttrustusers",
   importPath="~/neo4j_home/neo4jImport",
   .opts = list(ssl_verifypeer=0)
 )
@@ -458,6 +500,19 @@ df <- cypher(
 )
 print(dim(df))
 print(head(df))
+
+## Multiple queries can be sent at once
+dfl <- multicypher(
+   graph,
+   sprintf(
+      paste(
+         'MATCH (n:TestNode) WHERE n.value <= %s',
+         'RETURN n.name as name, n.value as value'
+      ),
+      2:4
+   )
+)
+print(lapply(dfl, dim))
 
 ## Get all paths of length 5 starting from a subset of nodes 
 net <- cypher(

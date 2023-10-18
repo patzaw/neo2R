@@ -19,6 +19,8 @@
 #' can be used to pass additional headers to the graph requests as
 #' "extendedHeaders": it is useful, for example, for OAuth access
 #' delegation (see details).
+#' @param check check the connection before returning it (default: TRUE).
+#' Set to false when connection to the "system" database
 #'
 #'
 #' @details The "ssl.verifypeer" logical option available in the RCurl package
@@ -41,7 +43,8 @@
 #' @export
 #'
 startGraph <- function(
-   url, database=NA, username=NA, password=NA, importPath=NA, .opts=list()
+   url, database=NA, username=NA, password=NA, importPath=NA, .opts=list(),
+   check = TRUE
 ){
 
    if("ssl.verifypeer" %in% names(.opts)){
@@ -159,6 +162,8 @@ startGraph <- function(
       toRet$cypher_endpoint <- sprintf("/db/%s/tx/commit", toRet$database)
    }
    ## Final connection check ----
-   cypher(toRet, "match (n) return n limit 1", result="graph")
+   if(check){
+      cypher(toRet, "match (n) return n limit 1", result="graph")
+   }
    return(toRet)
 }

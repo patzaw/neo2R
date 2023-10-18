@@ -9,9 +9,9 @@
 #' Use "row.FIELD" in the cql query to refer to one FIELD of the toImport
 #' data.frame
 #' @param periodicCommit use periodic commit when loading the data
-#' (default: 10000). Not supported for Neo4j >= 5.
+#' (default: 10000).
 #' @param by number of rows to send by batch (default: Inf).
-#' Can be an alternative to periodic commit for Neo4j >= 5.
+#' Can be an alternative to periodic commit.
 #' @param ... further parameters for [cypher()]
 #'
 #' @seealso [cypher()]
@@ -20,7 +20,7 @@
 #'
 import_from_df <- function(
    graph, cql, toImport,
-   periodicCommit=ifelse(graph$version[[1]]==5, NA, 10000),
+   periodicCommit=1000,
    by=Inf, ...
 ){
    stopifnot(
@@ -42,30 +42,61 @@ import_from_df <- function(
    for(cn in colnames(toImport)){
       toImport[,cn] <- as.character(toImport[, cn, drop=TRUE])
    }
-   pc <- c()
-   if(is.numeric(periodicCommit) && length(periodicCommit)==1){
-      if(graph$version[[1]]!=5){
-         pc <- sprintf("USING PERIODIC COMMIT %s", periodicCommit)
-      }else{
-         warning(
-            "Periodic commit not supported for Neo4j >= 5.\n",
-            "Consider the 'by' parameter."
-         )
-      }
-   }
-   cql <- prepCql(c(
-      pc,
-      paste0(
-         'LOAD CSV WITH HEADERS FROM "file:',
-         ifelse(
-            !is.null(importPath),
-            file.path("", basename(tf)),
-            tf
-         ),
-         '" AS row '# FIELDTERMINATOR "\\t"'
+   # pc <- c()
+   # if(is.numeric(periodicCommit) && length(periodicCommit)==1){
+   #    if(graph$version[[1]]!=5){
+   #       pc <- sprintf("USING PERIODIC COMMIT %s", periodicCommit)
+   #    }else{
+   #       warning(
+   #          "Periodic commit not supported for Neo4j >= 5.\n",
+   #          "Consider the 'by' parameter."
+   #       )
+   #    }
+   # }
+   # cql <- prepCql(c(
+   #    pc,
+   #    paste0(
+   #       'LOAD CSV WITH HEADERS FROM "file:',
+   #       ifelse(
+   #          !is.null(importPath),
+   #          file.path("", basename(tf)),
+   #          tf
+   #       ),
+   #       '" AS row '# FIELDTERMINATOR "\\t"'
+   #    ),
+   #    cql
+   # ))
+   load_string <- paste0(
+      'LOAD CSV WITH HEADERS FROM "file:',
+      ifelse(
+         !is.null(importPath),
+         file.path("", basename(tf)),
+         tf
       ),
-      cql
-   ))
+      '" AS row '# FIELDTERMINATOR "\\t"'
+   )
+   if(!is.na(periodicCommit)){
+      if(graph$version[[1]]!=5){
+         cql <- prepCql(c(
+            sprintf("USING PERIODIC COMMIT %s", periodicCommit),
+            load_string,
+            cql
+         ))
+      }else{
+         cql <- prepCql(c(
+            load_string,
+            "CALL {WITH row",
+            cql,
+            "}",
+            sprintf("IN TRANSACTIONS OF %s ROWS RETURN count(*)", periodicCommit)
+         ))
+      }
+   } else {
+      cql <- prepCql(c(
+         load_string,
+         cql
+      ))
+   }
    if(nrow(toImport)<=1000){
       taken <- 0
       while(taken < nrow(toImport)){

@@ -17,7 +17,7 @@
 #'
 prepCql <- function(...){
    cql <- paste(..., collapse=" ")
-   return(paste(sub(";[[:blank:]]*$", "", cql), ";"))
+   return(paste(sub(";[[:blank:]]*$", "", cql)))
 }
 
 

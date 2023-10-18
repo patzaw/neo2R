@@ -1,6 +1,7 @@
 library(here)
 
 ## Build and copy vignettes ----
+## First instantiate one of the image described in README.Rmd
 rmarkdown::render(here("README.Rmd"))
 
 ## Build and check package ----

@@ -603,22 +603,21 @@ padding-top: 0px;
 
 <h1 id="readme">README</h1>
 <ul>
-<li><a href="#neo2r" id="toc-neo2r">neo2R</a></li>
-<li><a href="#installation" id="toc-installation">Installation</a>
+<li><a href="#neo2r">neo2R</a></li>
+<li><a href="#installation">Installation</a>
 <ul>
-<li><a href="#from-cran" id="toc-from-cran">From CRAN</a></li>
-<li><a href="#dependencies" id="toc-dependencies">Dependencies</a></li>
-<li><a href="#installation-from-github" id="toc-installation-from-github">Installation from github</a></li>
+<li><a href="#from-cran">From CRAN</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+<li><a href="#installation-from-github">Installation from
+github</a></li>
 </ul></li>
-<li><a href="#use" id="toc-use">Use</a>
+<li><a href="#use">Use</a>
 <ul>
-<li><a href="#running-neo4j" id="toc-running-neo4j">Running
-Neo4j</a></li>
-<li><a href="#connect-to-neo4j" id="toc-connect-to-neo4j">Connect to
-Neo4j</a></li>
-<li><a href="#import-from-dataframe" id="toc-import-from-dataframe">Import
-from data.frame</a></li>
-<li><a href="#query-the-neo4j-database" id="toc-query-the-neo4j-database">Query the Neo4j database</a></li>
+<li><a href="#running-neo4j">Running Neo4j</a></li>
+<li><a href="#connect-to-neo4j">Connect to Neo4j</a></li>
+<li><a href="#import-from-dataframe">Import from data.frame</a></li>
+<li><a href="#query-the-neo4j-database">Query the Neo4j
+database</a></li>
 </ul></li>
 </ul>
 <!----------------------------------------------------------------------------->
@@ -626,7 +625,7 @@ from data.frame</a></li>
 <!----------------------------------------------------------------------------->
 
 <h1 id="neo2r">neo2R</h1>
-<p><a href="https://cran.r-project.org/package=neo2R"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgYXJpYS1sYWJlbD0iQ1JBTiAyLjEuMSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz4KICA8L21hc2s+CiAgPGcgbWFzaz0idXJsKCNhKSI+CiAgICA8cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDQzdjIwSDB6Ii8+CiAgICA8cGF0aCBmaWxsPSIjNGMxIiBkPSJNNDMgMGg2M3YyMEg0M3oiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoODV2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIyMS41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIENSQU4KICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjIxLjUiIHk9IjE0Ij4KICAgICAgQ1JBTgogICAgPC90ZXh0PgogICAgPHRleHQgeD0iNjMiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMi4xLjEKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjYzIiB5PSIxNCI+CiAgICAgIDIuMS4xCiAgICA8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=" alt="CRAN_Status_Badge" /></a> <a href="https://cran.r-project.org/package=neo2R"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiIGFyaWEtbGFiZWw9IkNSQU4gZG93bmxvYWRzIDIwNy9tb250aCI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+CiAgPC9tYXNrPgogIDxnIG1hc2s9InVybCgjYSkiPjxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoNzB2MjBIMHoiLz4KICAgIDxwYXRoIGZpbGw9IiMwMDdlYzYiIGQ9Ik03MCAwaDc5djIwSDcweiIvPgogICAgPHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGgxNDl2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIzNiIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPgogICAgICBkb3dubG9hZHMKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjM2IiB5PSIxNCI+CiAgICAgIGRvd25sb2FkcwogICAgPC90ZXh0PgogICAgPHRleHQgeD0iMTA4LjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMjA3L21vbnRoCiAgICA8L3RleHQ+CiAgICA8dGV4dCB4PSIxMDguNSIgeT0iMTQiPgogICAgICAyMDcvbW9udGgKICAgIDwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" /></a></p>
+<p><a href="https://cran.r-project.org/package=neo2R"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgYXJpYS1sYWJlbD0iQ1JBTiAyLjQuMSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz4KICA8L21hc2s+CiAgPGcgbWFzaz0idXJsKCNhKSI+CiAgICA8cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDQzdjIwSDB6Ii8+CiAgICA8cGF0aCBmaWxsPSIjNGMxIiBkPSJNNDMgMGg2M3YyMEg0M3oiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoODV2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIyMS41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIENSQU4KICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjIxLjUiIHk9IjE0Ij4KICAgICAgQ1JBTgogICAgPC90ZXh0PgogICAgPHRleHQgeD0iNjMiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMi40LjEKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjYzIiB5PSIxNCI+CiAgICAgIDIuNC4xCiAgICA8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=" alt="CRAN_Status_Badge" /></a> <a href="https://cran.r-project.org/package=neo2R"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiIGFyaWEtbGFiZWw9IkNSQU4gZG93bmxvYWRzIDI0NC9tb250aCI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+CiAgPC9tYXNrPgogIDxnIG1hc2s9InVybCgjYSkiPjxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoNzB2MjBIMHoiLz4KICAgIDxwYXRoIGZpbGw9IiMwMDdlYzYiIGQ9Ik03MCAwaDc5djIwSDcweiIvPgogICAgPHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGgxNDl2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIzNiIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPgogICAgICBkb3dubG9hZHMKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjM2IiB5PSIxNCI+CiAgICAgIGRvd25sb2FkcwogICAgPC90ZXh0PgogICAgPHRleHQgeD0iMTA4LjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMjQ0L21vbnRoCiAgICA8L3RleHQ+CiAgICA8dGV4dCB4PSIxMDguNSIgeT0iMTQiPgogICAgICAyNDQvbW9udGgKICAgIDwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" /></a></p>
 <p>The aim of the neo2R is to provide simple and low level connectors
 for querying <a href="https://neo4j.com/">Neo4j graph databases</a>. The
 objects returned by the query functions are either lists or data.frames
@@ -644,7 +643,7 @@ provide connectors to neo4j databases with additional features.</p>
 
 <h1 id="installation">Installation</h1>
 <h2 id="from-cran">From CRAN</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;neo2R&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;neo2R&quot;</span>)</span></code></pre></div>
 <!------------------------->
 
 <h2 id="dependencies">Dependencies</h2>
@@ -662,7 +661,7 @@ Utils Package</li>
 <!------------------------->
 
 <h2 id="installation-from-github">Installation from github</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;patzaw/neo2R&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;patzaw/neo2R&quot;</span>)</span></code></pre></div>
 <!----------------------------------------------------------------------------->
 
 <!----------------------------------------------------------------------------->
@@ -679,261 +678,280 @@ running either version 3 or version 4 (only those 2 are supported by
 neo2R) of Neo4j. The main differences between the 2 calls are related to
 the apoc library and SSL configuration.</p>
 <h3 id="neo4j-3x">Neo4j 3.x</h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">## CONFIG according to your needs</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">CONTAINER</span><span class="op">=</span>neo4j_cont</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_VERSION</span><span class="op">=</span>3.5.30</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">## Ports</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTP_PORT</span><span class="op">=</span>7474</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTPS_PORT</span><span class="op">=</span>7473</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_BOLT_PORT</span><span class="op">=</span>7687</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">## Change the location of the Neo4j directory</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HOME</span><span class="op">=</span>~/neo4j_home</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">## Authorization</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="va">NJ_AUTH</span><span class="op">=</span>neo4j/1234 <span class="co"># set to &#39;none&#39; if you want to disable authorization</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">## APOC download</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_APOC</span><span class="op">=</span>https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.15/apoc-3.5.0.15-all.jar</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">## RUN</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_HOME</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">## Import and data directory</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_IMPORT</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jImport</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_IMPORT</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_DATA</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jData</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">test</span> <span class="at">-e</span> <span class="va">$NJ_DATA</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>   <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$NJ_DATA</span><span class="st"> directory exists ==&gt; abort - Remove it before proceeding&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>   <span class="bu">exit</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_DATA</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co">## SSL</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_SSL</span><span class="op">=</span><span class="va">${NJ_HOME}</span>/ssl</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/client_policy</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/client_policy/revoked</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/client_policy/trusted</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="ex">openssl</span> req <span class="at">-subj</span> <span class="st">&quot;/CN=localhost&quot;</span> <span class="at">-new</span> <span class="at">-newkey</span> rsa:2048 <span class="at">-days</span> 365 <span class="at">-nodes</span> <span class="at">-x509</span> <span class="at">-keyout</span> <span class="va">${NJ_SSL}</span>/client_policy/private.key <span class="at">-out</span> <span class="va">${NJ_SSL}</span>/client_policy/public.crt</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> <span class="at">-R</span> a+rwx <span class="va">${NJ_SSL}</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="co">## Neo4j plugins: APOC</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_PLUGINS</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jPlugins</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_PLUGINS</span></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$NJ_PLUGINS</span></span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="at">--no-check-certificate</span> <span class="va">$NJ_APOC</span></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">-</span></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="dt">\</span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>   <span class="at">--name</span> <span class="va">$CONTAINER</span> <span class="dt">\</span></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTP_PORT</span>:7474 <span class="dt">\</span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTPS_PORT</span>:7473 <span class="dt">\</span></span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_BOLT_PORT</span>:7687 <span class="dt">\</span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_initial__size=2G <span class="dt">\</span></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_max__size=2G <span class="dt">\</span></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_pagecache_size=1G <span class="dt">\</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_query__cache__size=0 <span class="dt">\</span></span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_min__replan__interval=100000000ms <span class="dt">\</span></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_statistics__divergence__threshold=1 <span class="dt">\</span></span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_security_procedures_unrestricted=apoc.<span class="dt">\\\*</span> <span class="dt">\</span></span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_directories_import=import <span class="dt">\</span></span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span> NEO4J_AUTH=<span class="va">$NJ_AUTH</span> <span class="dt">\</span></span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>   <span class="at">--volume</span> <span class="va">$NJ_IMPORT</span>:/var/lib/neo4j/import <span class="dt">\</span></span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>   <span class="at">--volume</span> <span class="va">$NJ_DATA</span>/data:/data <span class="dt">\</span></span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">--volume</span> <span class="va">$NJ_PLUGINS</span>:/plugins <span class="dt">\</span></span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_SSL</span>:/ssl <span class="dt">\</span></span>
-<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_https_ssl__policy=client_policy <span class="dt">\</span></span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_client__policy_base__directory=/ssl/client_policy <span class="dt">\</span></span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_client__policy_client__auth=NONE <span class="dt">\</span></span>
-<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_client__policy_trust__all=true <span class="dt">\</span></span>
-<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>    neo4j:<span class="va">$NJ_VERSION</span></span>
-<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 15</span>
-<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod a+rwx <span class="va">$NJ_IMPORT</span></span>
-<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>    </span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">## CONFIG according to your needs</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="bu">export</span> <span class="va">CONTAINER</span><span class="op">=</span>neo4j_cont</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_VERSION</span><span class="op">=</span>3.5.30</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">## Ports</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTP_PORT</span><span class="op">=</span>7474</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTPS_PORT</span><span class="op">=</span>7473</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_BOLT_PORT</span><span class="op">=</span>7687</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">## Change the location of the Neo4j directory</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HOME</span><span class="op">=</span>~/neo4j_home</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">## Authorization</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="va">NJ_AUTH</span><span class="op">=</span>neo4j/donttrustusers <span class="co"># set to &#39;none&#39; if you want to disable authorization</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">## APOC download</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_APOC</span><span class="op">=</span>https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.15/apoc-3.5.0.15-all.jar</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">## RUN</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_HOME</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">## Import and data directory</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_IMPORT</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jImport</span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_IMPORT</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_DATA</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jData</span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="cf">if</span> <span class="bu">test</span> <span class="at">-e</span> <span class="va">$NJ_DATA</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>   <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$NJ_DATA</span><span class="st"> directory exists ==&gt; abort - Remove it before proceeding&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a>   <span class="bu">exit</span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_DATA</span></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="co">## SSL</span></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_SSL</span><span class="op">=</span><span class="va">${NJ_HOME}</span>/ssl</span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/client_policy</span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/client_policy/revoked</span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/client_policy/trusted</span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a><span class="ex">openssl</span> req <span class="at">-subj</span> <span class="st">&quot;/CN=localhost&quot;</span> <span class="at">-new</span> <span class="at">-newkey</span> rsa:2048 <span class="at">-days</span> 365 <span class="at">-nodes</span> <span class="at">-x509</span> <span class="at">-keyout</span> <span class="va">${NJ_SSL}</span>/client_policy/private.key <span class="at">-out</span> <span class="va">${NJ_SSL}</span>/client_policy/public.crt</span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a><span class="fu">chmod</span> <span class="at">-R</span> a+rwx <span class="va">${NJ_SSL}</span></span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a><span class="co">## Neo4j plugins: APOC</span></span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_PLUGINS</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jPlugins</span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_PLUGINS</span></span>
+<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$NJ_PLUGINS</span></span>
+<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a><span class="fu">wget</span> <span class="at">--no-check-certificate</span> <span class="va">$NJ_APOC</span></span>
+<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a><span class="bu">cd</span> <span class="at">-</span></span>
+<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="dt">\</span></span>
+<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a>   <span class="at">--name</span> <span class="va">$CONTAINER</span> <span class="dt">\</span></span>
+<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTP_PORT</span>:7474 <span class="dt">\</span></span>
+<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a>    <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTPS_PORT</span>:7473 <span class="dt">\</span></span>
+<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_BOLT_PORT</span>:7687 <span class="dt">\</span></span>
+<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_initial__size=2G <span class="dt">\</span></span>
+<span id="cb3-62"><a href="#cb3-62" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_max__size=2G <span class="dt">\</span></span>
+<span id="cb3-63"><a href="#cb3-63" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_pagecache_size=1G <span class="dt">\</span></span>
+<span id="cb3-64"><a href="#cb3-64" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_query__cache__size=0 <span class="dt">\</span></span>
+<span id="cb3-65"><a href="#cb3-65" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_min__replan__interval=100000000ms <span class="dt">\</span></span>
+<span id="cb3-66"><a href="#cb3-66" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_statistics__divergence__threshold=1 <span class="dt">\</span></span>
+<span id="cb3-67"><a href="#cb3-67" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_security_procedures_unrestricted=apoc.<span class="dt">\\\*</span> <span class="dt">\</span></span>
+<span id="cb3-68"><a href="#cb3-68" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_directories_import=import <span class="dt">\</span></span>
+<span id="cb3-69"><a href="#cb3-69" tabindex="-1"></a>   <span class="at">--env</span> NEO4J_AUTH=<span class="va">$NJ_AUTH</span> <span class="dt">\</span></span>
+<span id="cb3-70"><a href="#cb3-70" tabindex="-1"></a>   <span class="at">--volume</span> <span class="va">$NJ_IMPORT</span>:/var/lib/neo4j/import <span class="dt">\</span></span>
+<span id="cb3-71"><a href="#cb3-71" tabindex="-1"></a>   <span class="at">--volume</span> <span class="va">$NJ_DATA</span>/data:/data <span class="dt">\</span></span>
+<span id="cb3-72"><a href="#cb3-72" tabindex="-1"></a>    <span class="at">--volume</span> <span class="va">$NJ_PLUGINS</span>:/plugins <span class="dt">\</span></span>
+<span id="cb3-73"><a href="#cb3-73" tabindex="-1"></a>    <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_SSL</span>:/ssl <span class="dt">\</span></span>
+<span id="cb3-74"><a href="#cb3-74" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_https_ssl__policy=client_policy <span class="dt">\</span></span>
+<span id="cb3-75"><a href="#cb3-75" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_client__policy_base__directory=/ssl/client_policy <span class="dt">\</span></span>
+<span id="cb3-76"><a href="#cb3-76" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_client__policy_client__auth=NONE <span class="dt">\</span></span>
+<span id="cb3-77"><a href="#cb3-77" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_client__policy_trust__all=true <span class="dt">\</span></span>
+<span id="cb3-78"><a href="#cb3-78" tabindex="-1"></a>    neo4j:<span class="va">$NJ_VERSION</span></span>
+<span id="cb3-79"><a href="#cb3-79" tabindex="-1"></a></span>
+<span id="cb3-80"><a href="#cb3-80" tabindex="-1"></a><span class="fu">sleep</span> 15</span>
+<span id="cb3-81"><a href="#cb3-81" tabindex="-1"></a><span class="fu">sudo</span> chmod a+rwx <span class="va">$NJ_IMPORT</span></span>
+<span id="cb3-82"><a href="#cb3-82" tabindex="-1"></a>    </span></code></pre></div>
 <h3 id="neo4j-4x">Neo4j 4.x</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">## CONFIG according to your needs</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">CONTAINER</span><span class="op">=</span>neo4j_cont</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_VERSION</span><span class="op">=</span>4.4.5</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">## Ports</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTP_PORT</span><span class="op">=</span>7474</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTPS_PORT</span><span class="op">=</span>7473</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_BOLT_PORT</span><span class="op">=</span>7687</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">## Change the location of the Neo4j directory</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HOME</span><span class="op">=</span>~/neo4j_home</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">## Authorization</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="va">NJ_AUTH</span><span class="op">=</span>neo4j/1234 <span class="co"># set to &#39;none&#39; if you want to disable authorization</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">## APOC download</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_APOC</span><span class="op">=</span>https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.3/apoc-4.4.0.3-all.jar</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">## RUN</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_HOME</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">## Import and data directory</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_IMPORT</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jImport</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_IMPORT</span></span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_DATA</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jData</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">test</span> <span class="at">-e</span> <span class="va">$NJ_DATA</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>   <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$NJ_DATA</span><span class="st"> directory exists ==&gt; abort - Remove it before proceeding&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>   <span class="bu">exit</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_DATA</span></span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">## SSL</span></span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_SSL</span><span class="op">=</span><span class="va">${NJ_HOME}</span>/ssl</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https/revoked</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https/trusted</span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="ex">openssl</span> req <span class="at">-subj</span> <span class="st">&quot;/CN=localhost&quot;</span> <span class="at">-new</span> <span class="at">-newkey</span> rsa:2048 <span class="at">-days</span> 365 <span class="at">-nodes</span> <span class="at">-x509</span> <span class="at">-keyout</span> <span class="va">${NJ_SSL}</span>/https/private.key <span class="at">-out</span> <span class="va">${NJ_SSL}</span>/https/public.crt</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> <span class="at">-R</span> a+rwx <span class="va">${NJ_SSL}</span></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co">## Neo4j plugins: APOC</span></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_PLUGINS</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jPlugins</span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_PLUGINS</span></span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$NJ_PLUGINS</span></span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="at">--no-check-certificate</span> <span class="va">$NJ_APOC</span></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">-</span></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="dt">\</span></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>   <span class="at">--name</span> <span class="va">$CONTAINER</span> <span class="dt">\</span></span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTP_PORT</span>:7474 <span class="dt">\</span></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTPS_PORT</span>:7473 <span class="dt">\</span></span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_BOLT_PORT</span>:7687 <span class="dt">\</span></span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_initial__size=2G <span class="dt">\</span></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_max__size=2G <span class="dt">\</span></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_pagecache_size=1G <span class="dt">\</span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_query__cache__size=0 <span class="dt">\</span></span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_min__replan__interval=100000000ms <span class="dt">\</span></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_statistics__divergence__threshold=1 <span class="dt">\</span></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_security_procedures_unrestricted=apoc.<span class="dt">\\\*</span> <span class="dt">\</span></span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_directories_import=import <span class="dt">\</span></span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span> NEO4J_AUTH=<span class="va">$NJ_AUTH</span> <span class="dt">\</span></span>
-<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>   <span class="at">--volume</span> <span class="va">$NJ_IMPORT</span>:/var/lib/neo4j/import <span class="dt">\</span></span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>   <span class="at">--volume</span> <span class="va">$NJ_DATA</span>/data:/data <span class="dt">\</span></span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">--volume</span> <span class="va">$NJ_PLUGINS</span>:/plugins <span class="dt">\</span></span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_SSL</span>:/ssl <span class="dt">\</span></span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_connector_https_enabled=true <span class="dt">\</span></span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_enabled=true <span class="dt">\</span></span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https <span class="dt">\</span></span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_private__key=private.key <span class="dt">\</span></span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_public__certificate=public.crt <span class="dt">\</span></span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_client__auth=NONE <span class="dt">\</span></span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_trust__all=true <span class="dt">\</span></span>
-<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    neo4j:<span class="va">$NJ_VERSION</span></span>
-<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 15</span>
-<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod a+rwx <span class="va">$NJ_IMPORT</span></span>
-<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>    </span></code></pre></div>
-<h3 id="neo4j-5x">Neo4j 5.x</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">## CONFIG according to your needs</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">CONTAINER</span><span class="op">=</span>neo4j_cont</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_VERSION</span><span class="op">=</span>5.1.0</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">## Ports</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTP_PORT</span><span class="op">=</span>7474</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTPS_PORT</span><span class="op">=</span>7473</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_BOLT_PORT</span><span class="op">=</span>7687</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">## Change the location of the Neo4j directory</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HOME</span><span class="op">=</span>~/neo4j_home</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">## Authorization</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="va">NJ_AUTH</span><span class="op">=</span>neo4j/1234 <span class="co"># set to &#39;none&#39; if you want to disable authorization</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">## APOC download</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_APOC</span><span class="op">=</span>https://github.com/neo4j/apoc/releases/download/5.1.0/apoc-5.1.0-core.jar</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">## RUN</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#################################</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_HOME</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">## Import and data directory</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_IMPORT</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jImport</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_IMPORT</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_DATA</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jData</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">test</span> <span class="at">-e</span> <span class="va">$NJ_DATA</span><span class="kw">;</span> <span class="cf">then</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>   <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$NJ_DATA</span><span class="st"> directory exists ==&gt; abort - Remove it before proceeding&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>   <span class="bu">exit</span></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_DATA</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co">## SSL</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_SSL</span><span class="op">=</span><span class="va">${NJ_HOME}</span>/ssl</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https/revoked</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https/trusted</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="ex">openssl</span> req <span class="at">-subj</span> <span class="st">&quot;/CN=localhost&quot;</span> <span class="at">-new</span> <span class="at">-newkey</span> rsa:2048 <span class="at">-days</span> 365 <span class="at">-nodes</span> <span class="at">-x509</span> <span class="at">-keyout</span> <span class="va">${NJ_SSL}</span>/https/private.key <span class="at">-out</span> <span class="va">${NJ_SSL}</span>/https/public.crt</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="va">${NJ_SSL}</span>/https/public.crt <span class="va">${NJ_SSL}</span>/https/trusted</span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> <span class="at">-R</span> a+rwx <span class="va">${NJ_SSL}</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="co">## Neo4j plugins: APOC</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_PLUGINS</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jPlugins</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_PLUGINS</span></span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$NJ_PLUGINS</span></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="at">--no-check-certificate</span> <span class="va">$NJ_APOC</span></span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="at">-</span></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="dt">\</span></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>   <span class="at">--name</span> <span class="va">$CONTAINER</span> <span class="dt">\</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTP_PORT</span>:7474 <span class="dt">\</span></span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTPS_PORT</span>:7473 <span class="dt">\</span></span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_BOLT_PORT</span>:7687 <span class="dt">\</span></span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_initial__size=2G <span class="dt">\</span></span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_max__size=2G <span class="dt">\</span></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_pagecache_size=1G <span class="dt">\</span></span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_query__cache__size=0 <span class="dt">\</span></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_min__replan__interval=100000000ms <span class="dt">\</span></span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_statistics__divergence__threshold=1 <span class="dt">\</span></span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_security_procedures_unrestricted=apoc.<span class="dt">\\\*</span> <span class="dt">\</span></span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_directories_import=import <span class="dt">\</span></span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_AUTH=<span class="va">$NJ_AUTH</span> <span class="dt">\</span></span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>   <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_IMPORT</span>:/var/lib/neo4j/import <span class="dt">\</span></span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>   <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_DATA</span>/data:/data <span class="dt">\</span></span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>   <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_PLUGINS</span>:/plugins <span class="dt">\</span></span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>   <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_SSL</span>:/ssl <span class="dt">\</span></span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_server_https_enabled=true <span class="dt">\</span></span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_enabled=true <span class="dt">\</span></span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https <span class="dt">\</span></span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_private__key=private.key <span class="dt">\</span></span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_public__certificate=public.crt <span class="dt">\</span></span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_client__auth=NONE <span class="dt">\</span></span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_trust__all=true <span class="dt">\</span></span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>   neo4j:<span class="va">$NJ_VERSION</span></span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 15</span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod a+rwx <span class="va">$NJ_IMPORT</span></span>
-<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>    </span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">## CONFIG according to your needs</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="bu">export</span> <span class="va">CONTAINER</span><span class="op">=</span>neo4j_cont</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_VERSION</span><span class="op">=</span>4.4.26</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">## Ports</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTP_PORT</span><span class="op">=</span>7474</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTPS_PORT</span><span class="op">=</span>7473</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_BOLT_PORT</span><span class="op">=</span>7687</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">## Change the location of the Neo4j directory</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HOME</span><span class="op">=</span>~/neo4j_home</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">## Authorization</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="va">NJ_AUTH</span><span class="op">=</span>neo4j/donttrustusers <span class="co"># set to &#39;none&#39; if you want to disable authorization</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">## APOC download</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_APOC</span><span class="op">=</span>https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.3/apoc-4.4.0.3-all.jar</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">## RUN</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_HOME</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="co">## Import and data directory</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_IMPORT</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jImport</span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_IMPORT</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_DATA</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jData</span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="cf">if</span> <span class="bu">test</span> <span class="at">-e</span> <span class="va">$NJ_DATA</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a>   <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$NJ_DATA</span><span class="st"> directory exists ==&gt; abort - Remove it before proceeding&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a>   <span class="bu">exit</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_DATA</span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">## SSL</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_SSL</span><span class="op">=</span><span class="va">${NJ_HOME}</span>/ssl</span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https</span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https/revoked</span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https/trusted</span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="ex">openssl</span> req <span class="at">-subj</span> <span class="st">&quot;/CN=localhost&quot;</span> <span class="at">-new</span> <span class="at">-newkey</span> rsa:2048 <span class="at">-days</span> 365 <span class="at">-nodes</span> <span class="at">-x509</span> <span class="at">-keyout</span> <span class="va">${NJ_SSL}</span>/https/private.key <span class="at">-out</span> <span class="va">${NJ_SSL}</span>/https/public.crt</span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="fu">chmod</span> <span class="at">-R</span> a+rwx <span class="va">${NJ_SSL}</span></span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a></span>
+<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a><span class="co">## Neo4j plugins: APOC</span></span>
+<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_PLUGINS</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jPlugins</span>
+<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_PLUGINS</span></span>
+<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$NJ_PLUGINS</span></span>
+<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a><span class="fu">wget</span> <span class="at">--no-check-certificate</span> <span class="va">$NJ_APOC</span></span>
+<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a><span class="bu">cd</span> <span class="at">-</span></span>
+<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="dt">\</span></span>
+<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a>   <span class="at">--name</span> <span class="va">$CONTAINER</span> <span class="dt">\</span></span>
+<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTP_PORT</span>:7474 <span class="dt">\</span></span>
+<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a>    <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTPS_PORT</span>:7473 <span class="dt">\</span></span>
+<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_BOLT_PORT</span>:7687 <span class="dt">\</span></span>
+<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_initial__size=2G <span class="dt">\</span></span>
+<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_heap_max__size=2G <span class="dt">\</span></span>
+<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_memory_pagecache_size=1G <span class="dt">\</span></span>
+<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_query__cache__size=0 <span class="dt">\</span></span>
+<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_min__replan__interval=100000000ms <span class="dt">\</span></span>
+<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_cypher_statistics__divergence__threshold=1 <span class="dt">\</span></span>
+<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_security_procedures_unrestricted=apoc.<span class="dt">\\\*</span> <span class="dt">\</span></span>
+<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_directories_import=import <span class="dt">\</span></span>
+<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a>   <span class="at">--env</span> NEO4J_AUTH=<span class="va">$NJ_AUTH</span> <span class="dt">\</span></span>
+<span id="cb4-70"><a href="#cb4-70" tabindex="-1"></a>   <span class="at">--volume</span> <span class="va">$NJ_IMPORT</span>:/var/lib/neo4j/import <span class="dt">\</span></span>
+<span id="cb4-71"><a href="#cb4-71" tabindex="-1"></a>   <span class="at">--volume</span> <span class="va">$NJ_DATA</span>/data:/data <span class="dt">\</span></span>
+<span id="cb4-72"><a href="#cb4-72" tabindex="-1"></a>    <span class="at">--volume</span> <span class="va">$NJ_PLUGINS</span>:/plugins <span class="dt">\</span></span>
+<span id="cb4-73"><a href="#cb4-73" tabindex="-1"></a>    <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_SSL</span>:/ssl <span class="dt">\</span></span>
+<span id="cb4-74"><a href="#cb4-74" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_connector_https_enabled=true <span class="dt">\</span></span>
+<span id="cb4-75"><a href="#cb4-75" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_enabled=true <span class="dt">\</span></span>
+<span id="cb4-76"><a href="#cb4-76" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https <span class="dt">\</span></span>
+<span id="cb4-77"><a href="#cb4-77" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_private__key=private.key <span class="dt">\</span></span>
+<span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_public__certificate=public.crt <span class="dt">\</span></span>
+<span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_client__auth=NONE <span class="dt">\</span></span>
+<span id="cb4-80"><a href="#cb4-80" tabindex="-1"></a>    <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_trust__all=true <span class="dt">\</span></span>
+<span id="cb4-81"><a href="#cb4-81" tabindex="-1"></a>    neo4j:<span class="va">$NJ_VERSION</span></span>
+<span id="cb4-82"><a href="#cb4-82" tabindex="-1"></a></span>
+<span id="cb4-83"><a href="#cb4-83" tabindex="-1"></a><span class="fu">sleep</span> 15</span>
+<span id="cb4-84"><a href="#cb4-84" tabindex="-1"></a><span class="fu">sudo</span> chmod a+rwx <span class="va">$NJ_IMPORT</span></span>
+<span id="cb4-85"><a href="#cb4-85" tabindex="-1"></a>    </span></code></pre></div>
+<h3 id="neo4j-5x--512">Neo4j 5.x (&gt;= 5.12)</h3>
+<p>In recent version of Neo4j, it is not possible to instantiate the
+docker image with a specific user name and password. The password needs
+to be changed after Neo4j starts. Nevertheless, it’s still possible to
+instanciate the image without any credentials with the following
+<code>docker run</code> parameter:
+<code>--env NEO4J_AUTH=none</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">## CONFIG according to your needs</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="bu">export</span> <span class="va">CONTAINER</span><span class="op">=</span>neo4j_cont</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_VERSION</span><span class="op">=</span>5.12.0</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">## Ports</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTP_PORT</span><span class="op">=</span>7474</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HTTPS_PORT</span><span class="op">=</span>7473</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_BOLT_PORT</span><span class="op">=</span>7687</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">## Change the location of the Neo4j directory</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_HOME</span><span class="op">=</span>~/neo4j_home</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">## APOC download</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_APOC</span><span class="op">=</span>https://github.com/neo4j/apoc/releases/download/5.1.0/apoc-5.1.0-core.jar</span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">## RUN</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#################################</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_HOME</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">## Import and data directory</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_IMPORT</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jImport</span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_IMPORT</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_DATA</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jData</span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="cf">if</span> <span class="bu">test</span> <span class="at">-e</span> <span class="va">$NJ_DATA</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a>   <span class="bu">echo</span> <span class="st">&quot;</span><span class="va">$NJ_DATA</span><span class="st"> directory exists ==&gt; abort - Remove it before proceeding&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a>   <span class="bu">exit</span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_DATA</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">## SSL</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_SSL</span><span class="op">=</span><span class="va">${NJ_HOME}</span>/ssl</span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https</span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https/revoked</span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">${NJ_SSL}</span>/https/trusted</span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="ex">openssl</span> req <span class="at">-subj</span> <span class="st">&quot;/CN=localhost&quot;</span> <span class="at">-new</span> <span class="at">-newkey</span> rsa:2048 <span class="at">-days</span> 365 <span class="at">-nodes</span> <span class="at">-x509</span> <span class="at">-keyout</span> <span class="va">${NJ_SSL}</span>/https/private.key <span class="at">-out</span> <span class="va">${NJ_SSL}</span>/https/public.crt</span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="fu">cp</span> <span class="va">${NJ_SSL}</span>/https/public.crt <span class="va">${NJ_SSL}</span>/https/trusted</span>
+<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="fu">chmod</span> <span class="at">-R</span> a+rwx <span class="va">${NJ_SSL}</span></span>
+<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a></span>
+<span id="cb5-47"><a href="#cb5-47" tabindex="-1"></a><span class="co">## Neo4j plugins: APOC</span></span>
+<span id="cb5-48"><a href="#cb5-48" tabindex="-1"></a><span class="bu">export</span> <span class="va">NJ_PLUGINS</span><span class="op">=</span><span class="va">$NJ_HOME</span>/neo4jPlugins</span>
+<span id="cb5-49"><a href="#cb5-49" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$NJ_PLUGINS</span></span>
+<span id="cb5-50"><a href="#cb5-50" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$NJ_PLUGINS</span></span>
+<span id="cb5-51"><a href="#cb5-51" tabindex="-1"></a><span class="fu">wget</span> <span class="at">--no-check-certificate</span> <span class="va">$NJ_APOC</span></span>
+<span id="cb5-52"><a href="#cb5-52" tabindex="-1"></a><span class="bu">cd</span> <span class="at">-</span></span>
+<span id="cb5-53"><a href="#cb5-53" tabindex="-1"></a></span>
+<span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a><span class="co">## Add ` --env NEO4J_AUTH=none ` if you don&#39;t want to setup credentials</span></span>
+<span id="cb5-55"><a href="#cb5-55" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="dt">\</span></span>
+<span id="cb5-56"><a href="#cb5-56" tabindex="-1"></a>   <span class="at">--name</span> <span class="va">$CONTAINER</span> <span class="dt">\</span></span>
+<span id="cb5-57"><a href="#cb5-57" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTP_PORT</span>:7474 <span class="dt">\</span></span>
+<span id="cb5-58"><a href="#cb5-58" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_HTTPS_PORT</span>:7473 <span class="dt">\</span></span>
+<span id="cb5-59"><a href="#cb5-59" tabindex="-1"></a>   <span class="at">--publish</span><span class="op">=</span><span class="va">$NJ_BOLT_PORT</span>:7687 <span class="dt">\</span></span>
+<span id="cb5-60"><a href="#cb5-60" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_server_memory_heap_initial__size=2G <span class="dt">\</span></span>
+<span id="cb5-61"><a href="#cb5-61" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_server_memory_heap_max__size=2G <span class="dt">\</span></span>
+<span id="cb5-62"><a href="#cb5-62" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_server_memory_pagecache_size=1G <span class="dt">\</span></span>
+<span id="cb5-63"><a href="#cb5-63" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_server_db_query__cache__size=0 <span class="dt">\</span></span>
+<span id="cb5-64"><a href="#cb5-64" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_cypher_min__replan__interval=100000000ms <span class="dt">\</span></span>
+<span id="cb5-65"><a href="#cb5-65" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_cypher_statistics__divergence__threshold=1 <span class="dt">\</span></span>
+<span id="cb5-66"><a href="#cb5-66" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_security_procedures_unrestricted=apoc.<span class="dt">\\\*</span> <span class="dt">\</span></span>
+<span id="cb5-67"><a href="#cb5-67" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_server_directories_import=import<span class="dt">\</span></span>
+<span id="cb5-68"><a href="#cb5-68" tabindex="-1"></a>   <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_IMPORT</span>:/var/lib/neo4j/import <span class="dt">\</span></span>
+<span id="cb5-69"><a href="#cb5-69" tabindex="-1"></a>   <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_DATA</span>/data:/data <span class="dt">\</span></span>
+<span id="cb5-70"><a href="#cb5-70" tabindex="-1"></a>   <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_LOGS</span>:/var/lib/neo4j/logs <span class="dt">\</span></span>
+<span id="cb5-71"><a href="#cb5-71" tabindex="-1"></a>   <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_PLUGINS</span>:/plugins <span class="dt">\</span></span>
+<span id="cb5-72"><a href="#cb5-72" tabindex="-1"></a>   <span class="at">--volume</span><span class="op">=</span><span class="va">$NJ_SSL</span>:/ssl <span class="dt">\</span></span>
+<span id="cb5-73"><a href="#cb5-73" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_server_https_enabled=true <span class="dt">\</span></span>
+<span id="cb5-74"><a href="#cb5-74" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_enabled=true <span class="dt">\</span></span>
+<span id="cb5-75"><a href="#cb5-75" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https <span class="dt">\</span></span>
+<span id="cb5-76"><a href="#cb5-76" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_private__key=private.key <span class="dt">\</span></span>
+<span id="cb5-77"><a href="#cb5-77" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_public__certificate=public.crt <span class="dt">\</span></span>
+<span id="cb5-78"><a href="#cb5-78" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_client__auth=NONE <span class="dt">\</span></span>
+<span id="cb5-79"><a href="#cb5-79" tabindex="-1"></a>   <span class="at">--env</span><span class="op">=</span>NEO4J_dbms_ssl_policy_https_trust__all=true <span class="dt">\</span></span>
+<span id="cb5-80"><a href="#cb5-80" tabindex="-1"></a>   neo4j:<span class="va">$NJ_VERSION</span></span>
+<span id="cb5-81"><a href="#cb5-81" tabindex="-1"></a></span>
+<span id="cb5-82"><a href="#cb5-82" tabindex="-1"></a><span class="fu">sleep</span> 15</span>
+<span id="cb5-83"><a href="#cb5-83" tabindex="-1"></a><span class="fu">sudo</span> chmod a+rwx <span class="va">$NJ_IMPORT</span></span>
+<span id="cb5-84"><a href="#cb5-84" tabindex="-1"></a>    </span></code></pre></div>
+<p>If you did not disable credentials (with
+<code>--env NEO4J_AUTH=none</code>), you’ll need to first change the
+user password before being able to connect to the graph database. The
+following chunk shows how to do it with neo2R.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">library</span>(neo2R)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>system <span class="ot">&lt;-</span> <span class="fu">startGraph</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="st">&quot;https://localhost:7473&quot;</span>, <span class="at">database=</span><span class="st">&quot;system&quot;</span>, <span class="at">check=</span><span class="cn">FALSE</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">username=</span><span class="st">&quot;neo4j&quot;</span>, <span class="at">password=</span><span class="st">&quot;neo4j&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">importPath=</span><span class="st">&quot;~/neo4j_home/neo4jImport&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">ssl_verifypeer=</span><span class="dv">0</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="fu">cypher</span>(</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>   system,</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>   <span class="st">&quot;ALTER CURRENT USER SET PASSWORD FROM &#39;neo4j&#39; TO &#39;donttrustusers&#39;&quot;</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>)</span></code></pre></div>
 <!------------------------->
 
 <h2 id="connect-to-neo4j">Connect to Neo4j</h2>
@@ -944,63 +962,63 @@ neither username nor password are required. If you’re connecting to a
 local instance of Neo4j and import directory has been defined in the
 configuration, you can specify it in order to allow import from
 data.frames.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(neo2R)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">startGraph</span>(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;https://localhost:7473&quot;</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">username=</span><span class="st">&quot;neo4j&quot;</span>, <span class="at">password=</span><span class="st">&quot;1234&quot;</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">importPath=</span><span class="st">&quot;~/neo4j_home/neo4jImport&quot;</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">ssl_verifypeer=</span><span class="dv">0</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">library</span>(neo2R)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">startGraph</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="st">&quot;https://localhost:7473&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">username=</span><span class="st">&quot;neo4j&quot;</span>, <span class="at">password=</span><span class="st">&quot;donttrustusers&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">importPath=</span><span class="st">&quot;~/neo4j_home/neo4jImport&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">.opts =</span> <span class="fu">list</span>(<span class="at">ssl_verifypeer=</span><span class="dv">0</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>)</span></code></pre></div>
 <!------------------------->
 
 <h2 id="import-from-dataframe">Import from data.frame</h2>
 <p>If you’re connected to a local instance of Neo4j and import directory
 has been defined (see above), you can import data from data.frames. Use
 the ‘row’ prefix to refer to the data.frame column.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">#########################################</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Nodes</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Create an index to speed-up MERGE</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(graph<span class="sc">$</span>version[[<span class="dv">1</span>]]<span class="sc">==</span><span class="st">&quot;5&quot;</span>){</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>   <span class="fu">try</span>(<span class="fu">cypher</span>(graph, <span class="st">&#39;CREATE INDEX FOR (n:TestNode) ON (n.name)&#39;</span>), <span class="at">silent=</span><span class="cn">TRUE</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}<span class="cf">else</span>{</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">try</span>(<span class="fu">cypher</span>(graph, <span class="st">&#39;CREATE INDEX ON :TestNode(name)&#39;</span>), <span class="at">silent=</span><span class="cn">TRUE</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Define node properties in a data.frame</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>nn <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;name&quot;</span><span class="ot">=</span><span class="fu">paste</span>(</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sample</span>(LETTERS, nn, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sample.int</span>(nn, nn, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>   ),</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>   <span class="st">&quot;value&quot;</span><span class="ot">=</span><span class="fu">rnorm</span>(nn, <span class="dv">10</span>, <span class="dv">3</span>),</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>   <span class="at">stringsAsFactors=</span><span class="cn">FALSE</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="fu">import_from_df</span>(</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">graph=</span>graph,</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">cql=</span><span class="st">&#39;MERGE (n:TestNode {name:row.name, value:toFloat(row.value)})&#39;</span>,</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">toImport=</span>nodes</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="do">#########################################</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Edges</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Define node properties in a data.frame</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>ne <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;from&quot;</span><span class="ot">=</span><span class="fu">sample</span>(nodes<span class="sc">$</span>name, ne, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;to&quot;</span><span class="ot">=</span><span class="fu">sample</span>(nodes<span class="sc">$</span>name, ne, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;property&quot;</span><span class="ot">=</span><span class="fu">round</span>(<span class="fu">runif</span>(ne)<span class="sc">*</span><span class="dv">10</span>),</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">stringsAsFactors=</span><span class="cn">FALSE</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="fu">import_from_df</span>(</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>   <span class="at">graph=</span>graph,</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>   <span class="at">cql=</span><span class="fu">prepCql</span>(</span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;MATCH (f:TestNode {name:row.from})&#39;</span>,</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;MATCH (t:TestNode {name:row.to})&#39;</span>,</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;MERGE (f)-[r:TestEdge {property:toInteger(row.property)}]-&gt;(t)&#39;</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>   ),</span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>   <span class="at">toImport=</span>edges</span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="do">#########################################</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## Nodes</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">## Create an index to speed-up MERGE</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="cf">if</span>(graph<span class="sc">$</span>version[[<span class="dv">1</span>]]<span class="sc">==</span><span class="st">&quot;5&quot;</span>){</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>   <span class="fu">try</span>(<span class="fu">cypher</span>(graph, <span class="st">&#39;CREATE INDEX FOR (n:TestNode) ON (n.name)&#39;</span>), <span class="at">silent=</span><span class="cn">TRUE</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>}<span class="cf">else</span>{</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>   <span class="fu">try</span>(<span class="fu">cypher</span>(graph, <span class="st">&#39;CREATE INDEX ON :TestNode(name)&#39;</span>), <span class="at">silent=</span><span class="cn">TRUE</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>}</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="do">## Define node properties in a data.frame</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>nn <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>   <span class="st">&quot;name&quot;</span><span class="ot">=</span><span class="fu">paste</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>      <span class="fu">sample</span>(LETTERS, nn, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>      <span class="fu">sample.int</span>(nn, nn, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>   ),</span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>   <span class="st">&quot;value&quot;</span><span class="ot">=</span><span class="fu">rnorm</span>(nn, <span class="dv">10</span>, <span class="dv">3</span>),</span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>   <span class="at">stringsAsFactors=</span><span class="cn">FALSE</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>)</span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="fu">import_from_df</span>(</span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>  <span class="at">graph=</span>graph,</span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>  <span class="at">cql=</span><span class="st">&#39;MERGE (n:TestNode {name:row.name, value:toFloat(row.value)})&#39;</span>,</span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>  <span class="at">toImport=</span>nodes</span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>)</span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="do">#########################################</span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="do">## Edges</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="do">## Define node properties in a data.frame</span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a>ne <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a>  <span class="st">&quot;from&quot;</span><span class="ot">=</span><span class="fu">sample</span>(nodes<span class="sc">$</span>name, ne, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a>  <span class="st">&quot;to&quot;</span><span class="ot">=</span><span class="fu">sample</span>(nodes<span class="sc">$</span>name, ne, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>  <span class="st">&quot;property&quot;</span><span class="ot">=</span><span class="fu">round</span>(<span class="fu">runif</span>(ne)<span class="sc">*</span><span class="dv">10</span>),</span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a>  <span class="at">stringsAsFactors=</span><span class="cn">FALSE</span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a>)</span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="fu">import_from_df</span>(</span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a>   <span class="at">graph=</span>graph,</span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a>   <span class="at">cql=</span><span class="fu">prepCql</span>(</span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a>      <span class="st">&#39;MATCH (f:TestNode {name:row.from})&#39;</span>,</span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a>      <span class="st">&#39;MATCH (t:TestNode {name:row.to})&#39;</span>,</span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a>      <span class="st">&#39;MERGE (f)-[r:TestEdge {property:toInteger(row.property)}]-&gt;(t)&#39;</span></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a>   ),</span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a>   <span class="at">toImport=</span>edges</span>
+<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a>)</span></code></pre></div>
 <!------------------------->
 
 <h2 id="query-the-neo4j-database">Query the Neo4j database</h2>
@@ -1009,19 +1027,19 @@ the ‘row’ prefix to refer to the data.frame column.</p>
 return data in a a data.frame (by setting <code>result=&quot;row&quot;</code>) or
 in a list with nodes, relationships and paths returned by the query (by
 setting <code>result=&quot;graph&quot;</code>)</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get TestNode with value smaller than 4.</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## According to the normal distribution we expect 2.5% of the total</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## number of nodes ==&gt; ~2500 nodes</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cypher</span>(</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>   graph,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">prepCql</span>(</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;MATCH (n:TestNode) WHERE n.value &lt;= 4&#39;</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;RETURN n.name as name, n.value as value&#39;</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>   )</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">dim</span>(df))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="do">## Get TestNode with value smaller than 4.</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">## According to the normal distribution we expect 2.5% of the total</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="do">## number of nodes ==&gt; ~2500 nodes</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cypher</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>   graph,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>   <span class="fu">prepCql</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>      <span class="st">&#39;MATCH (n:TestNode) WHERE n.value &lt;= 4&#39;</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>      <span class="st">&#39;RETURN n.name as name, n.value as value&#39;</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>   )</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>)</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">dim</span>(df))</span></code></pre></div>
 <pre><code>## [1] 2253    2</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(df))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(df))</span></code></pre></div>
 <pre><code>##      name    value
 ## 1  N 2585 1.965486
 ## 2 L 72527 3.345461
@@ -1029,23 +1047,64 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## 4  N 1436 1.500713
 ## 5 T 21434 3.592195
 ## 6 M 91787 2.504475</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get all paths of length 5 starting from a subset of nodes </span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>net <span class="ot">&lt;-</span> <span class="fu">cypher</span>(</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>   graph,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>   <span class="fu">prepCql</span>(</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;MATCH p=(f:TestNode)-[:TestEdge*5..5]-&gt;(t:TestNode) WHERE f.value &lt; 3&#39;</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;RETURN p&#39;</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>   ),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>   <span class="at">result=</span><span class="st">&quot;graph&quot;</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">lapply</span>(net, head, <span class="dv">3</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="do">## Multiple queries can be sent at once</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>dfl <span class="ot">&lt;-</span> <span class="fu">multicypher</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>   graph,</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>   <span class="fu">sprintf</span>(</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>      <span class="fu">paste</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>         <span class="st">&#39;MATCH (n:TestNode) WHERE n.value &lt;= %s&#39;</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>         <span class="st">&#39;RETURN n.name as name, n.value as value&#39;</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>      ),</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>      <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>   )</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>)</span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">lapply</span>(dfl, dim))</span></code></pre></div>
+<pre><code>## [[1]]
+## [1] 386   2
+## 
+## [[2]]
+## [1] 954   2
+## 
+## [[3]]
+## [1] 2253    2</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="do">## Get all paths of length 5 starting from a subset of nodes </span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>net <span class="ot">&lt;-</span> <span class="fu">cypher</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>   graph,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>   <span class="fu">prepCql</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>      <span class="st">&#39;MATCH p=(f:TestNode)-[:TestEdge*5..5]-&gt;(t:TestNode) WHERE f.value &lt; 3&#39;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>      <span class="st">&#39;RETURN p&#39;</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>   ),</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>   <span class="at">result=</span><span class="st">&quot;graph&quot;</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">lapply</span>(net, head, <span class="dv">3</span>))</span></code></pre></div>
 <pre><code>## $nodes
+## $nodes$`79444`
+## $nodes$`79444`$id
+## [1] &quot;79444&quot;
+## 
+## $nodes$`79444`$elementId
+## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444&quot;
+## 
+## $nodes$`79444`$labels
+## $nodes$`79444`$labels[[1]]
+## [1] &quot;TestNode&quot;
+## 
+## 
+## $nodes$`79444`$properties
+## $nodes$`79444`$properties$name
+## [1] &quot;S 99155&quot;
+## 
+## $nodes$`79444`$properties$value
+## [1] 9.658103
+## 
+## 
+## 
 ## $nodes$`97347`
 ## $nodes$`97347`$id
 ## [1] &quot;97347&quot;
 ## 
 ## $nodes$`97347`$elementId
-## [1] &quot;4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:97347&quot;
+## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:97347&quot;
 ## 
 ## $nodes$`97347`$labels
 ## $nodes$`97347`$labels[[1]]
@@ -1066,7 +1125,7 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## [1] &quot;7&quot;
 ## 
 ## $nodes$`7`$elementId
-## [1] &quot;4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:7&quot;
+## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7&quot;
 ## 
 ## $nodes$`7`$labels
 ## $nodes$`7`$labels[[1]]
@@ -1082,124 +1141,103 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## 
 ## 
 ## 
-## $nodes$`39159`
-## $nodes$`39159`$id
-## [1] &quot;39159&quot;
-## 
-## $nodes$`39159`$elementId
-## [1] &quot;4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:39159&quot;
-## 
-## $nodes$`39159`$labels
-## $nodes$`39159`$labels[[1]]
-## [1] &quot;TestNode&quot;
-## 
-## 
-## $nodes$`39159`$properties
-## $nodes$`39159`$properties$name
-## [1] &quot;L 31296&quot;
-## 
-## $nodes$`39159`$properties$value
-## [1] 14.95749
-## 
-## 
-## 
 ## 
 ## $relationships
-## $relationships$`23876`
-## $relationships$`23876`$id
-## [1] &quot;23876&quot;
+## $relationships$`7553`
+## $relationships$`7553`$id
+## [1] &quot;7553&quot;
 ## 
-## $relationships$`23876`$elementId
-## [1] &quot;5:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:23876&quot;
+## $relationships$`7553`$elementId
+## [1] &quot;5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7553&quot;
 ## 
-## $relationships$`23876`$type
+## $relationships$`7553`$type
 ## [1] &quot;TestEdge&quot;
 ## 
-## $relationships$`23876`$startNode
-## [1] &quot;39159&quot;
+## $relationships$`7553`$startNode
+## [1] &quot;79444&quot;
 ## 
-## $relationships$`23876`$startNodeElementId
-## [1] &quot;4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:39159&quot;
+## $relationships$`7553`$startNodeElementId
+## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444&quot;
 ## 
-## $relationships$`23876`$endNode
-## [1] &quot;45711&quot;
+## $relationships$`7553`$endNode
+## [1] &quot;20186&quot;
 ## 
-## $relationships$`23876`$endNodeElementId
-## [1] &quot;4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:45711&quot;
+## $relationships$`7553`$endNodeElementId
+## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:20186&quot;
 ## 
-## $relationships$`23876`$properties
-## $relationships$`23876`$properties$property
+## $relationships$`7553`$properties
+## $relationships$`7553`$properties$property
+## [1] 8
+## 
+## 
+## 
+## $relationships$`94678`
+## $relationships$`94678`$id
+## [1] &quot;94678&quot;
+## 
+## $relationships$`94678`$elementId
+## [1] &quot;5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:94678&quot;
+## 
+## $relationships$`94678`$type
+## [1] &quot;TestEdge&quot;
+## 
+## $relationships$`94678`$startNode
+## [1] &quot;20186&quot;
+## 
+## $relationships$`94678`$startNodeElementId
+## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:20186&quot;
+## 
+## $relationships$`94678`$endNode
+## [1] &quot;7311&quot;
+## 
+## $relationships$`94678`$endNodeElementId
+## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7311&quot;
+## 
+## $relationships$`94678`$properties
+## $relationships$`94678`$properties$property
 ## [1] 3
 ## 
 ## 
 ## 
-## $relationships$`93543`
-## $relationships$`93543`$id
-## [1] &quot;93543&quot;
+## $relationships$`470`
+## $relationships$`470`$id
+## [1] &quot;470&quot;
 ## 
-## $relationships$`93543`$elementId
-## [1] &quot;5:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:93543&quot;
+## $relationships$`470`$elementId
+## [1] &quot;5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:470&quot;
 ## 
-## $relationships$`93543`$type
+## $relationships$`470`$type
 ## [1] &quot;TestEdge&quot;
 ## 
-## $relationships$`93543`$startNode
-## [1] &quot;7&quot;
+## $relationships$`470`$startNode
+## [1] &quot;13440&quot;
 ## 
-## $relationships$`93543`$startNodeElementId
-## [1] &quot;4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:7&quot;
+## $relationships$`470`$startNodeElementId
+## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:13440&quot;
 ## 
-## $relationships$`93543`$endNode
-## [1] &quot;97347&quot;
+## $relationships$`470`$endNode
+## [1] &quot;79444&quot;
 ## 
-## $relationships$`93543`$endNodeElementId
-## [1] &quot;4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:97347&quot;
+## $relationships$`470`$endNodeElementId
+## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444&quot;
 ## 
-## $relationships$`93543`$properties
-## $relationships$`93543`$properties$property
-## [1] 8
-## 
-## 
-## 
-## $relationships$`24488`
-## $relationships$`24488`$id
-## [1] &quot;24488&quot;
-## 
-## $relationships$`24488`$elementId
-## [1] &quot;5:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:24488&quot;
-## 
-## $relationships$`24488`$type
-## [1] &quot;TestEdge&quot;
-## 
-## $relationships$`24488`$startNode
-## [1] &quot;93854&quot;
-## 
-## $relationships$`24488`$startNodeElementId
-## [1] &quot;4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:93854&quot;
-## 
-## $relationships$`24488`$endNode
-## [1] &quot;39159&quot;
-## 
-## $relationships$`24488`$endNodeElementId
-## [1] &quot;4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:39159&quot;
-## 
-## $relationships$`24488`$properties
-## $relationships$`24488`$properties$property
-## [1] 8
+## $relationships$`470`$properties
+## $relationships$`470`$properties$property
+## [1] 10
 ## 
 ## 
 ## 
 ## 
 ## $paths
 ## $paths[[1]]
-## [1] &quot;23876&quot; &quot;93543&quot; &quot;24488&quot; &quot;46044&quot; &quot;6560&quot; 
-## 
-## $paths[[2]]
 ## [1] &quot;7553&quot;  &quot;94678&quot; &quot;470&quot;   &quot;93543&quot; &quot;31423&quot;
 ## 
+## $paths[[2]]
+## [1] &quot;7553&quot;  &quot;470&quot;   &quot;93543&quot; &quot;31423&quot; &quot;98608&quot;
+## 
 ## $paths[[3]]
-## [1] &quot;7553&quot;  &quot;470&quot;   &quot;93543&quot; &quot;31423&quot; &quot;98608&quot;</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(net<span class="sc">$</span>paths, length))))</span></code></pre></div>
+## [1] &quot;69425&quot; &quot;93543&quot; &quot;58428&quot; &quot;31423&quot; &quot;71263&quot;</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(net<span class="sc">$</span>paths, length))))</span></code></pre></div>
 <pre><code>## 
 ##   5 
 ## 945</code></pre>

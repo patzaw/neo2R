@@ -10,7 +10,8 @@ startGraph(
   username = NA,
   password = NA,
   importPath = NA,
-  .opts = list()
+  .opts = list(),
+  check = TRUE
 )
 }
 \arguments{
@@ -38,6 +39,9 @@ for example: \code{.opts = list(ssl_verifypeer = 0)}). Moreover, this parameter
 can be used to pass additional headers to the graph requests as
 "extendedHeaders": it is useful, for example, for OAuth access
 delegation (see details).}
+
+\item{check}{check the connection before returning it (default: TRUE).
+Set to false when connection to the "system" database}
 }
 \value{
 A connection to the graph DB:

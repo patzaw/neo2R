@@ -1,3 +1,11 @@
+# Version 2.4.2
+
+- Support periodic commit for Neo4j version 5
+(thanks to [gregleleu](https://github.com/gregleleu))
+
+- Support connection to the "system" database in Neo4j version 5
+for admin tasks
+
 # Version 2.4.1
 
 - Bug fix in `import_from_df()` when importing a data.frame with one column

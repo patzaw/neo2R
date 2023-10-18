@@ -1,20 +1,16 @@
 README
 ================
 
-- <a href="#neo2r" id="toc-neo2r">neo2R</a>
-- <a href="#installation" id="toc-installation">Installation</a>
-  - <a href="#from-cran" id="toc-from-cran">From CRAN</a>
-  - <a href="#dependencies" id="toc-dependencies">Dependencies</a>
-  - <a href="#installation-from-github"
-    id="toc-installation-from-github">Installation from github</a>
-- <a href="#use" id="toc-use">Use</a>
-  - <a href="#running-neo4j" id="toc-running-neo4j">Running Neo4j</a>
-  - <a href="#connect-to-neo4j" id="toc-connect-to-neo4j">Connect to
-    Neo4j</a>
-  - <a href="#import-from-dataframe" id="toc-import-from-dataframe">Import
-    from data.frame</a>
-  - <a href="#query-the-neo4j-database"
-    id="toc-query-the-neo4j-database">Query the Neo4j database</a>
+- [neo2R](#neo2r)
+- [Installation](#installation)
+  - [From CRAN](#from-cran)
+  - [Dependencies](#dependencies)
+  - [Installation from github](#installation-from-github)
+- [Use](#use)
+  - [Running Neo4j](#running-neo4j)
+  - [Connect to Neo4j](#connect-to-neo4j)
+  - [Import from data.frame](#import-from-dataframe)
+  - [Query the Neo4j database](#query-the-neo4j-database)
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
@@ -111,7 +107,7 @@ export NJ_BOLT_PORT=7687
 export NJ_HOME=~/neo4j_home
 
 ## Authorization
-NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
+NJ_AUTH=neo4j/donttrustusers # set to 'none' if you want to disable authorization
 
 ## APOC download
 export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.15/apoc-3.5.0.15-all.jar
@@ -187,7 +183,7 @@ sudo chmod a+rwx $NJ_IMPORT
 
 export CONTAINER=neo4j_cont
 
-export NJ_VERSION=4.4.5
+export NJ_VERSION=4.4.26
 
 ## Ports
 export NJ_HTTP_PORT=7474
@@ -198,7 +194,7 @@ export NJ_BOLT_PORT=7687
 export NJ_HOME=~/neo4j_home
 
 ## Authorization
-NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
+NJ_AUTH=neo4j/donttrustusers # set to 'none' if you want to disable authorization
 
 ## APOC download
 export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.3/apoc-4.4.0.3-all.jar
@@ -266,7 +262,13 @@ sudo chmod a+rwx $NJ_IMPORT
     
 ```
 
-### Neo4j 5.x
+### Neo4j 5.x (\>= 5.12)
+
+In recent version of Neo4j, it is not possible to instantiate the docker
+image with a specific user name and password. The password needs to be
+changed after Neo4j starts. Nevertheless, it’s still possible to
+instanciate the image without any credentials with the following
+`docker run` parameter: `--env NEO4J_AUTH=none`
 
 ``` sh
 #!/bin/sh
@@ -277,7 +279,7 @@ sudo chmod a+rwx $NJ_IMPORT
 
 export CONTAINER=neo4j_cont
 
-export NJ_VERSION=5.1.0
+export NJ_VERSION=5.12.0
 
 ## Ports
 export NJ_HTTP_PORT=7474
@@ -286,9 +288,6 @@ export NJ_BOLT_PORT=7687
 
 ## Change the location of the Neo4j directory
 export NJ_HOME=~/neo4j_home
-
-## Authorization
-NJ_AUTH=neo4j/1234 # set to 'none' if you want to disable authorization
 
 ## APOC download
 export NJ_APOC=https://github.com/neo4j/apoc/releases/download/5.1.0/apoc-5.1.0-core.jar
@@ -325,22 +324,23 @@ cd $NJ_PLUGINS
 wget --no-check-certificate $NJ_APOC
 cd -
 
+## Add ` --env NEO4J_AUTH=none ` if you don't want to setup credentials
 docker run -d \
    --name $CONTAINER \
    --publish=$NJ_HTTP_PORT:7474 \
    --publish=$NJ_HTTPS_PORT:7473 \
    --publish=$NJ_BOLT_PORT:7687 \
-   --env=NEO4J_dbms_memory_heap_initial__size=2G \
-   --env=NEO4J_dbms_memory_heap_max__size=2G \
-   --env=NEO4J_dbms_memory_pagecache_size=1G \
-   --env=NEO4J_dbms_query__cache__size=0 \
-   --env=NEO4J_cypher_min__replan__interval=100000000ms \
-   --env=NEO4J_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_server_memory_heap_initial__size=2G \
+   --env=NEO4J_server_memory_heap_max__size=2G \
+   --env=NEO4J_server_memory_pagecache_size=1G \
+   --env=NEO4J_server_db_query__cache__size=0 \
+   --env=NEO4J_dbms_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_dbms_cypher_statistics__divergence__threshold=1 \
    --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\\* \
-   --env=NEO4J_dbms_directories_import=import \
-   --env=NEO4J_AUTH=$NJ_AUTH \
+   --env=NEO4J_server_directories_import=import\
    --volume=$NJ_IMPORT:/var/lib/neo4j/import \
    --volume=$NJ_DATA/data:/data \
+   --volume=$NJ_LOGS:/var/lib/neo4j/logs \
    --volume=$NJ_PLUGINS:/plugins \
    --volume=$NJ_SSL:/ssl \
    --env=NEO4J_server_https_enabled=true \
@@ -355,6 +355,25 @@ docker run -d \
 sleep 15
 sudo chmod a+rwx $NJ_IMPORT
     
+```
+
+If you did not disable credentials (with `--env NEO4J_AUTH=none`),
+you’ll need to first change the user password before being able to
+connect to the graph database. The following chunk shows how to do it
+with neo2R.
+
+``` r
+library(neo2R)
+system <- startGraph(
+  "https://localhost:7473", database="system", check=FALSE,
+  username="neo4j", password="neo4j",
+  importPath="~/neo4j_home/neo4jImport",
+  .opts = list(ssl_verifypeer=0)
+)
+cypher(
+   system,
+   "ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'donttrustusers'"
+)
 ```
 
 <!------------------------->
@@ -372,7 +391,7 @@ order to allow import from data.frames.
 library(neo2R)
 graph <- startGraph(
   "https://localhost:7473",
-  username="neo4j", password="1234",
+  username="neo4j", password="donttrustusers",
   importPath="~/neo4j_home/neo4jImport",
   .opts = list(ssl_verifypeer=0)
 )
@@ -471,6 +490,30 @@ print(head(df))
     ## 6 M 91787 2.504475
 
 ``` r
+## Multiple queries can be sent at once
+dfl <- multicypher(
+   graph,
+   sprintf(
+      paste(
+         'MATCH (n:TestNode) WHERE n.value <= %s',
+         'RETURN n.name as name, n.value as value'
+      ),
+      2:4
+   )
+)
+print(lapply(dfl, dim))
+```
+
+    ## [[1]]
+    ## [1] 386   2
+    ## 
+    ## [[2]]
+    ## [1] 954   2
+    ## 
+    ## [[3]]
+    ## [1] 2253    2
+
+``` r
 ## Get all paths of length 5 starting from a subset of nodes 
 net <- cypher(
    graph,
@@ -484,12 +527,33 @@ print(lapply(net, head, 3))
 ```
 
     ## $nodes
+    ## $nodes$`79444`
+    ## $nodes$`79444`$id
+    ## [1] "79444"
+    ## 
+    ## $nodes$`79444`$elementId
+    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444"
+    ## 
+    ## $nodes$`79444`$labels
+    ## $nodes$`79444`$labels[[1]]
+    ## [1] "TestNode"
+    ## 
+    ## 
+    ## $nodes$`79444`$properties
+    ## $nodes$`79444`$properties$name
+    ## [1] "S 99155"
+    ## 
+    ## $nodes$`79444`$properties$value
+    ## [1] 9.658103
+    ## 
+    ## 
+    ## 
     ## $nodes$`97347`
     ## $nodes$`97347`$id
     ## [1] "97347"
     ## 
     ## $nodes$`97347`$elementId
-    ## [1] "4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:97347"
+    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:97347"
     ## 
     ## $nodes$`97347`$labels
     ## $nodes$`97347`$labels[[1]]
@@ -510,7 +574,7 @@ print(lapply(net, head, 3))
     ## [1] "7"
     ## 
     ## $nodes$`7`$elementId
-    ## [1] "4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:7"
+    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7"
     ## 
     ## $nodes$`7`$labels
     ## $nodes$`7`$labels[[1]]
@@ -526,123 +590,102 @@ print(lapply(net, head, 3))
     ## 
     ## 
     ## 
-    ## $nodes$`39159`
-    ## $nodes$`39159`$id
-    ## [1] "39159"
-    ## 
-    ## $nodes$`39159`$elementId
-    ## [1] "4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:39159"
-    ## 
-    ## $nodes$`39159`$labels
-    ## $nodes$`39159`$labels[[1]]
-    ## [1] "TestNode"
-    ## 
-    ## 
-    ## $nodes$`39159`$properties
-    ## $nodes$`39159`$properties$name
-    ## [1] "L 31296"
-    ## 
-    ## $nodes$`39159`$properties$value
-    ## [1] 14.95749
-    ## 
-    ## 
-    ## 
     ## 
     ## $relationships
-    ## $relationships$`23876`
-    ## $relationships$`23876`$id
-    ## [1] "23876"
+    ## $relationships$`7553`
+    ## $relationships$`7553`$id
+    ## [1] "7553"
     ## 
-    ## $relationships$`23876`$elementId
-    ## [1] "5:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:23876"
+    ## $relationships$`7553`$elementId
+    ## [1] "5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7553"
     ## 
-    ## $relationships$`23876`$type
+    ## $relationships$`7553`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`23876`$startNode
-    ## [1] "39159"
+    ## $relationships$`7553`$startNode
+    ## [1] "79444"
     ## 
-    ## $relationships$`23876`$startNodeElementId
-    ## [1] "4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:39159"
+    ## $relationships$`7553`$startNodeElementId
+    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444"
     ## 
-    ## $relationships$`23876`$endNode
-    ## [1] "45711"
+    ## $relationships$`7553`$endNode
+    ## [1] "20186"
     ## 
-    ## $relationships$`23876`$endNodeElementId
-    ## [1] "4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:45711"
+    ## $relationships$`7553`$endNodeElementId
+    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:20186"
     ## 
-    ## $relationships$`23876`$properties
-    ## $relationships$`23876`$properties$property
+    ## $relationships$`7553`$properties
+    ## $relationships$`7553`$properties$property
+    ## [1] 8
+    ## 
+    ## 
+    ## 
+    ## $relationships$`94678`
+    ## $relationships$`94678`$id
+    ## [1] "94678"
+    ## 
+    ## $relationships$`94678`$elementId
+    ## [1] "5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:94678"
+    ## 
+    ## $relationships$`94678`$type
+    ## [1] "TestEdge"
+    ## 
+    ## $relationships$`94678`$startNode
+    ## [1] "20186"
+    ## 
+    ## $relationships$`94678`$startNodeElementId
+    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:20186"
+    ## 
+    ## $relationships$`94678`$endNode
+    ## [1] "7311"
+    ## 
+    ## $relationships$`94678`$endNodeElementId
+    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7311"
+    ## 
+    ## $relationships$`94678`$properties
+    ## $relationships$`94678`$properties$property
     ## [1] 3
     ## 
     ## 
     ## 
-    ## $relationships$`93543`
-    ## $relationships$`93543`$id
-    ## [1] "93543"
+    ## $relationships$`470`
+    ## $relationships$`470`$id
+    ## [1] "470"
     ## 
-    ## $relationships$`93543`$elementId
-    ## [1] "5:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:93543"
+    ## $relationships$`470`$elementId
+    ## [1] "5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:470"
     ## 
-    ## $relationships$`93543`$type
+    ## $relationships$`470`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`93543`$startNode
-    ## [1] "7"
+    ## $relationships$`470`$startNode
+    ## [1] "13440"
     ## 
-    ## $relationships$`93543`$startNodeElementId
-    ## [1] "4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:7"
+    ## $relationships$`470`$startNodeElementId
+    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:13440"
     ## 
-    ## $relationships$`93543`$endNode
-    ## [1] "97347"
+    ## $relationships$`470`$endNode
+    ## [1] "79444"
     ## 
-    ## $relationships$`93543`$endNodeElementId
-    ## [1] "4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:97347"
+    ## $relationships$`470`$endNodeElementId
+    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444"
     ## 
-    ## $relationships$`93543`$properties
-    ## $relationships$`93543`$properties$property
-    ## [1] 8
-    ## 
-    ## 
-    ## 
-    ## $relationships$`24488`
-    ## $relationships$`24488`$id
-    ## [1] "24488"
-    ## 
-    ## $relationships$`24488`$elementId
-    ## [1] "5:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:24488"
-    ## 
-    ## $relationships$`24488`$type
-    ## [1] "TestEdge"
-    ## 
-    ## $relationships$`24488`$startNode
-    ## [1] "93854"
-    ## 
-    ## $relationships$`24488`$startNodeElementId
-    ## [1] "4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:93854"
-    ## 
-    ## $relationships$`24488`$endNode
-    ## [1] "39159"
-    ## 
-    ## $relationships$`24488`$endNodeElementId
-    ## [1] "4:625d6a6f-0897-4dcb-92c4-d4e94f2bb787:39159"
-    ## 
-    ## $relationships$`24488`$properties
-    ## $relationships$`24488`$properties$property
-    ## [1] 8
+    ## $relationships$`470`$properties
+    ## $relationships$`470`$properties$property
+    ## [1] 10
     ## 
     ## 
     ## 
     ## 
     ## $paths
     ## $paths[[1]]
-    ## [1] "23876" "93543" "24488" "46044" "6560" 
-    ## 
-    ## $paths[[2]]
     ## [1] "7553"  "94678" "470"   "93543" "31423"
     ## 
-    ## $paths[[3]]
+    ## $paths[[2]]
     ## [1] "7553"  "470"   "93543" "31423" "98608"
+    ## 
+    ## $paths[[3]]
+    ## [1] "69425" "93543" "58428" "31423" "71263"
 
 ``` r
 print(table(unlist(lapply(net$paths, length))))
