@@ -3,7 +3,7 @@ title: "README"
 output:
   rmarkdown::github_document:
     number_sections: false
-    toc: true
+    toc: false
     toc_depth: 2
 editor_options: 
   chunk_output_type: console
@@ -485,7 +485,8 @@ import_from_df(
 You can query the Neo4j graph database using the `cypher()` function.
 Depending on the query, the function can return data in a a data.frame
 (by setting `result="row"`) or in a list with nodes, relationships and paths
-returned by the query (by setting `result="graph"`)
+returned by the query by setting `result="graph"` (the "graph" method is
+quite slow with version 5 of Neo4j for unknown reason).
 
 ```{r}
 ## Get TestNode with value smaller than 4.

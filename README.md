@@ -1,17 +1,6 @@
 README
 ================
 
-- [neo2R](#neo2r)
-- [Installation](#installation)
-  - [From CRAN](#from-cran)
-  - [Dependencies](#dependencies)
-  - [Installation from github](#installation-from-github)
-- [Use](#use)
-  - [Running Neo4j](#running-neo4j)
-  - [Connect to Neo4j](#connect-to-neo4j)
-  - [Import from data.frame](#import-from-dataframe)
-  - [Query the Neo4j database](#query-the-neo4j-database)
-
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
 
@@ -414,6 +403,13 @@ if(graph$version[[1]]=="5"){
 }else{
    try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent=TRUE)
 }
+```
+
+    ## Neo.ClientError.Schema.EquivalentSchemaRuleAlreadyExists
+
+    ## An equivalent index already exists, 'Index( id=3, name='index_83b6d7ae', type='RANGE', schema=(:TestNode {name}), indexProvider='range-1.0' )'.
+
+``` r
 ## Define node properties in a data.frame
 set.seed(1)
 nn <- 100000
@@ -459,7 +455,8 @@ import_from_df(
 You can query the Neo4j graph database using the `cypher()` function.
 Depending on the query, the function can return data in a a data.frame
 (by setting `result="row"`) or in a list with nodes, relationships and
-paths returned by the query (by setting `result="graph"`)
+paths returned by the query by setting `result="graph"` (the “graph”
+method is quite slow with version 5 of Neo4j for unknown reason).
 
 ``` r
 ## Get TestNode with value smaller than 4.
@@ -532,7 +529,7 @@ print(lapply(net, head, 3))
     ## [1] "79444"
     ## 
     ## $nodes$`79444`$elementId
-    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444"
+    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:79444"
     ## 
     ## $nodes$`79444`$labels
     ## $nodes$`79444`$labels[[1]]
@@ -553,7 +550,7 @@ print(lapply(net, head, 3))
     ## [1] "97347"
     ## 
     ## $nodes$`97347`$elementId
-    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:97347"
+    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:97347"
     ## 
     ## $nodes$`97347`$labels
     ## $nodes$`97347`$labels[[1]]
@@ -574,7 +571,7 @@ print(lapply(net, head, 3))
     ## [1] "7"
     ## 
     ## $nodes$`7`$elementId
-    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7"
+    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:7"
     ## 
     ## $nodes$`7`$labels
     ## $nodes$`7`$labels[[1]]
@@ -597,7 +594,7 @@ print(lapply(net, head, 3))
     ## [1] "7553"
     ## 
     ## $relationships$`7553`$elementId
-    ## [1] "5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7553"
+    ## [1] "5:bf1055bf-0089-45bb-87e6-18a61e233aab:7553"
     ## 
     ## $relationships$`7553`$type
     ## [1] "TestEdge"
@@ -606,13 +603,13 @@ print(lapply(net, head, 3))
     ## [1] "79444"
     ## 
     ## $relationships$`7553`$startNodeElementId
-    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444"
+    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:79444"
     ## 
     ## $relationships$`7553`$endNode
     ## [1] "20186"
     ## 
     ## $relationships$`7553`$endNodeElementId
-    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:20186"
+    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:20186"
     ## 
     ## $relationships$`7553`$properties
     ## $relationships$`7553`$properties$property
@@ -625,7 +622,7 @@ print(lapply(net, head, 3))
     ## [1] "94678"
     ## 
     ## $relationships$`94678`$elementId
-    ## [1] "5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:94678"
+    ## [1] "5:bf1055bf-0089-45bb-87e6-18a61e233aab:94678"
     ## 
     ## $relationships$`94678`$type
     ## [1] "TestEdge"
@@ -634,13 +631,13 @@ print(lapply(net, head, 3))
     ## [1] "20186"
     ## 
     ## $relationships$`94678`$startNodeElementId
-    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:20186"
+    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:20186"
     ## 
     ## $relationships$`94678`$endNode
     ## [1] "7311"
     ## 
     ## $relationships$`94678`$endNodeElementId
-    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7311"
+    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:7311"
     ## 
     ## $relationships$`94678`$properties
     ## $relationships$`94678`$properties$property
@@ -653,7 +650,7 @@ print(lapply(net, head, 3))
     ## [1] "470"
     ## 
     ## $relationships$`470`$elementId
-    ## [1] "5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:470"
+    ## [1] "5:bf1055bf-0089-45bb-87e6-18a61e233aab:470"
     ## 
     ## $relationships$`470`$type
     ## [1] "TestEdge"
@@ -662,13 +659,13 @@ print(lapply(net, head, 3))
     ## [1] "13440"
     ## 
     ## $relationships$`470`$startNodeElementId
-    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:13440"
+    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:13440"
     ## 
     ## $relationships$`470`$endNode
     ## [1] "79444"
     ## 
     ## $relationships$`470`$endNodeElementId
-    ## [1] "4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444"
+    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:79444"
     ## 
     ## $relationships$`470`$properties
     ## $relationships$`470`$properties$property

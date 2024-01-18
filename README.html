@@ -602,30 +602,12 @@ padding-top: 0px;
 <body>
 
 <h1 id="readme">README</h1>
-<ul>
-<li><a href="#neo2r">neo2R</a></li>
-<li><a href="#installation">Installation</a>
-<ul>
-<li><a href="#from-cran">From CRAN</a></li>
-<li><a href="#dependencies">Dependencies</a></li>
-<li><a href="#installation-from-github">Installation from
-github</a></li>
-</ul></li>
-<li><a href="#use">Use</a>
-<ul>
-<li><a href="#running-neo4j">Running Neo4j</a></li>
-<li><a href="#connect-to-neo4j">Connect to Neo4j</a></li>
-<li><a href="#import-from-dataframe">Import from data.frame</a></li>
-<li><a href="#query-the-neo4j-database">Query the Neo4j
-database</a></li>
-</ul></li>
-</ul>
 <!----------------------------------------------------------------------------->
 
 <!----------------------------------------------------------------------------->
 
 <h1 id="neo2r">neo2R</h1>
-<p><a href="https://cran.r-project.org/package=neo2R"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgYXJpYS1sYWJlbD0iQ1JBTiAyLjQuMSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz4KICA8L21hc2s+CiAgPGcgbWFzaz0idXJsKCNhKSI+CiAgICA8cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDQzdjIwSDB6Ii8+CiAgICA8cGF0aCBmaWxsPSIjNGMxIiBkPSJNNDMgMGg2M3YyMEg0M3oiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoODV2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIyMS41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIENSQU4KICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjIxLjUiIHk9IjE0Ij4KICAgICAgQ1JBTgogICAgPC90ZXh0PgogICAgPHRleHQgeD0iNjMiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMi40LjEKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjYzIiB5PSIxNCI+CiAgICAgIDIuNC4xCiAgICA8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=" alt="CRAN_Status_Badge" /></a> <a href="https://cran.r-project.org/package=neo2R"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiIGFyaWEtbGFiZWw9IkNSQU4gZG93bmxvYWRzIDI0NC9tb250aCI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+CiAgPC9tYXNrPgogIDxnIG1hc2s9InVybCgjYSkiPjxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoNzB2MjBIMHoiLz4KICAgIDxwYXRoIGZpbGw9IiMwMDdlYzYiIGQ9Ik03MCAwaDc5djIwSDcweiIvPgogICAgPHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGgxNDl2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIzNiIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPgogICAgICBkb3dubG9hZHMKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjM2IiB5PSIxNCI+CiAgICAgIGRvd25sb2FkcwogICAgPC90ZXh0PgogICAgPHRleHQgeD0iMTA4LjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMjQ0L21vbnRoCiAgICA8L3RleHQ+CiAgICA8dGV4dCB4PSIxMDguNSIgeT0iMTQiPgogICAgICAyNDQvbW9udGgKICAgIDwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" /></a></p>
+<p><a href="https://cran.r-project.org/package=neo2R"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgYXJpYS1sYWJlbD0iQ1JBTiAyLjQuMSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz4KICA8L21hc2s+CiAgPGcgbWFzaz0idXJsKCNhKSI+CiAgICA8cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDQzdjIwSDB6Ii8+CiAgICA8cGF0aCBmaWxsPSIjNGMxIiBkPSJNNDMgMGg2M3YyMEg0M3oiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoODV2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIyMS41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIENSQU4KICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjIxLjUiIHk9IjE0Ij4KICAgICAgQ1JBTgogICAgPC90ZXh0PgogICAgPHRleHQgeD0iNjMiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMi40LjEKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjYzIiB5PSIxNCI+CiAgICAgIDIuNC4xCiAgICA8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=" alt="CRAN_Status_Badge" /></a> <a href="https://cran.r-project.org/package=neo2R"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiIGFyaWEtbGFiZWw9IkNSQU4gZG93bmxvYWRzIDIxMS9tb250aCI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSIxNDkiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+CiAgPC9tYXNrPgogIDxnIG1hc2s9InVybCgjYSkiPjxwYXRoIGZpbGw9IiM1NTUiIGQ9Ik0wIDBoNzB2MjBIMHoiLz4KICAgIDxwYXRoIGZpbGw9IiMwMDdlYzYiIGQ9Ik03MCAwaDc5djIwSDcweiIvPgogICAgPHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGgxNDl2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIzNiIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPgogICAgICBkb3dubG9hZHMKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjM2IiB5PSIxNCI+CiAgICAgIGRvd25sb2FkcwogICAgPC90ZXh0PgogICAgPHRleHQgeD0iMTA4LjUiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMjExL21vbnRoCiAgICA8L3RleHQ+CiAgICA8dGV4dCB4PSIxMDguNSIgeT0iMTQiPgogICAgICAyMTEvbW9udGgKICAgIDwvdGV4dD4KICA8L2c+Cjwvc3ZnPg==" /></a></p>
 <p>The aim of the neo2R is to provide simple and low level connectors
 for querying <a href="https://neo4j.com/">Neo4j graph databases</a>. The
 objects returned by the query functions are either lists or data.frames
@@ -982,64 +964,68 @@ the ‘row’ prefix to refer to the data.frame column.</p>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>   <span class="fu">try</span>(<span class="fu">cypher</span>(graph, <span class="st">&#39;CREATE INDEX FOR (n:TestNode) ON (n.name)&#39;</span>), <span class="at">silent=</span><span class="cn">TRUE</span>)</span>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>}<span class="cf">else</span>{</span>
 <span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>   <span class="fu">try</span>(<span class="fu">cypher</span>(graph, <span class="st">&#39;CREATE INDEX ON :TestNode(name)&#39;</span>), <span class="at">silent=</span><span class="cn">TRUE</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>}</span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="do">## Define node properties in a data.frame</span></span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>nn <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
-<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>   <span class="st">&quot;name&quot;</span><span class="ot">=</span><span class="fu">paste</span>(</span>
-<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>      <span class="fu">sample</span>(LETTERS, nn, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
-<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>      <span class="fu">sample.int</span>(nn, nn, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
-<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>   ),</span>
-<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>   <span class="st">&quot;value&quot;</span><span class="ot">=</span><span class="fu">rnorm</span>(nn, <span class="dv">10</span>, <span class="dv">3</span>),</span>
-<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>   <span class="at">stringsAsFactors=</span><span class="cn">FALSE</span></span>
-<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>)</span>
-<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="fu">import_from_df</span>(</span>
-<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>  <span class="at">graph=</span>graph,</span>
-<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>  <span class="at">cql=</span><span class="st">&#39;MERGE (n:TestNode {name:row.name, value:toFloat(row.value)})&#39;</span>,</span>
-<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>  <span class="at">toImport=</span>nodes</span>
-<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>)</span>
-<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a></span>
-<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="do">#########################################</span></span>
-<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="do">## Edges</span></span>
-<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="do">## Define node properties in a data.frame</span></span>
-<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a>ne <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
-<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a>  <span class="st">&quot;from&quot;</span><span class="ot">=</span><span class="fu">sample</span>(nodes<span class="sc">$</span>name, ne, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
-<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a>  <span class="st">&quot;to&quot;</span><span class="ot">=</span><span class="fu">sample</span>(nodes<span class="sc">$</span>name, ne, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
-<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>  <span class="st">&quot;property&quot;</span><span class="ot">=</span><span class="fu">round</span>(<span class="fu">runif</span>(ne)<span class="sc">*</span><span class="dv">10</span>),</span>
-<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a>  <span class="at">stringsAsFactors=</span><span class="cn">FALSE</span></span>
-<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a>)</span>
-<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="fu">import_from_df</span>(</span>
-<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a>   <span class="at">graph=</span>graph,</span>
-<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a>   <span class="at">cql=</span><span class="fu">prepCql</span>(</span>
-<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a>      <span class="st">&#39;MATCH (f:TestNode {name:row.from})&#39;</span>,</span>
-<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a>      <span class="st">&#39;MATCH (t:TestNode {name:row.to})&#39;</span>,</span>
-<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a>      <span class="st">&#39;MERGE (f)-[r:TestEdge {property:toInteger(row.property)}]-&gt;(t)&#39;</span></span>
-<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a>   ),</span>
-<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a>   <span class="at">toImport=</span>edges</span>
-<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## Neo.ClientError.Schema.EquivalentSchemaRuleAlreadyExists
+
+## An equivalent index already exists, &#39;Index( id=3, name=&#39;index_83b6d7ae&#39;, type=&#39;RANGE&#39;, schema=(:TestNode {name}), indexProvider=&#39;range-1.0&#39; )&#39;.</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="do">## Define node properties in a data.frame</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>nn <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>nodes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>   <span class="st">&quot;name&quot;</span><span class="ot">=</span><span class="fu">paste</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>      <span class="fu">sample</span>(LETTERS, nn, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>      <span class="fu">sample.int</span>(nn, nn, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>   ),</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>   <span class="st">&quot;value&quot;</span><span class="ot">=</span><span class="fu">rnorm</span>(nn, <span class="dv">10</span>, <span class="dv">3</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>   <span class="at">stringsAsFactors=</span><span class="cn">FALSE</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>)</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="fu">import_from_df</span>(</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>  <span class="at">graph=</span>graph,</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>  <span class="at">cql=</span><span class="st">&#39;MERGE (n:TestNode {name:row.name, value:toFloat(row.value)})&#39;</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>  <span class="at">toImport=</span>nodes</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>)</span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="do">#########################################</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="do">## Edges</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="do">## Define node properties in a data.frame</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>ne <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a>  <span class="st">&quot;from&quot;</span><span class="ot">=</span><span class="fu">sample</span>(nodes<span class="sc">$</span>name, ne, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a>  <span class="st">&quot;to&quot;</span><span class="ot">=</span><span class="fu">sample</span>(nodes<span class="sc">$</span>name, ne, <span class="at">replace=</span><span class="cn">TRUE</span>),</span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a>  <span class="st">&quot;property&quot;</span><span class="ot">=</span><span class="fu">round</span>(<span class="fu">runif</span>(ne)<span class="sc">*</span><span class="dv">10</span>),</span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a>  <span class="at">stringsAsFactors=</span><span class="cn">FALSE</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a>)</span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="fu">import_from_df</span>(</span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a>   <span class="at">graph=</span>graph,</span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a>   <span class="at">cql=</span><span class="fu">prepCql</span>(</span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a>      <span class="st">&#39;MATCH (f:TestNode {name:row.from})&#39;</span>,</span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a>      <span class="st">&#39;MATCH (t:TestNode {name:row.to})&#39;</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a>      <span class="st">&#39;MERGE (f)-[r:TestEdge {property:toInteger(row.property)}]-&gt;(t)&#39;</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a>   ),</span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a>   <span class="at">toImport=</span>edges</span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a>)</span></code></pre></div>
 <!------------------------->
 
 <h2 id="query-the-neo4j-database">Query the Neo4j database</h2>
 <p>You can query the Neo4j graph database using the
 <code>cypher()</code> function. Depending on the query, the function can
 return data in a a data.frame (by setting <code>result=&quot;row&quot;</code>) or
-in a list with nodes, relationships and paths returned by the query (by
-setting <code>result=&quot;graph&quot;</code>)</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="do">## Get TestNode with value smaller than 4.</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">## According to the normal distribution we expect 2.5% of the total</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="do">## number of nodes ==&gt; ~2500 nodes</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cypher</span>(</span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>   graph,</span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>   <span class="fu">prepCql</span>(</span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>      <span class="st">&#39;MATCH (n:TestNode) WHERE n.value &lt;= 4&#39;</span>,</span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>      <span class="st">&#39;RETURN n.name as name, n.value as value&#39;</span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>   )</span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>)</span>
-<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">dim</span>(df))</span></code></pre></div>
+in a list with nodes, relationships and paths returned by the query by
+setting <code>result=&quot;graph&quot;</code> (the “graph” method is quite slow
+with version 5 of Neo4j for unknown reason).</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="do">## Get TestNode with value smaller than 4.</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="do">## According to the normal distribution we expect 2.5% of the total</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="do">## number of nodes ==&gt; ~2500 nodes</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cypher</span>(</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>   graph,</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>   <span class="fu">prepCql</span>(</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>      <span class="st">&#39;MATCH (n:TestNode) WHERE n.value &lt;= 4&#39;</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>      <span class="st">&#39;RETURN n.name as name, n.value as value&#39;</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>   )</span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>)</span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">dim</span>(df))</span></code></pre></div>
 <pre><code>## [1] 2253    2</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(df))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(df))</span></code></pre></div>
 <pre><code>##      name    value
 ## 1  N 2585 1.965486
 ## 2 L 72527 3.345461
@@ -1047,18 +1033,18 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## 4  N 1436 1.500713
 ## 5 T 21434 3.592195
 ## 6 M 91787 2.504475</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="do">## Multiple queries can be sent at once</span></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>dfl <span class="ot">&lt;-</span> <span class="fu">multicypher</span>(</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>   graph,</span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>   <span class="fu">sprintf</span>(</span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>      <span class="fu">paste</span>(</span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>         <span class="st">&#39;MATCH (n:TestNode) WHERE n.value &lt;= %s&#39;</span>,</span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>         <span class="st">&#39;RETURN n.name as name, n.value as value&#39;</span></span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>      ),</span>
-<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>      <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span></span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>   )</span>
-<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>)</span>
-<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">lapply</span>(dfl, dim))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="do">## Multiple queries can be sent at once</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>dfl <span class="ot">&lt;-</span> <span class="fu">multicypher</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>   graph,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>   <span class="fu">sprintf</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>      <span class="fu">paste</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>         <span class="st">&#39;MATCH (n:TestNode) WHERE n.value &lt;= %s&#39;</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>         <span class="st">&#39;RETURN n.name as name, n.value as value&#39;</span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>      ),</span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>      <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>   )</span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>)</span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">lapply</span>(dfl, dim))</span></code></pre></div>
 <pre><code>## [[1]]
 ## [1] 386   2
 ## 
@@ -1067,23 +1053,23 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## 
 ## [[3]]
 ## [1] 2253    2</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="do">## Get all paths of length 5 starting from a subset of nodes </span></span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>net <span class="ot">&lt;-</span> <span class="fu">cypher</span>(</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>   graph,</span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>   <span class="fu">prepCql</span>(</span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>      <span class="st">&#39;MATCH p=(f:TestNode)-[:TestEdge*5..5]-&gt;(t:TestNode) WHERE f.value &lt; 3&#39;</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>      <span class="st">&#39;RETURN p&#39;</span></span>
-<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>   ),</span>
-<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>   <span class="at">result=</span><span class="st">&quot;graph&quot;</span></span>
-<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>)</span>
-<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">lapply</span>(net, head, <span class="dv">3</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="do">## Get all paths of length 5 starting from a subset of nodes </span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>net <span class="ot">&lt;-</span> <span class="fu">cypher</span>(</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>   graph,</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>   <span class="fu">prepCql</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>      <span class="st">&#39;MATCH p=(f:TestNode)-[:TestEdge*5..5]-&gt;(t:TestNode) WHERE f.value &lt; 3&#39;</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>      <span class="st">&#39;RETURN p&#39;</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>   ),</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>   <span class="at">result=</span><span class="st">&quot;graph&quot;</span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>)</span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">lapply</span>(net, head, <span class="dv">3</span>))</span></code></pre></div>
 <pre><code>## $nodes
 ## $nodes$`79444`
 ## $nodes$`79444`$id
 ## [1] &quot;79444&quot;
 ## 
 ## $nodes$`79444`$elementId
-## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444&quot;
+## [1] &quot;4:bf1055bf-0089-45bb-87e6-18a61e233aab:79444&quot;
 ## 
 ## $nodes$`79444`$labels
 ## $nodes$`79444`$labels[[1]]
@@ -1104,7 +1090,7 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## [1] &quot;97347&quot;
 ## 
 ## $nodes$`97347`$elementId
-## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:97347&quot;
+## [1] &quot;4:bf1055bf-0089-45bb-87e6-18a61e233aab:97347&quot;
 ## 
 ## $nodes$`97347`$labels
 ## $nodes$`97347`$labels[[1]]
@@ -1125,7 +1111,7 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## [1] &quot;7&quot;
 ## 
 ## $nodes$`7`$elementId
-## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7&quot;
+## [1] &quot;4:bf1055bf-0089-45bb-87e6-18a61e233aab:7&quot;
 ## 
 ## $nodes$`7`$labels
 ## $nodes$`7`$labels[[1]]
@@ -1148,7 +1134,7 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## [1] &quot;7553&quot;
 ## 
 ## $relationships$`7553`$elementId
-## [1] &quot;5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7553&quot;
+## [1] &quot;5:bf1055bf-0089-45bb-87e6-18a61e233aab:7553&quot;
 ## 
 ## $relationships$`7553`$type
 ## [1] &quot;TestEdge&quot;
@@ -1157,13 +1143,13 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## [1] &quot;79444&quot;
 ## 
 ## $relationships$`7553`$startNodeElementId
-## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444&quot;
+## [1] &quot;4:bf1055bf-0089-45bb-87e6-18a61e233aab:79444&quot;
 ## 
 ## $relationships$`7553`$endNode
 ## [1] &quot;20186&quot;
 ## 
 ## $relationships$`7553`$endNodeElementId
-## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:20186&quot;
+## [1] &quot;4:bf1055bf-0089-45bb-87e6-18a61e233aab:20186&quot;
 ## 
 ## $relationships$`7553`$properties
 ## $relationships$`7553`$properties$property
@@ -1176,7 +1162,7 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## [1] &quot;94678&quot;
 ## 
 ## $relationships$`94678`$elementId
-## [1] &quot;5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:94678&quot;
+## [1] &quot;5:bf1055bf-0089-45bb-87e6-18a61e233aab:94678&quot;
 ## 
 ## $relationships$`94678`$type
 ## [1] &quot;TestEdge&quot;
@@ -1185,13 +1171,13 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## [1] &quot;20186&quot;
 ## 
 ## $relationships$`94678`$startNodeElementId
-## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:20186&quot;
+## [1] &quot;4:bf1055bf-0089-45bb-87e6-18a61e233aab:20186&quot;
 ## 
 ## $relationships$`94678`$endNode
 ## [1] &quot;7311&quot;
 ## 
 ## $relationships$`94678`$endNodeElementId
-## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:7311&quot;
+## [1] &quot;4:bf1055bf-0089-45bb-87e6-18a61e233aab:7311&quot;
 ## 
 ## $relationships$`94678`$properties
 ## $relationships$`94678`$properties$property
@@ -1204,7 +1190,7 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## [1] &quot;470&quot;
 ## 
 ## $relationships$`470`$elementId
-## [1] &quot;5:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:470&quot;
+## [1] &quot;5:bf1055bf-0089-45bb-87e6-18a61e233aab:470&quot;
 ## 
 ## $relationships$`470`$type
 ## [1] &quot;TestEdge&quot;
@@ -1213,13 +1199,13 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## [1] &quot;13440&quot;
 ## 
 ## $relationships$`470`$startNodeElementId
-## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:13440&quot;
+## [1] &quot;4:bf1055bf-0089-45bb-87e6-18a61e233aab:13440&quot;
 ## 
 ## $relationships$`470`$endNode
 ## [1] &quot;79444&quot;
 ## 
 ## $relationships$`470`$endNodeElementId
-## [1] &quot;4:a81e761d-c0d7-49c5-af6f-5cb5130fdbc1:79444&quot;
+## [1] &quot;4:bf1055bf-0089-45bb-87e6-18a61e233aab:79444&quot;
 ## 
 ## $relationships$`470`$properties
 ## $relationships$`470`$properties$property
@@ -1237,7 +1223,7 @@ setting <code>result=&quot;graph&quot;</code>)</p>
 ## 
 ## $paths[[3]]
 ## [1] &quot;69425&quot; &quot;93543&quot; &quot;58428&quot; &quot;31423&quot; &quot;71263&quot;</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(net<span class="sc">$</span>paths, length))))</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(net<span class="sc">$</span>paths, length))))</span></code></pre></div>
 <pre><code>## 
 ##   5 
 ## 945</code></pre>
