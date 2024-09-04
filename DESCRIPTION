@@ -15,14 +15,13 @@ Authors@R: c(
         email = "marcueusebiu@gmail.com"
     )
     )
-Maintainer: Patrice Godard <patrice.godard@gmail.com>
 Description: The aim of neo2R is to provide simple and low level connectors
    for querying neo4j graph databases (<https://neo4j.com/>).
    The objects returned by the query functions are either lists or data.frames
-   with very few post-processing.
+   with very little post-processing.
    It allows fast processing of queries returning many records.
    And it let the user handle post-processing according to the data model
-   and his needs.
+   and their needs.
 URL: https://github.com/patzaw/neo2r
 BugReports: https://github.com/patzaw/neo2r/issues
 Depends:

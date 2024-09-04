@@ -24,8 +24,8 @@ cranRef <- function(x){
 <!----------------------------------------------------------------------------->
 # neo2R
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/neo2R)](https://cran.r-project.org/package=neo2R)
-[![](http://cranlogs.r-pkg.org/badges/neo2R)](https://cran.r-project.org/package=neo2R)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/neo2R)](https://cran.r-project.org/package=neo2R)
+[![](https://cranlogs.r-pkg.org/badges/neo2R)](https://cran.r-project.org/package=neo2R)
 
 The aim of the neo2R is to provide simple and low level connectors
 for querying [Neo4j graph databases](https://neo4j.com/).
