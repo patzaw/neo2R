@@ -20,7 +20,7 @@ Description: The aim of neo2R is to provide simple and low level connectors
    The objects returned by the query functions are either lists or data.frames
    with very little post-processing.
    It allows fast processing of queries returning many records.
-   And it let the user handle post-processing according to the data model
+   And it let the users handle post-processing according to the data model
    and their needs.
 URL: https://github.com/patzaw/neo2r
 BugReports: https://github.com/patzaw/neo2r/issues
