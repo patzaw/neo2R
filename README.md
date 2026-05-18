@@ -64,6 +64,71 @@ devtools::install_github("patzaw/neo2R")
 
 <!------------------------->
 
+### Connect to Neo4j Aura
+
+[Neo4j Aura](https://neo4j.com/cloud/platform/aura-graph-database/) is
+Neo4j’s fully managed cloud service. neo2R detects Aura URLs
+(`*.databases.neo4j.io`) automatically and selects the [Query API
+v2](https://neo4j.com/docs/query-api/current/) — no extra configuration
+is needed.
+
+Create a free instance at <https://console.neo4j.io> to get your
+connection details.
+
+``` r
+my_aura <- startGraph(
+   url = "https://<INSTANCEID>.databases.neo4j.io",
+   database = "INSTANCEID",
+   username = "INSTANCEID",
+   password = "INSTANCEPASSWORD"
+   ## api = "v2" is set automatically for *.databases.neo4j.io URLs
+)
+```
+
+[Example
+datasets](https://neo4j.com/docs/getting-started/appendix/example-data/)
+are provided by Neo4j. For example, you can connect to the movie
+recommendation database and query it as follows.
+
+``` r
+demo_aura <- startGraph(
+   url = "https://demo.neo4jlabs.com:7473",
+   database = "recommendations",
+   username = "recommendations",
+   password = "recommendations"
+   ## api = "v2" is set automatically for *.databases.neo4j.io URLs
+)
+
+## Most prolific actors in the Movie graph
+cypher(
+   demo_aura,
+   'MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
+    RETURN p.name AS actor, count(m) AS movies
+    ORDER BY movies DESC LIMIT 5'
+) |> 
+   print()
+
+## Graph result: co-actors of Tom Hanks
+co_actors <- cypher(
+   demo_aura,
+   'MATCH (tom:Person {name:"Tom Hanks"})-[mt:ACTED_IN]->
+          (m:Movie)<-[mca:ACTED_IN]-(coActor:Person)
+    RETURN tom, m, coActor, mt, mca',
+   result = "graph"
+)
+co_actors$nodes |> 
+   head() |> 
+   lapply(function(n){
+      if(!is.null(n$properties$name)){
+         n$properties$name
+      }else{
+         n$properties$title
+      }
+   })
+```
+
+<!------------------------->
+
 ## Running Neo4j
 
 You can download and install Neo4j according to the
@@ -380,6 +445,9 @@ neo4j by setting NEO4J.AUTH=none, neither username nor password are
 required. If you’re connecting to a local instance of Neo4j and import
 directory has been defined in the configuration, you can specify it in
 order to allow import from data.frames.
+
+On a self-managed Neo4j \>= 5.19, pass `api = "v2"` explicitly to use
+it.
 
 ``` r
 library(neo2R)

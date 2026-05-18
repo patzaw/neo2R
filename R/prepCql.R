@@ -15,9 +15,9 @@
 #'
 #' @export
 #'
-prepCql <- function(...){
-   cql <- paste(..., collapse=" ")
-   return(paste(sub(";[[:blank:]]*$", "", cql)))
+prepCql <- function(...) {
+  cql <- paste(..., collapse = " ")
+  return(paste(sub(";[[:blank:]]*$", "", cql)))
 }
 
 
@@ -33,18 +33,18 @@ prepCql <- function(...){
 #'
 #' @export
 #'
-readCql <- function(file){
-   rq <- readLines(file)
-   rq <- sub("//.*", "", rq)
-   rq <- rq[which(rq != "")]
-   qend <- grep(";$", rq)
-   qstart <- c(1, (qend[1:(length(qend))]+1)[-length(qend)])
-   toRet <- apply(
-      cbind(qstart, qend),
-      1,
-      function(x){
-         prepCql(rq[x[1]:x[2]])
-      }
-   )
-   return(toRet)
+readCql <- function(file) {
+  rq <- readLines(file)
+  rq <- sub("//.*", "", rq)
+  rq <- rq[which(rq != "")]
+  qend <- grep(";$", rq)
+  qstart <- c(1, (qend[1:(length(qend))] + 1)[-length(qend)])
+  toRet <- apply(
+    cbind(qstart, qend),
+    1,
+    function(x) {
+      prepCql(rq[x[1]:x[2]])
+    }
+  )
+  return(toRet)
 }
