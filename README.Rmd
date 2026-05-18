@@ -27,17 +27,17 @@ cranRef <- function(x){
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/neo2R)](https://cran.r-project.org/package=neo2R)
 [![](https://cranlogs.r-pkg.org/badges/neo2R)](https://cran.r-project.org/package=neo2R)
 
-The aim of the neo2R is to provide simple and low level connectors
+The aim of neo2R is to provide simple and low-level connectors
 for querying [Neo4j graph databases](https://neo4j.com/).
-The objects returned by the query functions are either lists or data.frames
-with very few post-processing.
-It allows fast processing of queries returning many records.
-And it let the user handle post-processing according to the data model
-and his needs.
-It has been developed to support the BED package (https://github.com/patzaw/BED,
-https://f1000research.com/articles/7-195/v3 ).
-Other packages such as RNeo4j (https://github.com/nicolewhite/RNeo4j) or
-neo4R (https://github.com/neo4j-rstats/neo4r) provide connectors to neo4j
+The objects returned by the query functions are either lists or data frames
+with minimal post-processing, allowing fast handling of queries returning
+many records and letting the user apply post-processing according to their
+data model and needs.
+It has been developed to support the
+[BED package](https://github.com/patzaw/BED)
+([F1000Research](https://f1000research.com/articles/7-195/v3)).
+Other packages such as [RNeo4j](https://github.com/nicolewhite/RNeo4j) or
+[neo4R](https://github.com/neo4j-rstats/neo4r) provide connectors to Neo4j
 databases with additional features.
 
 <!----------------------------------------------------------------------------->
@@ -75,10 +75,8 @@ devtools::install_github("patzaw/neo2R")
 <!----------------------------------------------------------------------------->
 # Use
 
-
-
 <!------------------------->
-### Connect to Neo4j Aura
+## Connect to Neo4j Aura
 
 [Neo4j Aura](https://neo4j.com/cloud/platform/aura-graph-database/) is
 Neo4j's fully managed cloud service.
@@ -99,9 +97,9 @@ my_aura <- startGraph(
 )
 ```
 
-[Example datasets](https://neo4j.com/docs/getting-started/appendix/example-data/)
-are provided by Neo4j. For example, you can connect to the movie recommendation
-database and query it as follows.
+Neo4j provides [example datasets](https://neo4j.com/docs/getting-started/appendix/example-data/).
+For instance, you can connect to the movie recommendations database and query it
+as follows.
 
 ```{r, eval=FALSE}
 demo_aura <- startGraph(
@@ -109,10 +107,9 @@ demo_aura <- startGraph(
    database = "recommendations",
    username = "recommendations",
    password = "recommendations"
-   ## api = "v2" is set automatically for *.databases.neo4j.io URLs
 )
 
-## Most prolific actors in the Movie graph
+## Most prolific actors in the recommendations database
 cypher(
    demo_aura,
    'MATCH (p:Person)-[:ACTED_IN]->(m:Movie)
@@ -144,15 +141,14 @@ co_actors$nodes |>
 ## Running Neo4j
 
 You can download and install Neo4j according to
-the [documentation](https://neo4j.com/docs/getting-started/current/get-started-with-neo4j/#_installing_neo4j).
+the [documentation](https://neo4j.com/docs/getting-started/whats-neo4j/#_installing_neo4j).
 You can also run it in
-a [docker container](https://neo4j.com/docs/operations-manual/current/docker/).
+a [Docker container](https://neo4j.com/docs/operations-manual/current/docker/).
 It takes a few seconds to start.
 
-The following chunks show how to instantaite a docker container running
-either version 3 or version 4 (only those 2 are supported by neo2R) of Neo4j.
-The main differences between the 2 calls are related to the apoc library and
-SSL configuration.
+The following chunks show how to instantiate a Docker container running
+Neo4j version 3, 4, or 5. The main differences between the calls are related
+to the APOC library and SSL configuration.
 
 ### Neo4j 3.x
 
@@ -176,7 +172,8 @@ export NJ_BOLT_PORT=7687
 export NJ_HOME=~/neo4j_home
 
 ## Authorization
-NJ_AUTH=neo4j/donttrustusers # set to 'none' if you want to disable authorization
+## set to 'none' if you want to disable authorization
+NJ_AUTH=neo4j/donttrustusers
 
 ## APOC download
 export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.15/apoc-3.5.0.15-all.jar
@@ -202,7 +199,10 @@ export NJ_SSL=${NJ_HOME}/ssl
 mkdir -p ${NJ_SSL}/client_policy
 mkdir -p ${NJ_SSL}/client_policy/revoked
 mkdir -p ${NJ_SSL}/client_policy/trusted
-openssl req -subj "/CN=localhost" -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout ${NJ_SSL}/client_policy/private.key -out ${NJ_SSL}/client_policy/public.crt
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 \
+   -days 365 -nodes -x509 \
+   -keyout ${NJ_SSL}/client_policy/private.key \
+   -out ${NJ_SSL}/client_policy/public.crt
 chmod -R a+rwx ${NJ_SSL}
 
 ## Neo4j plugins: APOC
@@ -265,7 +265,8 @@ export NJ_BOLT_PORT=7687
 export NJ_HOME=~/neo4j_home
 
 ## Authorization
-NJ_AUTH=neo4j/donttrustusers # set to 'none' if you want to disable authorization
+## set to 'none' if you want to disable authorization
+NJ_AUTH=neo4j/donttrustusers
 
 ## APOC download
 export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.3/apoc-4.4.0.3-all.jar
@@ -291,7 +292,10 @@ export NJ_SSL=${NJ_HOME}/ssl
 mkdir -p ${NJ_SSL}/https
 mkdir -p ${NJ_SSL}/https/revoked
 mkdir -p ${NJ_SSL}/https/trusted
-openssl req -subj "/CN=localhost" -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout ${NJ_SSL}/https/private.key -out ${NJ_SSL}/https/public.crt
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 \
+   -days 365 -nodes -x509 \
+   -keyout ${NJ_SSL}/https/private.key \
+   -out ${NJ_SSL}/https/public.crt
 chmod -R a+rwx ${NJ_SSL}
 
 ## Neo4j plugins: APOC
@@ -336,9 +340,9 @@ sudo chmod a+rwx $NJ_IMPORT
 
 ### Neo4j 5.x (>= 5.12)
 
-In recent version of Neo4j, it is not possible to instantiate the docker image
-with a specific user name and password. The password needs to be changed
-after Neo4j starts. Nevertheless, it's still possible to instanciate the image
+In recent versions of Neo4j, it is not possible to instantiate the Docker image
+with a specific username and password. The password must be changed
+after Neo4j starts. Nevertheless, it is still possible to instantiate the image
 without any credentials with the following `docker run`
 parameter: `--env NEO4J_AUTH=none`
 
@@ -388,7 +392,10 @@ export NJ_SSL=${NJ_HOME}/ssl
 mkdir -p ${NJ_SSL}/https
 mkdir -p ${NJ_SSL}/https/revoked
 mkdir -p ${NJ_SSL}/https/trusted
-openssl req -subj "/CN=localhost" -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout ${NJ_SSL}/https/private.key -out ${NJ_SSL}/https/public.crt
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 \
+   -days 365 -nodes -x509 \
+   -keyout ${NJ_SSL}/https/private.key \
+   -out ${NJ_SSL}/https/public.crt
 cp ${NJ_SSL}/https/public.crt ${NJ_SSL}/https/trusted
 chmod -R a+rwx ${NJ_SSL}
 
@@ -473,13 +480,14 @@ cypher(
 
 After installing [neo4j](https://neo4j.com/),
 `startGraph` is used to initialize the connection from R.
-If authentication has been disabled in neo4j by setting NEO4J.AUTH=none,
+If authentication has been disabled in Neo4j by setting NEO4J_AUTH=none,
 neither username nor password are required.
 If you're connecting to a local instance of Neo4j and import directory has
 been defined in the configuration, you can specify it in order to allow
 import from data.frames.
 
-On a self-managed Neo4j >= 5.19, pass `api = "v2"` explicitly to use it.
+Optional:
+on a self-managed Neo4j >= 5.19, pass `api = "v2"` explicitly to use it.
 
 ```{r}
 library(neo2R)
@@ -549,7 +557,7 @@ import_from_df(
 ## Query the Neo4j database
 
 You can query the Neo4j graph database using the `cypher()` function.
-Depending on the query, the function can return data in a a data.frame
+Depending on the query, the function can return data in a data.frame
 (by setting `result="row"`) or in a list with nodes, relationships and paths
 returned by the query by setting `result="graph"` (the "graph" method is
 quite slow with version 5 of Neo4j for unknown reason).
