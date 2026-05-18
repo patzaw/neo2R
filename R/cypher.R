@@ -46,35 +46,51 @@ cypher <- function(
 ){
    result=match.arg(result)
    endpoint <- graph$cypher_endpoint
-   postText <- list(
-      statements=list(list(
-         statement=query,
-         resultDataContents=list(result)
-      ))
-   )
-   if(!is.null(parameters)){
-      postText$statements[[1]]$parameters <- parameters
+   api <- if(is.null(graph$api)) "tx" else graph$api
+
+   if(api == "v2"){
+      postText <- list(statement=query)
+      if(!is.null(parameters)) postText$parameters <- parameters
+   } else {
+      postText <- list(
+         statements=list(list(
+            statement=query,
+            resultDataContents=list(result)
+         ))
+      )
+      if(!is.null(parameters)){
+         postText$statements[[1]]$parameters <- parameters
+      }
    }
-   results <- graphRequest(
+
+   raw_result <- graphRequest(
       graph=graph,
       endpoint=endpoint,
       customrequest="POST",
       postText=postText
    )$result
-   errors <- results$errors
+   errors <- raw_result$errors
    if(length(errors)>0){
       devnull <- lapply(errors, lapply, message)
       stop("neo4j error")
    }
-   if(result=="row"){
-      results <- results$results[[1]]
-      toRet <- process_row(
-         results, arraysAsStrings=arraysAsStrings, eltSep=eltSep
-      )
-   }
-   if(result=="graph"){
-      d <- results$results[[1]]$data
-      toRet <- process_graph(d)
+   if(api == "v2"){
+      if(result=="row"){
+         toRet <- process_row_v2(
+            raw_result$data, arraysAsStrings=arraysAsStrings, eltSep=eltSep
+         )
+      } else {
+         toRet <- process_graph_v2(raw_result$data)
+      }
+   } else {
+      if(result=="row"){
+         toRet <- process_row(
+            raw_result$results[[1]], arraysAsStrings=arraysAsStrings, eltSep=eltSep
+         )
+      }
+      if(result=="graph"){
+         toRet <- process_graph(raw_result$results[[1]]$data)
+      }
    }
    invisible(toRet)
 }
@@ -137,7 +153,35 @@ multicypher <- function(
 ){
    result = match.arg(result)
    endpoint <- graph$cypher_endpoint
+   api <- if(is.null(graph$api)) "tx" else graph$api
    qnames <- names(queries)
+
+   ## Query API v2: one request per query ----
+   if(api == "v2"){
+      toRet <- lapply(
+         unname(queries),
+         function(query){
+            if(is.character(query)){
+               cypher(
+                  graph, query=query, parameters=parameters, result=result,
+                  arraysAsStrings=arraysAsStrings, eltSep=eltSep
+               )
+            } else {
+               if(!"query" %in% names(query)){
+                  stop('Parameterized query should have a "query" slot')
+               }
+               qparams <- if(!is.null(query$parameters)) query$parameters else parameters
+               qresult <- if(!is.null(query$result)) match.arg(query$result, c("row", "graph")) else result
+               cypher(
+                  graph, query=query$query, parameters=qparams, result=qresult,
+                  arraysAsStrings=arraysAsStrings, eltSep=eltSep
+               )
+            }
+         }
+      )
+      names(toRet) <- qnames
+      return(invisible(toRet))
+   }
 
    statements <- lapply(
       unname(queries),
@@ -241,6 +285,17 @@ process_row <- function(results, arraysAsStrings, eltSep){
    return(toRet)
 }
 
+process_row_v2 <- function(data, arraysAsStrings, eltSep){
+   if(is.null(data) || length(data$values) == 0) return(NULL)
+   process_row(
+      list(
+         columns = data$fields,
+         data = lapply(data$values, function(row) list(row=row))
+      ),
+      arraysAsStrings, eltSep
+   )
+}
+
 process_graph <- function(d){
    if(is.null(d) || length(d)==0){
       return(NULL)
@@ -259,4 +314,31 @@ process_graph <- function(d){
    )
    p <- p[which(!unlist(lapply(p, is.null)))]
    toRet <- list(nodes=nodes, relationships=relationships, paths=p)
+}
+
+process_graph_v2 <- function(d){
+   if(is.null(d) || length(d$values) == 0) return(NULL)
+   is_node <- function(v){
+      is.list(v) && !is.null(v$elementId) && !is.null(v$labels) && is.null(v$type)
+   }
+   is_rel <- function(v){
+      is.list(v) && !is.null(v$elementId) && !is.null(v$type) &&
+         !is.null(v$startNodeElementId)
+   }
+   nodes <- list()
+   relationships <- list()
+   p <- list()
+   for(row in d$values){
+      row_rel_ids <- character(0)
+      for(val in row){
+         if(is_node(val)){
+            nodes[[val$elementId]] <- val
+         } else if(is_rel(val)){
+            relationships[[val$elementId]] <- val
+            row_rel_ids <- c(row_rel_ids, val$elementId)
+         }
+      }
+      if(length(row_rel_ids) > 0) p[[length(p)+1]] <- row_rel_ids
+   }
+   list(nodes=nodes, relationships=relationships, paths=p)
 }

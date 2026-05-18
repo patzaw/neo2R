@@ -1,7 +1,7 @@
 Package: neo2R
 Type: Package
 Title: Neo4j to R
-Version: 2.4.2
+Version: 3.0.0.9000
 Authors@R: c(
     person(
         "Patrice", "Godard",
@@ -25,14 +25,14 @@ Description: The aim of neo2R is to provide simple and low level connectors
 URL: https://github.com/patzaw/neo2r
 BugReports: https://github.com/patzaw/neo2r/issues
 Depends:
-    R (>= 3.6)
+    R (>= 4.1)
 Imports:
     base64enc,
     jsonlite,
-    httr,
+    httr2,
     utils
-SystemRequirements: neo4j (>=3 AND <=5) <https://neo4j.com/>
+SystemRequirements: neo4j (>=3) <https://neo4j.com/>
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+Config/roxygen2/version: 8.0.0

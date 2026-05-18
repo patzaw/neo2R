@@ -1,3 +1,16 @@
+# Version 3.0.0
+
+- Use the 'httr2' package instead of the 'httr' package.
+
+- Add support for the Neo4j Query API v2 (`/db/{database}/query/v2`), required
+for Neo4j Aura and available on self-managed Neo4j >= 5.19. `startGraph()` gains
+an `api` parameter (`"auto"`, `"tx"`, `"v2"`); Aura URLs
+(`*.databases.neo4j.io`) are detected automatically and default to `"v2"`.
+Self-managed instances continue to use the legacy Transactional HTTP API
+(`"tx"`) unless `api = "v2"` is set explicitly.
+Note: with `api = "v2"`, graph nodes expose `elementId` (a string) instead of
+the integer `id` returned by the legacy API.
+
 # Version 2.4.2
 
 - Support periodic commit for Neo4j version 5

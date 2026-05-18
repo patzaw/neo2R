@@ -1,5 +1,13 @@
 library(here)
 
+##############################@
+## Build documentation ----
+devtools::document(
+  pkg = here::here(),
+  roclets = c('rd', 'collate', 'namespace')
+)
+install.packages(here::here(), repos = NULL)
+
 ## Build and copy vignettes ----
 ## First instantiate one of the image described in README.Rmd
 rmarkdown::render(here("README.Rmd"))
@@ -12,4 +20,4 @@ system(paste(
    sprintf("R CMD check --as-cran neo2R_%s.tar.gz", pv),
    sep=" ; "
 ))
-# install.packages(here(sprintf("../neo2R_%s.tar.gz", pv)), repos=NULL)
+install.packages(here(sprintf("../neo2R_%s.tar.gz", pv)), repos=NULL)

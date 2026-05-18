@@ -11,7 +11,8 @@ startGraph(
   password = NA,
   importPath = NA,
   .opts = list(),
-  check = TRUE
+  check = TRUE,
+  api = c("auto", "tx", "v2")
 )
 }
 \arguments{
@@ -33,7 +34,7 @@ setting NEO4J.AUTH=none)}
 instance.}
 
 \item{.opts}{a named list identifying the curl
-options for the handle (see \code{\link[httr:config]{httr::config()}} and \code{\link[httr:httr_options]{httr::httr_options()}}
+options for the handle (see \code{\link[httr2:req_options]{httr2::req_options()}} and curl option names
 for a complete list of available options;
 for example: \code{.opts = list(ssl_verifypeer = 0)}). Moreover, this parameter
 can be used to pass additional headers to the graph requests as
@@ -42,6 +43,12 @@ delegation (see details).}
 
 \item{check}{check the connection before returning it (default: TRUE).
 Set to false when connection to the "system" database}
+
+\item{api}{the HTTP API to use: \code{"tx"} for the legacy Transactional Cypher
+HTTP API (default for self-managed instances), \code{"v2"} for the Neo4j Query
+API v2 (required for Aura, available on self-managed Neo4j >= 5.19), or
+\code{"auto"} (default) to detect automatically — Aura URLs
+(*.databases.neo4j.io) select \code{"v2"}, all others select \code{"tx"}.}
 }
 \value{
 A connection to the graph DB:
@@ -53,10 +60,9 @@ Prepare connection to neo4j database
 \details{
 The "ssl.verifypeer" logical option available in the RCurl package
 used in former versions of neo2R (<= 2.2.0) is
-not recognized by \code{\link[httr:config]{httr::config()}}.
-However, for backward compatibility, if it used, it is translated into
-"ssl_verifypeer" integer option recognized by the httr package with a
-warning message.
+not recognized by \code{\link[httr2:req_options]{httr2::req_options()}}.
+However, for backward compatibility, if it is used, it is translated into
+the "ssl_verifypeer" integer curl option with a warning message.
 
 Headers in \code{.opts$extendedHeaders} are added to, or overwrite,
 the default Neo4j headers.

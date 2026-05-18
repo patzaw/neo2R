@@ -2,6 +2,7 @@ README
 ================
 
 <!----------------------------------------------------------------------------->
+
 <!----------------------------------------------------------------------------->
 
 # neo2R
@@ -22,6 +23,7 @@ RNeo4j (<https://github.com/nicolewhite/RNeo4j>) or neo4R
 databases with additional features.
 
 <!----------------------------------------------------------------------------->
+
 <!----------------------------------------------------------------------------->
 
 # Installation
@@ -39,11 +41,11 @@ install.packages("neo2R")
 The following R packages available on CRAN are required:
 
 - [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
-  base64 encoding
+  ‘base64’ Encoding
 - [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Simple and
   Robust JSON Parser and Generator for R
-- [httr](https://CRAN.R-project.org/package=httr): Tools for Working
-  with URLs and HTTP
+- [httr2](https://CRAN.R-project.org/package=httr2): Perform HTTP
+  Requests and Process the Responses
 - [utils](https://CRAN.R-project.org/package=utils): The R Utils Package
 
 <!------------------------->
@@ -55,6 +57,7 @@ devtools::install_github("patzaw/neo2R")
 ```
 
 <!----------------------------------------------------------------------------->
+
 <!----------------------------------------------------------------------------->
 
 # Use
@@ -268,7 +271,7 @@ instanciate the image without any credentials with the following
 
 export CONTAINER=neo4j_cont
 
-export NJ_VERSION=5.12.0
+export NJ_VERSION=5.26.26
 
 ## Ports
 export NJ_HTTP_PORT=7474
@@ -279,7 +282,7 @@ export NJ_BOLT_PORT=7687
 export NJ_HOME=~/neo4j_home
 
 ## APOC download
-export NJ_APOC=https://github.com/neo4j/apoc/releases/download/5.1.0/apoc-5.1.0-core.jar
+export NJ_APOC=https://github.com/neo4j/apoc/releases/download/5.26.26/apoc-5.26.26-core.jar
 
 #################################
 ## RUN
@@ -296,6 +299,8 @@ if test -e $NJ_DATA; then
    exit
 fi
 mkdir -p $NJ_DATA
+export NJ_LOGS=$NJ_HOME/neo4jLogs
+mkdir -p $NJ_LOGS
 
 ## SSL
 export NJ_SSL=${NJ_HOME}/ssl
@@ -529,7 +534,7 @@ print(lapply(net, head, 3))
     ## [1] "79444"
     ## 
     ## $nodes$`79444`$elementId
-    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:79444"
+    ## [1] "4:90aab94c-0679-4250-bbf6-ac621ad2396b:79444"
     ## 
     ## $nodes$`79444`$labels
     ## $nodes$`79444`$labels[[1]]
@@ -550,7 +555,7 @@ print(lapply(net, head, 3))
     ## [1] "97347"
     ## 
     ## $nodes$`97347`$elementId
-    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:97347"
+    ## [1] "4:90aab94c-0679-4250-bbf6-ac621ad2396b:97347"
     ## 
     ## $nodes$`97347`$labels
     ## $nodes$`97347`$labels[[1]]
@@ -571,7 +576,7 @@ print(lapply(net, head, 3))
     ## [1] "7"
     ## 
     ## $nodes$`7`$elementId
-    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:7"
+    ## [1] "4:90aab94c-0679-4250-bbf6-ac621ad2396b:7"
     ## 
     ## $nodes$`7`$labels
     ## $nodes$`7`$labels[[1]]
@@ -594,7 +599,7 @@ print(lapply(net, head, 3))
     ## [1] "7553"
     ## 
     ## $relationships$`7553`$elementId
-    ## [1] "5:bf1055bf-0089-45bb-87e6-18a61e233aab:7553"
+    ## [1] "5:90aab94c-0679-4250-bbf6-ac621ad2396b:7553"
     ## 
     ## $relationships$`7553`$type
     ## [1] "TestEdge"
@@ -603,13 +608,13 @@ print(lapply(net, head, 3))
     ## [1] "79444"
     ## 
     ## $relationships$`7553`$startNodeElementId
-    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:79444"
+    ## [1] "4:90aab94c-0679-4250-bbf6-ac621ad2396b:79444"
     ## 
     ## $relationships$`7553`$endNode
     ## [1] "20186"
     ## 
     ## $relationships$`7553`$endNodeElementId
-    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:20186"
+    ## [1] "4:90aab94c-0679-4250-bbf6-ac621ad2396b:20186"
     ## 
     ## $relationships$`7553`$properties
     ## $relationships$`7553`$properties$property
@@ -622,7 +627,7 @@ print(lapply(net, head, 3))
     ## [1] "94678"
     ## 
     ## $relationships$`94678`$elementId
-    ## [1] "5:bf1055bf-0089-45bb-87e6-18a61e233aab:94678"
+    ## [1] "5:90aab94c-0679-4250-bbf6-ac621ad2396b:94678"
     ## 
     ## $relationships$`94678`$type
     ## [1] "TestEdge"
@@ -631,13 +636,13 @@ print(lapply(net, head, 3))
     ## [1] "20186"
     ## 
     ## $relationships$`94678`$startNodeElementId
-    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:20186"
+    ## [1] "4:90aab94c-0679-4250-bbf6-ac621ad2396b:20186"
     ## 
     ## $relationships$`94678`$endNode
     ## [1] "7311"
     ## 
     ## $relationships$`94678`$endNodeElementId
-    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:7311"
+    ## [1] "4:90aab94c-0679-4250-bbf6-ac621ad2396b:7311"
     ## 
     ## $relationships$`94678`$properties
     ## $relationships$`94678`$properties$property
@@ -650,7 +655,7 @@ print(lapply(net, head, 3))
     ## [1] "470"
     ## 
     ## $relationships$`470`$elementId
-    ## [1] "5:bf1055bf-0089-45bb-87e6-18a61e233aab:470"
+    ## [1] "5:90aab94c-0679-4250-bbf6-ac621ad2396b:470"
     ## 
     ## $relationships$`470`$type
     ## [1] "TestEdge"
@@ -659,13 +664,13 @@ print(lapply(net, head, 3))
     ## [1] "13440"
     ## 
     ## $relationships$`470`$startNodeElementId
-    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:13440"
+    ## [1] "4:90aab94c-0679-4250-bbf6-ac621ad2396b:13440"
     ## 
     ## $relationships$`470`$endNode
     ## [1] "79444"
     ## 
     ## $relationships$`470`$endNodeElementId
-    ## [1] "4:bf1055bf-0089-45bb-87e6-18a61e233aab:79444"
+    ## [1] "4:90aab94c-0679-4250-bbf6-ac621ad2396b:79444"
     ## 
     ## $relationships$`470`$properties
     ## $relationships$`470`$properties$property
