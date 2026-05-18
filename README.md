@@ -40,8 +40,6 @@ install.packages("neo2R")
 
 The following R packages available on CRAN are required:
 
-- [base64enc](https://CRAN.R-project.org/package=base64enc): Tools for
-  ‘base64’ Encoding
 - [jsonlite](https://CRAN.R-project.org/package=jsonlite): A Simple and
   Robust JSON Parser and Generator for R
 - [httr2](https://CRAN.R-project.org/package=httr2): Perform HTTP

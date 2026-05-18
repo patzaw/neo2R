@@ -27,7 +27,6 @@ BugReports: https://github.com/patzaw/neo2r/issues
 Depends:
     R (>= 4.1)
 Imports:
-    base64enc,
     jsonlite,
     httr2,
     utils

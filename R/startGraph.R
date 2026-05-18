@@ -89,9 +89,7 @@ startGraph <- function(
     'X-Stream' = TRUE,
     'Authorization' = paste(
       "Basic",
-      base64enc::base64encode(charToRaw(
-        paste(username, password, sep = ":")
-      ))
+      jsonlite::base64_enc(paste(username, password, sep = ":"))
     )
   )
 
