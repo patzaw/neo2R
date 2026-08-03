@@ -1,3 +1,13 @@
+# Version 3.1.0
+
+- Improvement of neo4j result processing
+
+  - API v2: paths handled correctly
+  - new possible value for the `result` parameter: `"source"`. With this value
+  the `cypher` and `multicypher` functions return the result as returned by
+  neo4j API. Caution: The format is inconsistent between the two versions of
+  the API.
+
 # Version 3.0.0
 
 - Use the 'httr2' package instead of the 'httr' package.

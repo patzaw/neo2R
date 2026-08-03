@@ -8,7 +8,7 @@ cypher(
   graph,
   query,
   parameters = NULL,
-  result = c("row", "graph"),
+  result = c("row", "graph", "source"),
   arraysAsStrings = TRUE,
   eltSep = " || "
 )
@@ -22,7 +22,9 @@ cypher(
 
 \item{result}{the way to return results. "row" will return a data frame
 and "graph" will return a list of nodes, a list of relationships
-and a list of paths (vectors of relationships identifiers).}
+and a list of paths (vectors of relationships identifiers).
+'source' will return the results as returned by neo4j
+(Caution: The format is inconsistent between the two versions of the API).}
 
 \item{arraysAsStrings}{if result="row" and arraysAsStrings is TRUE (default)
 array from neo4j are converted to strings and array elements are

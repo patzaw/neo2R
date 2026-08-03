@@ -7,6 +7,8 @@
 #' @param result the way to return results. "row" will return a data frame
 #' and "graph" will return a list of nodes, a list of relationships
 #' and a list of paths (vectors of relationships identifiers).
+#' 'source' will return the results as returned by neo4j
+#' (Caution: The format is inconsistent between the two versions of the API).
 #' @param arraysAsStrings if result="row" and arraysAsStrings is TRUE (default)
 #' array from neo4j are converted to strings and array elements are
 #' separated by eltSep.
@@ -40,11 +42,11 @@ cypher <- function(
   graph,
   query,
   parameters = NULL,
-  result = c("row", "graph"),
+  result = c("row", "graph", "source"),
   arraysAsStrings = TRUE,
   eltSep = " || "
 ) {
-  result = match.arg(result)
+  result <- match.arg(result)
   endpoint <- graph$cypher_endpoint
   api <- if (is.null(graph$api)) "tx" else graph$api
 
@@ -55,7 +57,7 @@ cypher <- function(
     postText <- list(
       statements = list(list(
         statement = query,
-        resultDataContents = list(result)
+        resultDataContents = list(ifelse(result == "source", "graph", result))
       ))
     )
     if (!is.null(parameters)) {
@@ -75,25 +77,33 @@ cypher <- function(
     stop("neo4j error")
   }
   if (api == "v2") {
-    if (result == "row") {
-      toRet <- process_row_v2(
-        raw_result$data,
-        arraysAsStrings = arraysAsStrings,
-        eltSep = eltSep
-      )
+    if (result == "source") {
+      toRet <- raw_result$data
     } else {
-      toRet <- process_graph_v2(raw_result$data)
+      if (result == "row") {
+        toRet <- process_row_v2(
+          raw_result$data,
+          arraysAsStrings = arraysAsStrings,
+          eltSep = eltSep
+        )
+      } else {
+        toRet <- process_graph_v2(raw_result$data)
+      }
     }
   } else {
-    if (result == "row") {
-      toRet <- process_row(
-        raw_result$results[[1]],
-        arraysAsStrings = arraysAsStrings,
-        eltSep = eltSep
-      )
-    }
-    if (result == "graph") {
-      toRet <- process_graph(raw_result$results[[1]]$data)
+    if (result == "source") {
+      toRet <- raw_result$results[[1]]
+    } else {
+      if (result == "row") {
+        toRet <- process_row(
+          raw_result$results[[1]],
+          arraysAsStrings = arraysAsStrings,
+          eltSep = eltSep
+        )
+      }
+      if (result == "graph") {
+        toRet <- process_graph(raw_result$results[[1]]$data)
+      }
     }
   }
   invisible(toRet)
@@ -118,6 +128,8 @@ cypher <- function(
 #' @param result default way to return results. "row" will return a data frame
 #' and "graph" will return a list of nodes, a list of relationships
 #' and a list of paths (vectors of relationships identifiers).
+#' 'source' will return the results as returned by neo4j
+#' (Caution: The format is inconsistent between the two versions of the API).
 #' @param arraysAsStrings if result="row" and arraysAsStrings is TRUE (default)
 #' array from neo4j are converted to strings and array elements are
 #' separated by eltSep.
@@ -151,11 +163,11 @@ multicypher <- function(
   graph,
   queries,
   parameters = NULL,
-  result = c("row", "graph"),
+  result = c("row", "graph", "source"),
   arraysAsStrings = TRUE,
   eltSep = " || "
 ) {
-  result = match.arg(result)
+  result <- match.arg(result)
   endpoint <- graph$cypher_endpoint
   api <- if (is.null(graph$api)) "tx" else graph$api
   qnames <- names(queries)
@@ -184,7 +196,7 @@ multicypher <- function(
             parameters
           }
           qresult <- if (!is.null(query$result)) {
-            match.arg(query$result, c("row", "graph"))
+            match.arg(query$result, c("row", "graph", "source"))
           } else {
             result
           }
@@ -221,17 +233,27 @@ multicypher <- function(
         }
         toRet <- list(statement = query$query)
         if ("result" %in% names(query)) {
-          if (!query$result %in% c("row", "graph")) {
-            stop('The "result" slot should be "row" or "graph"')
+          if (!query$result %in% c("row", "graph", "source")) {
+            stop('The "result" slot should be "row", "graph" or "source"')
           }
-          toRet$resultDataContents <- list(query$result)
+          toRet$resultDataContents <- list(ifelse(
+            query$result == "source",
+            "graph",
+            query$result
+          ))
+          toRet$result <- list(query$result)
         }
         if (!is.null(query$parameters)) {
           toRet$parameters <- query$parameters
         }
       }
       if (is.null(toRet$resultDataContents)) {
-        toRet$resultDataContents <- list(result)
+        toRet$resultDataContents <- list(ifelse(
+          result == "source",
+          "graph",
+          result
+        ))
+        toRet$result <- list(result)
       }
       if (is.null(toRet$parameters) && !is.null(parameters)) {
         toRet$parameters <- parameters
@@ -257,14 +279,17 @@ multicypher <- function(
     1:length(results$results),
     function(i) {
       results <- results$results[[i]]
-      if (statements[[i]]$resultDataContents == "row") {
+      if (statements[[i]]$result == "source") {
+        return(results)
+      }
+      if (statements[[i]]$result == "row") {
         return(process_row(
           results,
           arraysAsStrings = arraysAsStrings,
           eltSep = eltSep
         ))
       }
-      if (statements[[i]]$resultDataContents == "graph") {
+      if (statements[[i]]$result == "graph") {
         return(process_graph(results$d))
       }
     }
@@ -280,11 +305,6 @@ process_row <- function(results, arraysAsStrings, eltSep) {
   if (length(results$data) == 0) {
     toRet <- NULL
   } else {
-    if (!is.null(names(results$data[[1]][[1]]))) {
-      warning(
-        "Complex data from query ==> you should shift to 'graph' result."
-      )
-    }
     columns <- do.call(c, results$columns)
     toRet <- do.call(rbind, lapply(results$data, function(x) x$row))
     toRet[sapply(toRet, is.null)] <- NA
@@ -351,8 +371,14 @@ process_graph_v2 <- function(d) {
   if (is.null(d) || length(d$values) == 0) {
     return(NULL)
   }
+  is_scalar <- function(v) {
+    !is.list(v)
+  }
   is_node <- function(v) {
-    is.list(v) && !is.null(v$elementId) && !is.null(v$labels) && is.null(v$type)
+    is.list(v) &&
+      !is.null(v$elementId) &&
+      is.null(v$startNodeElementId) &&
+      is.null(v$type)
   }
   is_rel <- function(v) {
     is.list(v) &&
@@ -364,16 +390,33 @@ process_graph_v2 <- function(d) {
   relationships <- list()
   p <- list()
   for (row in d$values) {
-    row_rel_ids <- character(0)
     for (val in row) {
       if (is_node(val)) {
         nodes[[val$elementId]] <- val
-      } else if (is_rel(val)) {
+      }
+      if (is_rel(val)) {
         relationships[[val$elementId]] <- val
-        row_rel_ids <- c(row_rel_ids, val$elementId)
+      }
+      if (!is_scalar(val)) {
+        row_rel_ids <- character(0)
+        for (sval in val) {
+          if (is_node(sval)) {
+            nodes[[sval$elementId]] <- sval
+          }
+          if (is_rel(sval)) {
+            relationships[[sval$elementId]] <- sval
+            row_rel_ids <- c(row_rel_ids, sval$elementId)
+          }
+        }
+        if (length(row_rel_ids) > 0) {
+          p[[length(p) + 1]] <- row_rel_ids
+        }
       }
     }
-    if (length(row_rel_ids) > 0) p[[length(p) + 1]] <- row_rel_ids
   }
-  list(nodes = nodes, relationships = relationships, paths = p)
+  list(
+    nodes = unique(nodes),
+    relationships = unique(relationships),
+    paths = unique(p)
+  )
 }

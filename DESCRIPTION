@@ -1,7 +1,7 @@
 Package: neo2R
 Type: Package
 Title: Neo4j to R
-Version: 3.0.0
+Version: 3.1.0
 Authors@R: c(
     person(
         "Patrice", "Godard",

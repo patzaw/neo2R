@@ -72,7 +72,7 @@ startGraph <- function(
   ## Process URL and guess protocol ----
   protocol <- grep("^https://", url)
   if (length(protocol) == 1) {
-    protocol = "https://"
+    protocol <- "https://"
     url <- sub("^https://", "", url)
   } else {
     protocol <- "http://"
@@ -133,7 +133,7 @@ startGraph <- function(
     stop("Cannot connect to the Neo4j database")
   }
   if ("neo4j_version" %in% names(conStatus$result)) {
-    toRet$version = unlist(strsplit(
+    toRet$version <- unlist(strsplit(
       conStatus$result$neo4j_version,
       split = "[.]"
     ))
@@ -149,7 +149,7 @@ startGraph <- function(
       stop("Cannot connect to the Neo4j database")
     }
     if ("neo4j_version" %in% names(conStatus$result)) {
-      toRet$version = unlist(strsplit(
+      toRet$version <- unlist(strsplit(
         conStatus$result$neo4j_version,
         split = "[.]"
       ))
