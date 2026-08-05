@@ -26,6 +26,8 @@
 #' API v2 (required for Aura, available on self-managed Neo4j >= 5.19), or
 #' `"auto"` (default) to detect automatically — Aura URLs
 #' (*.databases.neo4j.io) select `"v2"`, all others select `"tx"`.
+#' @param cypher_version The version of the cypher language used by the
+#' database. Should be `""` for neo4j version <= 5.
 #'
 #'
 #' @details The "ssl.verifypeer" logical option available in the RCurl package
@@ -54,9 +56,11 @@ startGraph <- function(
   importPath = NA,
   .opts = list(),
   check = TRUE,
-  api = c("auto", "tx", "v2")
+  api = c("auto", "tx", "v2"),
+  cypher_version = c("auto", "")
 ) {
   api <- match.arg(api)
+  cypher_version <- match.arg(cypher_version)
 
   if ("ssl.verifypeer" %in% names(.opts)) {
     .opts$ssl_verifypeer <- as.integer(.opts$ssl.verifypeer)
@@ -199,6 +203,17 @@ startGraph <- function(
       toRet$cypher_endpoint <- sprintf("/db/%s/tx/commit", toRet$database)
     }
   }
+  ## Define cypher version ----
+  if (cypher_version == "auto") {
+    cypher_version <- suppressMessages(tryCatch(
+      {
+        cv <- cypher(toRet, "SHOW DATABASES YIELD name, defaultLanguage")
+        sub("CYPHER *", "", cv[cv$name == toRet$database, "defaultLanguage"])
+      },
+      error = function(e) ""
+    ))
+  }
+  toRet$cypher_version <- cypher_version
   ## Final connection check ----
   if (check) {
     cypher(toRet, "match (n) return n limit 1", result = "graph")

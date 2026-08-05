@@ -1,2 +1,5 @@
 .Rproj.user
 ^README\.html$
+
+/.quarto/
+**/*.quarto_ipynb

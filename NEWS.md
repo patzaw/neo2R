@@ -1,3 +1,7 @@
+# Version 3.1.1
+
+- Fix Import with neo4j >= 2025
+
 # Version 3.1.0
 
 - Improvement of neo4j result processing

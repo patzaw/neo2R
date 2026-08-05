@@ -414,9 +414,13 @@ process_graph_v2 <- function(d) {
       }
     }
   }
+  nodes <- unique(nodes)
+  names(nodes) <- unlist(lapply(nodes, function(n) n$elementId))
+  relationships <- unique(relationships)
+  names(relationships) <- unlist(lapply(relationships, function(n) n$elementId))
   list(
-    nodes = unique(nodes),
-    relationships = unique(relationships),
+    nodes = nodes,
+    relationships = relationships,
     paths = unique(p)
   )
 }

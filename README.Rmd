@@ -439,6 +439,104 @@ sudo chmod a+rwx $NJ_IMPORT
 	
 ```
 
+### Neo4j >= 2025
+
+In recent versions of Neo4j, it is not possible to instantiate the Docker image
+with a specific username and password. The password must be changed
+after Neo4j starts. Nevertheless, it is still possible to instantiate the image
+without any credentials with the following `docker run`
+parameter: `--env NEO4J_AUTH=none`
+
+```{sh, eval=FALSE}
+#!/bin/sh
+
+#################################
+## CONFIG according to your needs
+#################################
+
+export CONTAINER=neo4j_cont
+
+export NJ_VERSION=2026.06.0
+
+## Ports
+export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
+export NJ_BOLT_PORT=7687
+
+## Change the location of the Neo4j directory
+export NJ_HOME=~/neo4j_home
+
+#################################
+## RUN
+#################################
+
+mkdir -p $NJ_HOME
+
+## Import and data directory
+export NJ_IMPORT=$NJ_HOME/neo4jImport
+mkdir -p $NJ_IMPORT
+export NJ_DATA=$NJ_HOME/neo4jData
+if test -e $NJ_DATA; then
+   echo "$NJ_DATA directory exists ==> abort - Remove it before proceeding" >&2
+   exit
+fi
+mkdir -p $NJ_DATA
+export NJ_LOGS=$NJ_HOME/neo4jLogs
+mkdir -p $NJ_LOGS
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/https
+mkdir -p ${NJ_SSL}/https/revoked
+mkdir -p ${NJ_SSL}/https/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 \
+   -days 365 -nodes -x509 \
+   -keyout ${NJ_SSL}/https/private.key \
+   -out ${NJ_SSL}/https/public.crt
+cp ${NJ_SSL}/https/public.crt ${NJ_SSL}/https/trusted
+chmod -R a+rwx ${NJ_SSL}
+
+## Plugins directory (APOC jar is now bundled in the image;
+## NEO4J_PLUGINS copies it in automatically at container start,
+## and persisting /plugins avoids re-copying on every restart)
+export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
+mkdir -p $NJ_PLUGINS
+
+## Add ` --env NEO4J_AUTH=none ` if you don't want to setup credentials
+docker run -d \
+   --name $CONTAINER \
+   --publish=$NJ_HTTP_PORT:7474 \
+   --publish=$NJ_HTTPS_PORT:7473 \
+   --publish=$NJ_BOLT_PORT:7687 \
+   --env=NEO4J_server_memory_heap_initial__size=2G \
+   --env=NEO4J_server_memory_heap_max__size=2G \
+   --env=NEO4J_server_memory_pagecache_size=1G \
+   --env=NEO4J_server_db_query__cache__size=0 \
+   --env=NEO4J_dbms_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_dbms_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_PLUGINS='["apoc"]' \
+   --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\\* \
+   --env=NEO4J_server_directories_import=import\
+   --volume=$NJ_IMPORT:/var/lib/neo4j/import \
+   --volume=$NJ_DATA/data:/data \
+   --volume=$NJ_LOGS:/var/lib/neo4j/logs \
+   --volume=$NJ_PLUGINS:/plugins \
+   --volume=$NJ_SSL:/ssl \
+   --env=NEO4J_server_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https \
+   --env=NEO4J_dbms_ssl_policy_https_private__key=private.key \
+   --env=NEO4J_dbms_ssl_policy_https_public__certificate=public.crt \
+   --env=NEO4J_dbms_ssl_policy_https_client__auth=NONE \
+   --env=NEO4J_dbms_ssl_policy_https_trust__all=true \
+   neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
+```
+
+### Update credentials for neo4j >= 5
+
 If you did not disable credentials (with `--env NEO4J_AUTH=none`), you'll need
 to first change the user password before being able to connect to the graph
 database.
@@ -452,7 +550,7 @@ system <- try(startGraph(
   importPath="~/neo4j_home/neo4jImport",
   .opts = list(ssl_verifypeer=0)
 ), silent = TRUE)
-if(system$version[[1]]=="5"){
+if(as.integer(system$version[[1]]) >= 5 ){
    try(cypher(
       system,
       "ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'donttrustusers'"
@@ -510,7 +608,7 @@ Use the 'row' prefix to refer to the data.frame column.
 #########################################
 ## Nodes
 ## Create an index to speed-up MERGE
-if(graph$version[[1]]=="5"){
+if(as.integer(graph$version[[1]]) >= 5){
    try(cypher(graph, 'CREATE INDEX FOR (n:TestNode) ON (n.name)'), silent=TRUE)
 }else{
    try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent=TRUE)

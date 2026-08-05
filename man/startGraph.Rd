@@ -12,7 +12,8 @@ startGraph(
   importPath = NA,
   .opts = list(),
   check = TRUE,
-  api = c("auto", "tx", "v2")
+  api = c("auto", "tx", "v2"),
+  cypher_version = c("auto", "")
 )
 }
 \arguments{
@@ -49,6 +50,9 @@ HTTP API (default for self-managed instances), \code{"v2"} for the Neo4j Query
 API v2 (required for Aura, available on self-managed Neo4j >= 5.19), or
 \code{"auto"} (default) to detect automatically — Aura URLs
 (*.databases.neo4j.io) select \code{"v2"}, all others select \code{"tx"}.}
+
+\item{cypher_version}{The version of the cypher language used by the
+database. Should be \code{""} for neo4j version <= 5.}
 }
 \value{
 A connection to the graph DB:

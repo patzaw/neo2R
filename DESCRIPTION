@@ -1,7 +1,7 @@
 Package: neo2R
 Type: Package
 Title: Neo4j to R
-Version: 3.1.0
+Version: 3.1.1
 Authors@R: c(
     person(
         "Patrice", "Godard",
@@ -34,4 +34,4 @@ SystemRequirements: neo4j (>=3) <https://neo4j.com/>
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0

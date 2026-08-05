@@ -47,30 +47,6 @@ import_from_df <- function(
   for (cn in colnames(toImport)) {
     toImport[, cn] <- as.character(toImport[, cn, drop = TRUE])
   }
-  # pc <- c()
-  # if(is.numeric(periodicCommit) && length(periodicCommit)==1){
-  #    if(graph$version[[1]]!=5){
-  #       pc <- sprintf("USING PERIODIC COMMIT %s", periodicCommit)
-  #    }else{
-  #       warning(
-  #          "Periodic commit not supported for Neo4j >= 5.\n",
-  #          "Consider the 'by' parameter."
-  #       )
-  #    }
-  # }
-  # cql <- prepCql(c(
-  #    pc,
-  #    paste0(
-  #       'LOAD CSV WITH HEADERS FROM "file:',
-  #       ifelse(
-  #          !is.null(importPath),
-  #          file.path("", basename(tf)),
-  #          tf
-  #       ),
-  #       '" AS row '# FIELDTERMINATOR "\\t"'
-  #    ),
-  #    cql
-  # ))
   load_string <- paste0(
     'LOAD CSV WITH HEADERS FROM "file:',
     ifelse(
@@ -81,7 +57,10 @@ import_from_df <- function(
     '" AS row ' # FIELDTERMINATOR "\\t"'
   )
   if (!is.na(periodicCommit)) {
-    if (graph$version[[1]] != 5) {
+    if (
+      !is.na(as.integer(graph$version[[1]])) &&
+        as.integer(graph$version[[1]]) < 5
+    ) {
       cql <- prepCql(c(
         sprintf("USING PERIODIC COMMIT %s", periodicCommit),
         load_string,

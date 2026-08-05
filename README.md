@@ -423,6 +423,104 @@ sudo chmod a+rwx $NJ_IMPORT
     
 ```
 
+### Neo4j \>= 2025
+
+In recent versions of Neo4j, it is not possible to instantiate the
+Docker image with a specific username and password. The password must be
+changed after Neo4j starts. Nevertheless, it is still possible to
+instantiate the image without any credentials with the following
+`docker run` parameter: `--env NEO4J_AUTH=none`
+
+``` sh
+#!/bin/sh
+
+#################################
+## CONFIG according to your needs
+#################################
+
+export CONTAINER=neo4j_cont
+
+export NJ_VERSION=2026.06.0
+
+## Ports
+export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
+export NJ_BOLT_PORT=7687
+
+## Change the location of the Neo4j directory
+export NJ_HOME=~/neo4j_home
+
+#################################
+## RUN
+#################################
+
+mkdir -p $NJ_HOME
+
+## Import and data directory
+export NJ_IMPORT=$NJ_HOME/neo4jImport
+mkdir -p $NJ_IMPORT
+export NJ_DATA=$NJ_HOME/neo4jData
+if test -e $NJ_DATA; then
+   echo "$NJ_DATA directory exists ==> abort - Remove it before proceeding" >&2
+   exit
+fi
+mkdir -p $NJ_DATA
+export NJ_LOGS=$NJ_HOME/neo4jLogs
+mkdir -p $NJ_LOGS
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/https
+mkdir -p ${NJ_SSL}/https/revoked
+mkdir -p ${NJ_SSL}/https/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 \
+   -days 365 -nodes -x509 \
+   -keyout ${NJ_SSL}/https/private.key \
+   -out ${NJ_SSL}/https/public.crt
+cp ${NJ_SSL}/https/public.crt ${NJ_SSL}/https/trusted
+chmod -R a+rwx ${NJ_SSL}
+
+## Plugins directory (APOC jar is now bundled in the image;
+## NEO4J_PLUGINS copies it in automatically at container start,
+## and persisting /plugins avoids re-copying on every restart)
+export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
+mkdir -p $NJ_PLUGINS
+
+## Add ` --env NEO4J_AUTH=none ` if you don't want to setup credentials
+docker run -d \
+   --name $CONTAINER \
+   --publish=$NJ_HTTP_PORT:7474 \
+   --publish=$NJ_HTTPS_PORT:7473 \
+   --publish=$NJ_BOLT_PORT:7687 \
+   --env=NEO4J_server_memory_heap_initial__size=2G \
+   --env=NEO4J_server_memory_heap_max__size=2G \
+   --env=NEO4J_server_memory_pagecache_size=1G \
+   --env=NEO4J_server_db_query__cache__size=0 \
+   --env=NEO4J_dbms_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_dbms_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_PLUGINS='["apoc"]' \
+   --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\\* \
+   --env=NEO4J_server_directories_import=import\
+   --volume=$NJ_IMPORT:/var/lib/neo4j/import \
+   --volume=$NJ_DATA/data:/data \
+   --volume=$NJ_LOGS:/var/lib/neo4j/logs \
+   --volume=$NJ_PLUGINS:/plugins \
+   --volume=$NJ_SSL:/ssl \
+   --env=NEO4J_server_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https \
+   --env=NEO4J_dbms_ssl_policy_https_private__key=private.key \
+   --env=NEO4J_dbms_ssl_policy_https_public__certificate=public.crt \
+   --env=NEO4J_dbms_ssl_policy_https_client__auth=NONE \
+   --env=NEO4J_dbms_ssl_policy_https_trust__all=true \
+   neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
+```
+
+### Update credentials for neo4j \>= 5
+
 If you did not disable credentials (with `--env NEO4J_AUTH=none`),
 you’ll need to first change the user password before being able to
 connect to the graph database. The following chunk shows how to do it
@@ -478,7 +576,7 @@ the ‘row’ prefix to refer to the data.frame column.
 #########################################
 ## Nodes
 ## Create an index to speed-up MERGE
-if(graph$version[[1]]=="5"){
+if(as.integer(graph$version[[1]]) >= 5){
    try(cypher(graph, 'CREATE INDEX FOR (n:TestNode) ON (n.name)'), silent=TRUE)
 }else{
    try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent=TRUE)
@@ -597,151 +695,115 @@ print(lapply(net, head, 3))
 ```
 
     ## $nodes
-    ## $nodes$`79444`
-    ## $nodes$`79444`$id
-    ## [1] "79444"
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:7`
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:7`$elementId
+    ## [1] "4:7c67c0f3-52a6-4303-8979-b95bcb63257b:7"
     ## 
-    ## $nodes$`79444`$elementId
-    ## [1] "4:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:79444"
-    ## 
-    ## $nodes$`79444`$labels
-    ## $nodes$`79444`$labels[[1]]
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:7`$labels
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:7`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`79444`$properties
-    ## $nodes$`79444`$properties$name
-    ## [1] "S 99155"
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:7`$properties
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:7`$properties$name
+    ## [1] "N 2585"
     ## 
-    ## $nodes$`79444`$properties$value
-    ## [1] 9.658103
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:7`$properties$value
+    ## [1] 1.965486
     ## 
     ## 
     ## 
-    ## $nodes$`97347`
-    ## $nodes$`97347`$id
-    ## [1] "97347"
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347`
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347`$elementId
+    ## [1] "4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347"
     ## 
-    ## $nodes$`97347`$elementId
-    ## [1] "4:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:97347"
-    ## 
-    ## $nodes$`97347`$labels
-    ## $nodes$`97347`$labels[[1]]
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347`$labels
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`97347`$properties
-    ## $nodes$`97347`$properties$name
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347`$properties
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347`$properties$name
     ## [1] "V 30913"
     ## 
-    ## $nodes$`97347`$properties$value
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347`$properties$value
     ## [1] 10.389
     ## 
     ## 
     ## 
-    ## $nodes$`7`
-    ## $nodes$`7`$id
-    ## [1] "7"
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440`
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440`$elementId
+    ## [1] "4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440"
     ## 
-    ## $nodes$`7`$elementId
-    ## [1] "4:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:7"
-    ## 
-    ## $nodes$`7`$labels
-    ## $nodes$`7`$labels[[1]]
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440`$labels
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440`$labels[[1]]
     ## [1] "TestNode"
     ## 
     ## 
-    ## $nodes$`7`$properties
-    ## $nodes$`7`$properties$name
-    ## [1] "N 2585"
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440`$properties
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440`$properties$name
+    ## [1] "Z 33864"
     ## 
-    ## $nodes$`7`$properties$value
-    ## [1] 1.965486
+    ## $nodes$`4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440`$properties$value
+    ## [1] 5.65467
     ## 
     ## 
     ## 
     ## 
     ## $relationships
-    ## $relationships$`7553`
-    ## $relationships$`7553`$id
-    ## [1] "7553"
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543`
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543`$elementId
+    ## [1] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543"
     ## 
-    ## $relationships$`7553`$elementId
-    ## [1] "5:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:7553"
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543`$startNodeElementId
+    ## [1] "4:7c67c0f3-52a6-4303-8979-b95bcb63257b:7"
     ## 
-    ## $relationships$`7553`$type
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543`$endNodeElementId
+    ## [1] "4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347"
+    ## 
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`7553`$startNode
-    ## [1] "79444"
-    ## 
-    ## $relationships$`7553`$startNodeElementId
-    ## [1] "4:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:79444"
-    ## 
-    ## $relationships$`7553`$endNode
-    ## [1] "20186"
-    ## 
-    ## $relationships$`7553`$endNodeElementId
-    ## [1] "4:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:20186"
-    ## 
-    ## $relationships$`7553`$properties
-    ## $relationships$`7553`$properties$property
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543`$properties
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543`$properties$property
     ## [1] 8
     ## 
     ## 
     ## 
-    ## $relationships$`94678`
-    ## $relationships$`94678`$id
-    ## [1] "94678"
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423`
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423`$elementId
+    ## [1] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423"
     ## 
-    ## $relationships$`94678`$elementId
-    ## [1] "5:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:94678"
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423`$startNodeElementId
+    ## [1] "4:7c67c0f3-52a6-4303-8979-b95bcb63257b:97347"
     ## 
-    ## $relationships$`94678`$type
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423`$endNodeElementId
+    ## [1] "4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440"
+    ## 
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`94678`$startNode
-    ## [1] "20186"
-    ## 
-    ## $relationships$`94678`$startNodeElementId
-    ## [1] "4:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:20186"
-    ## 
-    ## $relationships$`94678`$endNode
-    ## [1] "7311"
-    ## 
-    ## $relationships$`94678`$endNodeElementId
-    ## [1] "4:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:7311"
-    ## 
-    ## $relationships$`94678`$properties
-    ## $relationships$`94678`$properties$property
-    ## [1] 3
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423`$properties
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423`$properties$property
+    ## [1] 0
     ## 
     ## 
     ## 
-    ## $relationships$`470`
-    ## $relationships$`470`$id
-    ## [1] "470"
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470`
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470`$elementId
+    ## [1] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470"
     ## 
-    ## $relationships$`470`$elementId
-    ## [1] "5:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:470"
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470`$startNodeElementId
+    ## [1] "4:7c67c0f3-52a6-4303-8979-b95bcb63257b:13440"
     ## 
-    ## $relationships$`470`$type
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470`$endNodeElementId
+    ## [1] "4:7c67c0f3-52a6-4303-8979-b95bcb63257b:79444"
+    ## 
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470`$type
     ## [1] "TestEdge"
     ## 
-    ## $relationships$`470`$startNode
-    ## [1] "13440"
-    ## 
-    ## $relationships$`470`$startNodeElementId
-    ## [1] "4:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:13440"
-    ## 
-    ## $relationships$`470`$endNode
-    ## [1] "79444"
-    ## 
-    ## $relationships$`470`$endNodeElementId
-    ## [1] "4:be7756cc-98f9-49dd-a0ff-b31fcd073d5d:79444"
-    ## 
-    ## $relationships$`470`$properties
-    ## $relationships$`470`$properties$property
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470`$properties
+    ## $relationships$`5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470`$properties$property
     ## [1] 10
     ## 
     ## 
@@ -749,13 +811,19 @@ print(lapply(net, head, 3))
     ## 
     ## $paths
     ## $paths[[1]]
-    ## [1] "7553"  "94678" "470"   "93543" "31423"
+    ## [1] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543" "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423"
+    ## [3] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470"   "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:7553" 
+    ## [5] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:94678"
     ## 
     ## $paths[[2]]
-    ## [1] "7553"  "470"   "93543" "31423" "98608"
+    ## [1] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543" "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423"
+    ## [3] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:470"   "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:7553" 
+    ## [5] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:98608"
     ## 
     ## $paths[[3]]
-    ## [1] "69425" "93543" "58428" "31423" "71263"
+    ## [1] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:93543" "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:31423"
+    ## [3] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:69425" "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:71263"
+    ## [5] "5:7c67c0f3-52a6-4303-8979-b95bcb63257b:58428"
 
 ``` r
 print(table(unlist(lapply(net$paths, length))))
