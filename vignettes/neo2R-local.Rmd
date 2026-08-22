@@ -1,0 +1,187 @@
+---
+title: "Using neo2R with Local Neo4j Instances"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using neo2R with Local Neo4j Instances}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+--- 
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  echo = TRUE
+)
+```
+
+# Introduction
+
+This vignette demonstrates how to connect to a local Neo4j instance and import data from data frames.
+
+**Note:** The executable code in this vignette is designed to run only for user `pgodard` and only when a local Neo4j instance is available and empty. For other users, the code chunks will be shown but not executed.
+
+```{r setup, include = FALSE}
+# Check if we're running as pgodard and if the graph is accessible and empty
+library(neo2R)
+
+# Only run executable code if we're pgodard
+is_pgodard <- identical(Sys.getenv("USER"), "pgodard")
+
+# Try to connect to the local graph
+if (is_pgodard) {
+  graph <- tryCatch({
+    startGraph(
+      "https://localhost:7473",
+      username = "neo4j",
+      password = "donttrustusers",
+      importPath = "~/neo4j_home/neo4jImport",
+      .opts = list(ssl_verifypeer = 0)
+    )
+  }, error = function(e) NULL)
+  
+  # Check if graph is accessible and empty
+  can_connect <- !is.null(graph)
+  if (can_connect) {
+    # Check if graph is empty by counting nodes
+    node_count <- tryCatch({
+      res <- cypher(graph, "MATCH (n) RETURN count(n) as count", result = "row")
+      as.numeric(res$count[1])
+    }, error = function(e) Inf)
+    
+    graph_is_empty <- node_count == 0 || is.na(node_count)
+  } else {
+    graph_is_empty <- FALSE
+  }
+  
+  should_run <- can_connect && graph_is_empty
+} else {
+  should_run <- FALSE
+}
+```
+
+# Connecting to Local Neo4j
+
+After installing [Neo4j](https://neo4j.com/), use `startGraph()` to initialize the connection from R. If authentication has been disabled in Neo4j by setting `NEO4J_AUTH=none`, neither username nor password are required.
+
+If you're connecting to a local instance of Neo4j and an import directory has been defined in the configuration, you can specify it in order to allow import from data frames.
+
+```{r, eval = !should_run}
+library(neo2R)
+
+graph <- startGraph(
+  "https://localhost:7473",
+  username = "neo4j",
+  password = "donttrustusers",
+  importPath = "~/neo4j_home/neo4jImport",
+  .opts = list(ssl_verifypeer = 0)
+)
+```
+
+Optional: on a self-managed Neo4j >= 5.19, pass `api = "v2"` explicitly to use it.
+
+# Importing Data from Data Frames
+
+If you're connected to a local instance of Neo4j and an import directory has been defined (see above), you can import data from data frames. Use the `row` prefix to refer to the data frame column.
+
+```{r, eval = !should_run}
+# Create an index to speed-up MERGE
+if (as.integer(graph$version[[1]]) >= 5) {
+   try(cypher(graph, 'CREATE INDEX FOR (n:TestNode) ON (n.name)'), silent = TRUE)
+} else {
+   try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent = TRUE)
+}
+
+# Define node properties in a data frame
+set.seed(1)
+nn <- 100000
+nodes <- data.frame(
+   "name" = paste(
+      sample(LETTERS, nn, replace = TRUE),
+      sample.int(nn, nn, replace = FALSE)
+   ),
+   "value" = rnorm(nn, 10, 3),
+   stringsAsFactors = FALSE
+)
+
+# Import nodes
+import_from_df(
+  graph = graph,
+  cql = 'MERGE (n:TestNode {name: row.name, value: toFloat(row.value)})',
+  toImport = nodes
+)
+
+# Define edge properties in a data frame
+ne <- 100000
+edges <- data.frame(
+  "from" = sample(nodes$name, ne, replace = TRUE),
+  "to" = sample(nodes$name, ne, replace = TRUE),
+  "property" = round(runif(ne) * 10),
+  stringsAsFactors = FALSE
+)
+
+# Import edges
+import_from_df(
+   graph = graph,
+   cql = prepCql(
+      'MATCH (f:TestNode {name: row.from})',
+      'MATCH (t:TestNode {name: row.to})',
+      'MERGE (f)-[r:TestEdge {property: toInteger(row.property)}]->(t)'
+   ),
+   toImport = edges
+)
+```
+
+# Querying the Neo4j Database
+
+You can query the Neo4j graph database using the `cypher()` function. Depending on the query, the function can return data in a data frame (by setting `result = "row"`) or in a list with nodes, relationships and paths returned by the query by setting `result = "graph"`.
+
+```{r, eval = !should_run}
+# Get TestNode with value smaller than 4
+# According to the normal distribution we expect 2.5% of the total
+# number of nodes ==> ~2500 nodes
+df <- cypher(
+   graph,
+   prepCql(
+      'MATCH (n:TestNode) WHERE n.value <= 4',
+      'RETURN n.name as name, n.value as value'
+   )
+)
+print(dim(df))
+print(head(df))
+
+# Multiple queries can be sent at once
+dfl <- multicypher(
+   graph,
+   sprintf(
+      paste(
+         'MATCH (n:TestNode) WHERE n.value <= %s',
+         'RETURN n.name as name, n.value as value'
+      ),
+      2:4
+   )
+)
+print(lapply(dfl, dim))
+
+# Get all paths of length 5 starting from a subset of nodes 
+net <- cypher(
+   graph,
+   prepCql(
+      'MATCH p=(f:TestNode)-[:TestEdge*5..5]->(t:TestNode) WHERE f.value < 3',
+      'RETURN p'
+   ),
+   result = "graph"
+)
+print(lapply(net, head, 3))
+print(table(unlist(lapply(net$paths, length))))
+```
+
+# Note on Execution
+
+The code chunks in this vignette are configured to execute only when:
+1. The current user is `pgodard`
+2. A local Neo4j instance is accessible at `https://localhost:7473`
+3. The graph database is empty (contains no nodes)
+
+If these conditions are not met, the code will be displayed but not executed, allowing you to see the examples without errors.
