@@ -1,10 +1,26 @@
 ---
 title: "Using neo2R with Local Neo4j Instances"
-output: rmarkdown::html_vignette
+oauthor: "[Patrice Godard](mailto:patrice.godard@gmail.com?Subject=neo2R)"
+date: "`r format(Sys.time(), '%B %d %Y')`"
+always_allow_html: true
+output:
+  html_document:
+    keep_md: no
+    number_sections: yes
+    self_contained: yes
+    theme: cerulean
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    number_sections: yes
+package: neo2R (version `r packageVersion('neo2R')`)
 vignette: >
-  %\VignetteIndexEntry{Using neo2R with Local Neo4j Instances}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+   %\VignetteIndexEntry{Using neo2R with Local Neo4j Instances}
+   %\VignetteEncoding{UTF-8}
+   %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
 --- 
 
 ```{r, include = FALSE}
@@ -19,8 +35,6 @@ knitr::opts_chunk$set(
 # Introduction
 
 This vignette demonstrates how to connect to a local Neo4j instance and import data from data frames.
-
-**Note:** The executable code in this vignette is designed to run only for user `pgodard` and only when a local Neo4j instance is available and empty. For other users, the code chunks will be shown but not executed.
 
 ```{r setup, include = FALSE}
 # Check if we're running as pgodard and if the graph is accessible and empty
@@ -41,21 +55,8 @@ if (is_pgodard) {
     )
   }, error = function(e) NULL)
   
-  # Check if graph is accessible and empty
-  can_connect <- !is.null(graph)
-  if (can_connect) {
-    # Check if graph is empty by counting nodes
-    node_count <- tryCatch({
-      res <- cypher(graph, "MATCH (n) RETURN count(n) as count", result = "row")
-      as.numeric(res$count[1])
-    }, error = function(e) Inf)
-    
-    graph_is_empty <- node_count == 0 || is.na(node_count)
-  } else {
-    graph_is_empty <- FALSE
-  }
-  
-  should_run <- can_connect && graph_is_empty
+  # Check if graph is accessible
+  should_run <- !is.null(graph)
 } else {
   should_run <- FALSE
 }
@@ -67,7 +68,7 @@ After installing [Neo4j](https://neo4j.com/), use `startGraph()` to initialize t
 
 If you're connecting to a local instance of Neo4j and an import directory has been defined in the configuration, you can specify it in order to allow import from data frames.
 
-```{r, eval = !should_run}
+```{r, eval = should_run}
 library(neo2R)
 
 graph <- startGraph(
@@ -79,13 +80,11 @@ graph <- startGraph(
 )
 ```
 
-Optional: on a self-managed Neo4j >= 5.19, pass `api = "v2"` explicitly to use it.
-
 # Importing Data from Data Frames
 
 If you're connected to a local instance of Neo4j and an import directory has been defined (see above), you can import data from data frames. Use the `row` prefix to refer to the data frame column.
 
-```{r, eval = !should_run}
+```{r, eval = should_run}
 # Create an index to speed-up MERGE
 if (as.integer(graph$version[[1]]) >= 5) {
    try(cypher(graph, 'CREATE INDEX FOR (n:TestNode) ON (n.name)'), silent = TRUE)
@@ -137,7 +136,7 @@ import_from_df(
 
 You can query the Neo4j graph database using the `cypher()` function. Depending on the query, the function can return data in a data frame (by setting `result = "row"`) or in a list with nodes, relationships and paths returned by the query by setting `result = "graph"`.
 
-```{r, eval = !should_run}
+```{r, eval = should_run}
 # Get TestNode with value smaller than 4
 # According to the normal distribution we expect 2.5% of the total
 # number of nodes ==> ~2500 nodes
@@ -177,11 +176,6 @@ print(lapply(net, head, 3))
 print(table(unlist(lapply(net$paths, length))))
 ```
 
-# Note on Execution
+## Further Reading
 
-The code chunks in this vignette are configured to execute only when:
-1. The current user is `pgodard`
-2. A local Neo4j instance is accessible at `https://localhost:7473`
-3. The graph database is empty (contains no nodes)
-
-If these conditions are not met, the code will be displayed but not executed, allowing you to see the examples without errors.
+- [Neo4j Cypher reference](https://neo4j.com/docs/cypher-manual/current/) — query language docs

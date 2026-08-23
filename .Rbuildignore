@@ -5,3 +5,6 @@
 ^README\.html$
 ^NEWS\.md$
 ^supp$
+_pkgdown.yml
+docs
+pkgdown

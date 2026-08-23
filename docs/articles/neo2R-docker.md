@@ -1,0 +1,434 @@
+# Running Neo4j with Docker Containers
+
+## Introduction
+
+This vignette shows how to instantiate Docker containers running
+different versions of Neo4j (3.x, 4.x, 5.x, and 2025+). The main
+differences between the configurations are related to the APOC library
+and SSL setup.
+
+## Prerequisites
+
+1.  Install Docker on your system
+2.  Install openssl for SSL certificate generation
+
+## Neo4j 3.x
+
+For Neo4j 3.x, you need to manually download and configure the APOC
+library.
+
+``` sh
+#!/bin/sh
+
+#################################
+## CONFIG according to your needs
+#################################
+
+export CONTAINER=neo4j_cont
+export NJ_VERSION=3.5.30
+
+## Ports
+export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
+export NJ_BOLT_PORT=7687
+
+## Change the location of the Neo4j directory
+export NJ_HOME=~/neo4j_home
+
+## Authorization
+## set to 'none' if you want to disable authorization
+NJ_AUTH=neo4j/donttrustusers
+
+## APOC download
+export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.5.0.15/apoc-3.5.0.15-all.jar
+
+#################################
+## RUN
+#################################
+
+mkdir -p $NJ_HOME
+
+## Import and data directory
+export NJ_IMPORT=$NJ_HOME/neo4jImport
+mkdir -p $NJ_IMPORT
+export NJ_DATA=$NJ_HOME/neo4jData
+if test -e $NJ_DATA; then
+   echo "$NJ_DATA directory exists ==> abort - Remove it before proceeding" >&2
+   exit
+fi
+mkdir -p $NJ_DATA
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/client_policy
+mkdir -p ${NJ_SSL}/client_policy/revoked
+mkdir -p ${NJ_SSL}/client_policy/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 \
+   -days 365 -nodes -x509 \
+   -keyout ${NJ_SSL}/client_policy/private.key \
+   -out ${NJ_SSL}/client_policy/public.crt
+chmod -R a+rwx ${NJ_SSL}
+
+## Neo4j plugins: APOC
+export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
+mkdir -p $NJ_PLUGINS
+cd $NJ_PLUGINS
+wget --no-check-certificate $NJ_APOC
+cd -
+
+docker run -d \
+   --name $CONTAINER \
+   --publish=$NJ_HTTP_PORT:7474 \
+   --publish=$NJ_HTTPS_PORT:7473 \
+   --publish=$NJ_BOLT_PORT:7687 \
+   --env=NEO4J_dbms_memory_heap_initial__size=2G \
+   --env=NEO4J_dbms_memory_heap_max__size=2G \
+   --env=NEO4J_dbms_memory_pagecache_size=1G \
+   --env=NEO4J_dbms_query__cache__size=0 \
+   --env=NEO4J_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\* \
+   --env=NEO4J_dbms_directories_import=import \
+   --env NEO4J_AUTH=$NJ_AUTH \
+   --volume $NJ_IMPORT:/var/lib/neo4j/import \
+   --volume $NJ_DATA/data:/data \
+   --volume $NJ_PLUGINS:/plugins \
+   --volume=$NJ_SSL:/ssl \
+   --env=NEO4J_https_ssl__policy=client_policy \
+   --env=NEO4J_dbms_ssl_policy_client__policy_base__directory=/ssl/client_policy \
+   --env=NEO4J_dbms_ssl_policy_client__policy_client__auth=NONE \
+   --env=NEO4J_dbms_ssl_policy_client__policy_trust__all=true \
+   neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
+```
+
+## Neo4j 4.x
+
+Neo4j 4.x has similar configuration to 3.x but with updated environment
+variable names.
+
+``` sh
+#!/bin/sh
+
+#################################
+## CONFIG according to your needs
+#################################
+
+export CONTAINER=neo4j_cont
+export NJ_VERSION=4.4.26
+
+## Ports
+export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
+export NJ_BOLT_PORT=7687
+
+## Change the location of the Neo4j directory
+export NJ_HOME=~/neo4j_home
+
+## Authorization
+export NJ_AUTH=neo4j/donttrustusers
+
+## APOC download
+export NJ_APOC=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.3/apoc-4.4.0.3-all.jar
+
+#################################
+## RUN
+#################################
+
+mkdir -p $NJ_HOME
+
+## Import and data directory
+export NJ_IMPORT=$NJ_HOME/neo4jImport
+mkdir -p $NJ_IMPORT
+export NJ_DATA=$NJ_HOME/neo4jData
+if test -e $NJ_DATA; then
+   echo "$NJ_DATA directory exists ==> abort - Remove it before proceeding" >&2
+   exit
+fi
+mkdir -p $NJ_DATA
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/https
+mkdir -p ${NJ_SSL}/https/revoked
+mkdir -p ${NJ_SSL}/https/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 \
+   -days 365 -nodes -x509 \
+   -keyout ${NJ_SSL}/https/private.key \
+   -out ${NJ_SSL}/https/public.crt
+chmod -R a+rwx ${NJ_SSL}
+
+## Neo4j plugins: APOC
+export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
+mkdir -p $NJ_PLUGINS
+cd $NJ_PLUGINS
+wget --no-check-certificate $NJ_APOC
+cd -
+
+docker run -d \
+   --name $CONTAINER \
+   --publish=$NJ_HTTP_PORT:7474 \
+   --publish=$NJ_HTTPS_PORT:7473 \
+   --publish=$NJ_BOLT_PORT:7687 \
+   --env=NEO4J_dbms_memory_heap_initial__size=2G \
+   --env=NEO4J_dbms_memory_heap_max__size=2G \
+   --env=NEO4J_dbms_memory_pagecache_size=1G \
+   --env=NEO4J_dbms_query__cache__size=0 \
+   --env=NEO4J_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\* \
+   --env=NEO4J_dbms_directories_import=import \
+   --env NEO4J_AUTH=$NJ_AUTH \
+   --volume $NJ_IMPORT:/var/lib/neo4j/import \
+   --volume $NJ_DATA/data:/data \
+   --volume $NJ_PLUGINS:/plugins \
+   --volume=$NJ_SSL:/ssl \
+   --env=NEO4J_dbms_connector_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https \
+   --env=NEO4J_dbms_ssl_policy_https_private__key=private.key \
+   --env=NEO4J_dbms_ssl_policy_https_public__certificate=public.crt \
+   --env=NEO4J_dbms_ssl_policy_https_client__auth=NONE \
+   --env=NEO4J_dbms_ssl_policy_https_trust__all=true \
+   neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
+```
+
+## Neo4j 5.x (\>= 5.12)
+
+In Neo4j 5.x, it is not possible to instantiate the Docker image with a
+specific username and password. The password must be changed after Neo4j
+starts. However, you can instantiate the image without any credentials
+using `--env NEO4J_AUTH=none`.
+
+``` sh
+#!/bin/sh
+
+#################################
+## CONFIG according to your needs
+#################################
+
+export CONTAINER=neo4j_cont
+export NJ_VERSION=5.26.26
+
+## Ports
+export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
+export NJ_BOLT_PORT=7687
+
+## Change the location of the Neo4j directory
+export NJ_HOME=~/neo4j_home
+
+## APOC download
+export NJ_APOC=https://github.com/neo4j/apoc/releases/download/5.26.26/apoc-5.26.26-core.jar
+
+#################################
+## RUN
+#################################
+
+mkdir -p $NJ_HOME
+
+## Import and data directory
+export NJ_IMPORT=$NJ_HOME/neo4jImport
+mkdir -p $NJ_IMPORT
+export NJ_DATA=$NJ_HOME/neo4jData
+if test -e $NJ_DATA; then
+   echo "$NJ_DATA directory exists ==> abort - Remove it before proceeding" >&2
+   exit
+fi
+mkdir -p $NJ_DATA
+export NJ_LOGS=$NJ_HOME/neo4jLogs
+mkdir -p $NJ_LOGS
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/https
+mkdir -p ${NJ_SSL}/https/revoked
+mkdir -p ${NJ_SSL}/https/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 \
+   -days 365 -nodes -x509 \
+   -keyout ${NJ_SSL}/https/private.key \
+   -out ${NJ_SSL}/https/public.crt
+cp ${NJ_SSL}/https/public.crt ${NJ_SSL}/https/trusted
+chmod -R a+rwx ${NJ_SSL}
+
+## Neo4j plugins: APOC
+export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
+mkdir -p $NJ_PLUGINS
+cd $NJ_PLUGINS
+wget --no-check-certificate $NJ_APOC
+cd -
+
+## Add ` --env NEO4J_AUTH=none ` if you don't want to setup credentials
+docker run -d \
+   --name $CONTAINER \
+   --publish=$NJ_HTTP_PORT:7474 \
+   --publish=$NJ_HTTPS_PORT:7473 \
+   --publish=$NJ_BOLT_PORT:7687 \
+   --env=NEO4J_server_memory_heap_initial__size=2G \
+   --env=NEO4J_server_memory_heap_max__size=2G \
+   --env=NEO4J_server_memory_pagecache_size=1G \
+   --env=NEO4J_server_db_query__cache__size=0 \
+   --env=NEO4J_dbms_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_dbms_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\* \
+   --env=NEO4J_server_directories_import=import\
+   --volume=$NJ_IMPORT:/var/lib/neo4j/import \
+   --volume=$NJ_DATA/data:/data \
+   --volume=$NJ_LOGS:/var/lib/neo4j/logs \
+   --volume=$NJ_PLUGINS:/plugins \
+   --volume=$NJ_SSL:/ssl \
+   --env=NEO4J_server_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https \
+   --env=NEO4J_dbms_ssl_policy_https_private__key=private.key \
+   --env=NEO4J_dbms_ssl_policy_https_public__certificate=public.crt \
+   --env=NEO4J_dbms_ssl_policy_https_client__auth=NONE \
+   --env=NEO4J_dbms_ssl_policy_https_trust__all=true \
+   neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
+```
+
+## Neo4j \>= 2025
+
+In recent versions of Neo4j (2025 and later), the APOC jar is bundled in
+the image. The `NEO4J_PLUGINS` environment variable automatically copies
+it in at container start, and persisting `/plugins` avoids re-copying on
+every restart.
+
+``` sh
+#!/bin/sh
+
+#################################
+## CONFIG according to your needs
+#################################
+
+export CONTAINER=neo4j_cont
+export NJ_VERSION=2026.06.0
+
+## Ports
+export NJ_HTTP_PORT=7474
+export NJ_HTTPS_PORT=7473
+export NJ_BOLT_PORT=7687
+
+## Change the location of the Neo4j directory
+export NJ_HOME=~/neo4j_home
+
+#################################
+## RUN
+#################################
+
+mkdir -p $NJ_HOME
+
+## Import and data directory
+export NJ_IMPORT=$NJ_HOME/neo4jImport
+mkdir -p $NJ_IMPORT
+export NJ_DATA=$NJ_HOME/neo4jData
+if test -e $NJ_DATA; then
+   echo "$NJ_DATA directory exists ==> abort - Remove it before proceeding" >&2
+   exit
+fi
+mkdir -p $NJ_DATA
+export NJ_LOGS=$NJ_HOME/neo4jLogs
+mkdir -p $NJ_LOGS
+
+## SSL
+export NJ_SSL=${NJ_HOME}/ssl
+mkdir -p ${NJ_SSL}/https
+mkdir -p ${NJ_SSL}/https/revoked
+mkdir -p ${NJ_SSL}/https/trusted
+openssl req -subj "/CN=localhost" -new -newkey rsa:2048 \
+   -days 365 -nodes -x509 \
+   -keyout ${NJ_SSL}/https/private.key \
+   -out ${NJ_SSL}/https/public.crt
+cp ${NJ_SSL}/https/public.crt ${NJ_SSL}/https/trusted
+chmod -R a+rwx ${NJ_SSL}
+
+## Plugins directory (APOC jar is now bundled in the image;
+## NEO4J_PLUGINS copies it in automatically at container start,
+## and persisting /plugins avoids re-copying on every restart)
+export NJ_PLUGINS=$NJ_HOME/neo4jPlugins
+mkdir -p $NJ_PLUGINS
+
+## Add ` --env NEO4J_AUTH=none ` if you don't want to setup credentials
+docker run -d \
+   --name $CONTAINER \
+   --publish=$NJ_HTTP_PORT:7474 \
+   --publish=$NJ_HTTPS_PORT:7473 \
+   --publish=$NJ_BOLT_PORT:7687 \
+   --env=NEO4J_server_memory_heap_initial__size=2G \
+   --env=NEO4J_server_memory_heap_max__size=2G \
+   --env=NEO4J_server_memory_pagecache_size=1G \
+   --env=NEO4J_server_db_query__cache__size=0 \
+   --env=NEO4J_dbms_cypher_min__replan__interval=100000000ms \
+   --env=NEO4J_dbms_cypher_statistics__divergence__threshold=1 \
+   --env=NEO4J_PLUGINS='["apoc"]' \
+   --env=NEO4J_dbms_security_procedures_unrestricted=apoc.\\* \
+   --env=NEO4J_server_directories_import=import\
+   --volume=$NJ_IMPORT:/var/lib/neo4j/import \
+   --volume=$NJ_DATA/data:/data \
+   --volume=$NJ_LOGS:/var/lib/neo4j/logs \
+   --volume=$NJ_PLUGINS:/plugins \
+   --volume=$NJ_SSL:/ssl \
+   --env=NEO4J_server_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_enabled=true \
+   --env=NEO4J_dbms_ssl_policy_https_base__directory=/ssl/https \
+   --env=NEO4J_dbms_ssl_policy_https_private__key=private.key \
+   --env=NEO4J_dbms_ssl_policy_https_public__certificate=public.crt \
+   --env=NEO4J_dbms_ssl_policy_https_client__auth=NONE \
+   --env=NEO4J_dbms_ssl_policy_https_trust__all=true \
+   neo4j:$NJ_VERSION
+
+sleep 15
+sudo chmod a+rwx $NJ_IMPORT
+```
+
+## Updating Credentials for Neo4j \>= 5
+
+If you did not disable credentials (with `--env NEO4J_AUTH=none`),
+you’ll need to first change the user password before being able to
+connect to the graph database. The following code shows how to do it
+with neo2R:
+
+``` r
+
+library(neo2R)
+
+# First connect with default credentials
+system <- startGraph(
+  "https://localhost:7473",
+  database = "system",
+  check = FALSE,
+  username = "neo4j",
+  password = "neo4j",
+  importPath = "~/neo4j_home/neo4jImport",
+  .opts = list(ssl_verifypeer = 0)
+)
+
+# Change the password
+cypher(
+  system,
+  "ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'donttrustusers'"
+)
+```
+
+## Key Differences Summary
+
+| Version | APOC Configuration | SSL Configuration | Authentication |
+|----|----|----|----|
+| 3.x | Manual download, mount as volume | `client_policy` directory | Set via `NEO4J_AUTH` |
+| 4.x | Manual download, mount as volume | `https` directory | Set via `NEO4J_AUTH` |
+| 5.x | Manual download, mount as volume | `https` directory | Change after start or use `NEO4J_AUTH=none` |
+| 2025+ | Bundled, use `NEO4J_PLUGINS` | `https` directory | Change after start or use `NEO4J_AUTH=none` |
+
+### Further Reading
+
+- [Neo4j Docker
+  documentation](https://neo4j.com/docs/operations-manual/current/docker/)
+  — Running Neo4j in a Docker container.

@@ -1,7 +1,7 @@
 Package: neo2R
 Type: Package
 Title: Neo4j to R
-Version: 3.1.1
+Version: 3.1.2
 Authors@R: c(
     person(
         "Patrice", "Godard",
@@ -22,8 +22,10 @@ Description: The aim of neo2R is to provide simple and low level connectors
    It allows fast processing of queries returning many records.
    And it let the users handle post-processing according to the data model
    and their needs.
-URL: https://github.com/patzaw/neo2r
-BugReports: https://github.com/patzaw/neo2r/issues
+URL:
+   https://patzaw.github.io/neo2R/,
+   https://github.com/patzaw/neo2R/
+BugReports: https://github.com/patzaw/neo2R/issues
 Depends:
     R (>= 4.1)
 Imports:
@@ -38,4 +40,6 @@ Config/roxygen2/version: 8.1.0
 VignetteBuilder: knitr
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    dplyr,
+    visNetwork

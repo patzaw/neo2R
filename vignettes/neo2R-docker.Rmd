@@ -1,10 +1,26 @@
 ---
 title: "Running Neo4j with Docker Containers"
-output: rmarkdown::html_vignette
+author: "[Patrice Godard](mailto:patrice.godard@gmail.com?Subject=neo2R)"
+date: "`r format(Sys.time(), '%B %d %Y')`"
+always_allow_html: true
+output:
+  html_document:
+    keep_md: no
+    number_sections: yes
+    self_contained: yes
+    theme: cerulean
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    number_sections: yes
+package: neo2R (version `r packageVersion('neo2R')`)
 vignette: >
-  %\VignetteIndexEntry{Running Neo4j with Docker Containers}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+   %\VignetteIndexEntry{Running Neo4j with Docker Containers}
+   %\VignetteEncoding{UTF-8}
+   %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
 --- 
 
 ```{r, include = FALSE}
@@ -305,7 +321,7 @@ sudo chmod a+rwx $NJ_IMPORT
 
 # Neo4j >= 2025
 
-In recent versions of Neo4j (2025 and later), the APOC jar is now bundled in the image. The `NEO4J_PLUGINS` environment variable automatically copies it in at container start, and persisting `/plugins` avoids re-copying on every restart.
+In recent versions of Neo4j (2025 and later), the APOC jar is bundled in the image. The `NEO4J_PLUGINS` environment variable automatically copies it in at container start, and persisting `/plugins` avoids re-copying on every restart.
 
 ```{sh, eval=FALSE}
 #!/bin/sh
@@ -414,8 +430,8 @@ system <- startGraph(
 
 # Change the password
 cypher(
-   system,
-   "ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'donttrustusers'"
+  system,
+  "ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO 'donttrustusers'"
 )
 ```
 
@@ -427,3 +443,7 @@ cypher(
 | 4.x | Manual download, mount as volume | `https` directory | Set via `NEO4J_AUTH` |
 | 5.x | Manual download, mount as volume | `https` directory | Change after start or use `NEO4J_AUTH=none` |
 | 2025+ | Bundled, use `NEO4J_PLUGINS` | `https` directory | Change after start or use `NEO4J_AUTH=none` |
+
+## Further Reading
+
+- [Neo4j Docker documentation](https://neo4j.com/docs/operations-manual/current/docker/) — Running Neo4j in a Docker container.

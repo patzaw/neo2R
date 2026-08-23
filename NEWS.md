@@ -1,3 +1,7 @@
+# Version 3.1.2
+
+- Vignettes and package website with {pkgdown}
+
 # Version 3.1.1
 
 - Fix Import with neo4j >= 2025
