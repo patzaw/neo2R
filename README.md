@@ -5,7 +5,7 @@ README
 
 <!----------------------------------------------------------------------------->
 
-# neo2R
+# neo2R <img src="man/figures/logo.png" align="right" alt="logo" width="120" />
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/neo2R)](https://cran.r-project.org/package=neo2R)
 [![](https://cranlogs.r-pkg.org/badges/neo2R)](https://cran.r-project.org/package=neo2R)
