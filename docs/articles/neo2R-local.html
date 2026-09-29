@@ -71,7 +71,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Using neo2R with Local Neo4j Instances</h1>
             
-            <h4 data-toc-skip class="date">August 23 2026</h4>
+            <h4 data-toc-skip class="date">September 29 2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/patzaw/neo2R/blob/HEAD/vignettes/neo2R-local.Rmd" class="external-link"><code>vignettes/neo2R-local.Rmd</code></a></small>
       <div class="d-none name"><code>neo2R-local.Rmd</code></div>
@@ -121,8 +121,6 @@ column.</p>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>   <span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="../reference/cypher.html">cypher</a></span><span class="op">(</span><span class="va">graph</span>, <span class="st">'CREATE INDEX ON :TestNode(name)'</span><span class="op">)</span>, silent <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; Neo.ClientError.Schema.EquivalentSchemaRuleAlreadyExists</span></span>
-<span><span class="co">#&gt; An equivalent index already exists, 'Index( id=3, name='index_e8759119', type='RANGE', schema=(:TestNode {name}), indexProvider='range-1.0' )'.</span></span>
 <span></span>
 <span><span class="co"># Define node properties in a data frame</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
@@ -183,15 +181,7 @@ setting <code>result = "graph"</code>.</p>
 <span>   <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2253    2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      name    value</span></span>
-<span><span class="co">#&gt; 1  N 2585 1.965486</span></span>
-<span><span class="co">#&gt; 2 L 72527 3.345461</span></span>
-<span><span class="co">#&gt; 3 Y 54240 2.372623</span></span>
-<span><span class="co">#&gt; 4  N 1436 1.500713</span></span>
-<span><span class="co">#&gt; 5 T 21434 3.592195</span></span>
-<span><span class="co">#&gt; 6 M 91787 2.504475</span></span>
 <span></span>
 <span><span class="co"># Multiple queries can be sent at once</span></span>
 <span><span class="va">dfl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/multicypher.html">multicypher</a></span><span class="op">(</span></span>
@@ -205,14 +195,6 @@ setting <code>result = "graph"</code>.</p>
 <span>   <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">dfl</span>, <span class="va">dim</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; [1] 386   2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; [1] 954   2</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; [[3]]</span></span>
-<span><span class="co">#&gt; [1] 2253    2</span></span>
 <span></span>
 <span><span class="co"># Get all paths of length 5 starting from a subset of nodes </span></span>
 <span><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cypher.html">cypher</a></span><span class="op">(</span></span>
@@ -224,146 +206,7 @@ setting <code>result = "graph"</code>.</p>
 <span>   result <span class="op">=</span> <span class="st">"graph"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">net</span>, <span class="va">head</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $nodes</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$elementId</span></span>
-<span><span class="co">#&gt; [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$labels</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$labels[[1]]</span></span>
-<span><span class="co">#&gt; [1] "TestNode"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$properties</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$properties$name</span></span>
-<span><span class="co">#&gt; [1] "N 2585"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$properties$value</span></span>
-<span><span class="co">#&gt; [1] 1.965486</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$elementId</span></span>
-<span><span class="co">#&gt; [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$labels</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$labels[[1]]</span></span>
-<span><span class="co">#&gt; [1] "TestNode"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$properties</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$properties$name</span></span>
-<span><span class="co">#&gt; [1] "V 30913"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$properties$value</span></span>
-<span><span class="co">#&gt; [1] 10.389</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$elementId</span></span>
-<span><span class="co">#&gt; [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$labels</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$labels[[1]]</span></span>
-<span><span class="co">#&gt; [1] "TestNode"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$properties</span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$properties$name</span></span>
-<span><span class="co">#&gt; [1] "Z 33864"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$properties$value</span></span>
-<span><span class="co">#&gt; [1] 5.65467</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships</span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`</span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$elementId</span></span>
-<span><span class="co">#&gt; [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$startNodeElementId</span></span>
-<span><span class="co">#&gt; [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$endNodeElementId</span></span>
-<span><span class="co">#&gt; [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$type</span></span>
-<span><span class="co">#&gt; [1] "TestEdge"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$properties</span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$properties$property</span></span>
-<span><span class="co">#&gt; [1] 8</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`</span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$elementId</span></span>
-<span><span class="co">#&gt; [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$startNodeElementId</span></span>
-<span><span class="co">#&gt; [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$endNodeElementId</span></span>
-<span><span class="co">#&gt; [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$type</span></span>
-<span><span class="co">#&gt; [1] "TestEdge"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$properties</span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$properties$property</span></span>
-<span><span class="co">#&gt; [1] 0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`</span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$elementId</span></span>
-<span><span class="co">#&gt; [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$startNodeElementId</span></span>
-<span><span class="co">#&gt; [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$endNodeElementId</span></span>
-<span><span class="co">#&gt; [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:79444"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$type</span></span>
-<span><span class="co">#&gt; [1] "TestEdge"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$properties</span></span>
-<span><span class="co">#&gt; $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$properties$property</span></span>
-<span><span class="co">#&gt; [1] 10</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $paths</span></span>
-<span><span class="co">#&gt; $paths[[1]]</span></span>
-<span><span class="co">#&gt; [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543"</span></span>
-<span><span class="co">#&gt; [2] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423"</span></span>
-<span><span class="co">#&gt; [3] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470"  </span></span>
-<span><span class="co">#&gt; [4] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7553" </span></span>
-<span><span class="co">#&gt; [5] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:94678"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $paths[[2]]</span></span>
-<span><span class="co">#&gt; [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543"</span></span>
-<span><span class="co">#&gt; [2] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423"</span></span>
-<span><span class="co">#&gt; [3] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470"  </span></span>
-<span><span class="co">#&gt; [4] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7553" </span></span>
-<span><span class="co">#&gt; [5] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:98608"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $paths[[3]]</span></span>
-<span><span class="co">#&gt; [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543"</span></span>
-<span><span class="co">#&gt; [2] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423"</span></span>
-<span><span class="co">#&gt; [3] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:69425"</span></span>
-<span><span class="co">#&gt; [4] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:71263"</span></span>
-<span><span class="co">#&gt; [5] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:58428"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">net</span><span class="op">$</span><span class="va">paths</span>, <span class="va">length</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   5 </span></span>
-<span><span class="co">#&gt; 945</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">net</span><span class="op">$</span><span class="va">paths</span>, <span class="va">length</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="further-reading">Further Reading<a class="anchor" aria-label="anchor" href="#further-reading"></a>
 </h3>

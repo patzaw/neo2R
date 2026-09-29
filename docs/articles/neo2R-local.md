@@ -44,8 +44,6 @@ if (as.integer(graph$version[[1]]) >= 5) {
 } else {
    try(cypher(graph, 'CREATE INDEX ON :TestNode(name)'), silent = TRUE)
 }
-#> Neo.ClientError.Schema.EquivalentSchemaRuleAlreadyExists
-#> An equivalent index already exists, 'Index( id=3, name='index_e8759119', type='RANGE', schema=(:TestNode {name}), indexProvider='range-1.0' )'.
 
 # Define node properties in a data frame
 set.seed(1)
@@ -109,15 +107,7 @@ df <- cypher(
    )
 )
 print(dim(df))
-#> [1] 2253    2
 print(head(df))
-#>      name    value
-#> 1  N 2585 1.965486
-#> 2 L 72527 3.345461
-#> 3 Y 54240 2.372623
-#> 4  N 1436 1.500713
-#> 5 T 21434 3.592195
-#> 6 M 91787 2.504475
 
 # Multiple queries can be sent at once
 dfl <- multicypher(
@@ -131,14 +121,6 @@ dfl <- multicypher(
    )
 )
 print(lapply(dfl, dim))
-#> [[1]]
-#> [1] 386   2
-#> 
-#> [[2]]
-#> [1] 954   2
-#> 
-#> [[3]]
-#> [1] 2253    2
 
 # Get all paths of length 5 starting from a subset of nodes 
 net <- cypher(
@@ -150,146 +132,7 @@ net <- cypher(
    result = "graph"
 )
 print(lapply(net, head, 3))
-#> $nodes
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$elementId
-#> [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7"
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$labels
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$labels[[1]]
-#> [1] "TestNode"
-#> 
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$properties
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$properties$name
-#> [1] "N 2585"
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7`$properties$value
-#> [1] 1.965486
-#> 
-#> 
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$elementId
-#> [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347"
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$labels
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$labels[[1]]
-#> [1] "TestNode"
-#> 
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$properties
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$properties$name
-#> [1] "V 30913"
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347`$properties$value
-#> [1] 10.389
-#> 
-#> 
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$elementId
-#> [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440"
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$labels
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$labels[[1]]
-#> [1] "TestNode"
-#> 
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$properties
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$properties$name
-#> [1] "Z 33864"
-#> 
-#> $nodes$`4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440`$properties$value
-#> [1] 5.65467
-#> 
-#> 
-#> 
-#> 
-#> $relationships
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$elementId
-#> [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$startNodeElementId
-#> [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$endNodeElementId
-#> [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$type
-#> [1] "TestEdge"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$properties
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543`$properties$property
-#> [1] 8
-#> 
-#> 
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$elementId
-#> [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$startNodeElementId
-#> [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:97347"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$endNodeElementId
-#> [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$type
-#> [1] "TestEdge"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$properties
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423`$properties$property
-#> [1] 0
-#> 
-#> 
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$elementId
-#> [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$startNodeElementId
-#> [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:13440"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$endNodeElementId
-#> [1] "4:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:79444"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$type
-#> [1] "TestEdge"
-#> 
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$properties
-#> $relationships$`5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470`$properties$property
-#> [1] 10
-#> 
-#> 
-#> 
-#> 
-#> $paths
-#> $paths[[1]]
-#> [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543"
-#> [2] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423"
-#> [3] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470"  
-#> [4] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7553" 
-#> [5] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:94678"
-#> 
-#> $paths[[2]]
-#> [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543"
-#> [2] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423"
-#> [3] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:470"  
-#> [4] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:7553" 
-#> [5] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:98608"
-#> 
-#> $paths[[3]]
-#> [1] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:93543"
-#> [2] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:31423"
-#> [3] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:69425"
-#> [4] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:71263"
-#> [5] "5:189c469e-6afa-4d4f-b15c-f46d0ff5d9b4:58428"
 print(table(unlist(lapply(net$paths, length))))
-#> 
-#>   5 
-#> 945
 ```
 
 ### Further Reading

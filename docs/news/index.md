@@ -72,7 +72,8 @@ CRAN release: 2023-02-16
 CRAN release: 2022-04-15
 
 - [`graphRequest()`](https://patzaw.github.io/neo2R/reference/graphRequest.md)
-  supports the .opts parameter of `RCurl::curlPerform()`.
+  supports the .opts parameter of
+  [`RCurl::curlPerform()`](https://rdrr.io/pkg/RCurl/man/curlPerform.html).
 
 ## Version 2.1.0
 
