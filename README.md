@@ -51,7 +51,7 @@ The following R packages available on CRAN are required:
 ## Installation from github
 
 ``` r
-devtools::install_github("patzaw/neo2R")
+pak::pkg_install("github::patzaw/neo2R")
 ```
 
 <!----------------------------------------------------------------------------->

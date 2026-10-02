@@ -68,7 +68,7 @@ for(p in sdeps$package){
 ## Installation from github
 
 ```r
-devtools::install_github("patzaw/neo2R")
+pak::pkg_install("github::patzaw/neo2R")
 ```
 
 <!----------------------------------------------------------------------------->

@@ -40,7 +40,7 @@ The following R packages available on CRAN are required:
 
 ``` r
 
-devtools::install_github("patzaw/neo2R")
+pak::pkg_install("github::patzaw/neo2R")
 ```
 
 # Use
