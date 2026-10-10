@@ -41,9 +41,9 @@ databases with additional features.
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
-# Installation
+## Installation
 
-## From CRAN
+### From CRAN
 
 ```{r, eval=FALSE}
 install.packages("neo2R")
@@ -51,7 +51,7 @@ install.packages("neo2R")
 
 
 <!------------------------->
-## Dependencies
+### Dependencies
 
 The following R packages available on CRAN are required:
 
@@ -64,7 +64,7 @@ for(p in sdeps$package){
 ```
 
 <!------------------------->
-## Installation from github
+### Installation from github
 
 ```r
 pak::pkg_install("github::patzaw/neo2R")
@@ -72,7 +72,7 @@ pak::pkg_install("github::patzaw/neo2R")
 
 <!----------------------------------------------------------------------------->
 <!----------------------------------------------------------------------------->
-# Use
+## Use
 
 For detailed guides on using neo2R, please refer to the following vignettes:
 

@@ -15,16 +15,16 @@ packages such as [RNeo4j](https://github.com/nicolewhite/RNeo4j) or
 [neo4R](https://github.com/neo4j-rstats/neo4r) provide connectors to
 Neo4j databases with additional features.
 
-# Installation
+## Installation
 
-## From CRAN
+### From CRAN
 
 ``` r
 
 install.packages("neo2R")
 ```
 
-## Dependencies
+### Dependencies
 
 The following R packages available on CRAN are required:
 
@@ -34,14 +34,14 @@ The following R packages available on CRAN are required:
   Requests and Process the Responses
 - [utils](https://CRAN.R-project.org/package=utils): The R Utils Package
 
-## Installation from github
+### Installation from github
 
 ``` r
 
 pak::pkg_install("github::patzaw/neo2R")
 ```
 
-# Use
+## Use
 
 For detailed guides on using neo2R, please refer to the following
 vignettes:
