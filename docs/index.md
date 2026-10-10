@@ -1,5 +1,3 @@
-# README
-
 # neo2R
 
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/neo2R)](https://cran.r-project.org/package=neo2R)
